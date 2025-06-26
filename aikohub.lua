@@ -324,8 +324,7 @@ local win = ui:CreateWindow({
     KeySystem = { -- <- ↓ remove this all, if you dont neet the key system
         Key = { "/aikohub" }
         },
-        SaveKey = true,
-    },
+        SaveKey = true
 })
 
 win:EditOpenButton({
