@@ -308,9 +308,9 @@ initializeAntiAFK()
 versgame = getGameVersion()
 
 local win = ui:CreateWindow({
-    Title = "WreakHub",
+    Title = "Aiko Hub",
     Author = "Made by: @a11bove",
-    Folder = "WREAKHUB",
+    Folder = "AIKOHUB",
     Size = UDim2.fromOffset(580, 400),
     Transparent = true,
     Theme = "Dark",
