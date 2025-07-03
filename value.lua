@@ -15,7 +15,7 @@ local RootPart = Character:WaitForChild("HumanoidRootPart")
 local ESP = {}
 ESP.ESPs = {}
 ESP.UpdateQueue = {}
-ESP.RANGE = 50
+ESP.RANGE = 300
 ESP.Enabled = false
 ESP.UpdateLoop = nil
 ESP.Connections = {}
@@ -23,7 +23,7 @@ ESP.Connections = {}
 local function createBillboard(model)
     local billboard = Instance.new("BillboardGui")
     billboard.Name = "esp"
-    billboard.Size = UDim2.new(0, 100, 0, 20)
+    billboard.Size = UDim2.new(0, 200, 0, 25)
     billboard.StudsOffset = Vector3.new(0, 3, 0)
     billboard.AlwaysOnTop = true
     billboard.LightInfluence = 0
@@ -31,13 +31,13 @@ local function createBillboard(model)
     billboard.Parent = model
 
     local label = Instance.new("TextLabel")
-    label.Name = "money"
+    label.Name = "info"
     label.Size = UDim2.new(1, 0, 1, 0)
     label.BackgroundTransparency = 1
-    label.TextColor3 = Color3.fromRGB(255, 255, 0)
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
     label.TextStrokeTransparency = 0.5
     label.TextStrokeColor3 = Color3.new(0, 0, 0)
-    label.Font = Enum.Font.GothamBold
+    label.Font = Enum.Font.Cartoon
     label.TextScaled = true
     label.Text = "..."
     label.Parent = billboard
@@ -48,12 +48,27 @@ end
 local function updateESP(model)
     local esp = ESP.ESPs[model]
     if not esp or not model:IsDescendantOf(workspace) then return end
-    local label = esp:FindFirstChild("money")
+    
+    local label = esp:FindFirstChild("info")
     if label then
-        local success, value = pcall(CalculatePlantValue, model)
-        if success and typeof(value) == "number" then
-            label.Text = Comma.Comma(value) .. "¢"
+        -- Get fruit name
+        local fruitName = model.Name or "Unknown"
+        
+        -- Get fruit weight
+        local weight = "N/A"
+        if model:FindFirstChild("Configuration") and model.Configuration:FindFirstChild("Weight") then
+            weight = tostring(model.Configuration.Weight.Value) .. " KG"
         end
+        
+        -- Get fruit value
+        local value = "N/A"
+        local success, val = pcall(CalculatePlantValue, model)
+        if success and typeof(val) == "number" then
+            value = Comma.Comma(val)
+        end
+        
+        -- Format like the image: "Fruit Name / (Weight) / Value"
+        label.Text = fruitName .. " / (" .. weight .. ") / " .. value
     end
 end
 
