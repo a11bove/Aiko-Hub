@@ -20,6 +20,29 @@ ESP.Enabled = false
 ESP.UpdateLoop = nil
 ESP.Connections = {}
 
+-- Function to get the player's farm
+local function getPlayerFarm()
+    local farm = nil
+    if workspace:FindFirstChild("Farm") then
+        for _, v in next, workspace.Farm:GetDescendants() do
+            if v.Name == "Owner" and v:IsA("StringValue") and v.Value == LocalPlayer.Name then
+                farm = v.Parent.Parent
+                break
+            end
+        end
+    end
+    return farm
+end
+
+-- Function to check if a plant is on the owner's farm
+local function isOnOwnerFarm(model)
+    local playerFarm = getPlayerFarm()
+    if not playerFarm then return false end
+    
+    -- Check if the model is a descendant of the player's farm
+    return model:IsDescendantOf(playerFarm)
+end
+
 local function createBillboard(model)
     local billboard = Instance.new("BillboardGui")
     billboard.Name = "esp"
@@ -68,6 +91,8 @@ end
 
 local function trackPlant(model)
     if ESP.ESPs[model] then return end
+    -- Only track if it's on the owner's farm
+    if not isOnOwnerFarm(model) then return end
     ESP.UpdateQueue[model] = tick() + math.random()
 end
 
@@ -83,6 +108,8 @@ local function createesp(model)
     if not ESP.Enabled then return end
     if ESP.ESPs[model] then return end
     if not model:IsDescendantOf(workspace) then return end
+    if not isOnOwnerFarm(model) then return end -- Additional check
+    
     local part = model:FindFirstChildWhichIsA("BasePart")
     if not part then return end
     if (part.Position - RootPart.Position).Magnitude <= ESP.RANGE then
@@ -140,6 +167,9 @@ function ESP:Enable()
             local now = tick()
             for model, _ in pairs(self.UpdateQueue) do
                 if not model:IsDescendantOf(workspace) then
+                    untrackPlant(model)
+                elseif not isOnOwnerFarm(model) then
+                    -- Remove ESP if plant is no longer on owner's farm
                     untrackPlant(model)
                 else
                     createesp(model)
