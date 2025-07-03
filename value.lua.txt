@@ -1,0 +1,185 @@
+-- Plant ESP Script for External Host
+return function()
+    local Players = game:GetService("Players")
+    local CollectionService = game:GetService("CollectionService")
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local RunService = game:GetService("RunService")
+    local workspace = game:GetService("Workspace")
+    
+    local CalculatePlantValue = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("CalculatePlantValue"))
+    local Comma = require(ReplicatedStorage:WaitForChild("Comma_Module"))
+    
+    local LocalPlayer = Players.LocalPlayer
+    local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    local RootPart = Character:WaitForChild("HumanoidRootPart")
+    
+    local ESPs = {}
+    local UpdateQueue = {}
+    local RANGE = 50
+    local connections = {}
+    local espEnabled = false
+    
+    local function createBillboard(model)
+        local billboard = Instance.new("BillboardGui")
+        billboard.Name = "esp"
+        billboard.Size = UDim2.new(0, 100, 0, 20)
+        billboard.StudsOffset = Vector3.new(0, 3, 0)
+        billboard.AlwaysOnTop = true
+        billboard.LightInfluence = 0
+        billboard.ResetOnSpawn = false
+        billboard.Parent = model
+        
+        local label = Instance.new("TextLabel")
+        label.Name = "money"
+        label.Size = UDim2.new(1, 0, 1, 0)
+        label.BackgroundTransparency = 1
+        label.TextColor3 = Color3.fromRGB(255, 255, 0)
+        label.TextStrokeTransparency = 0.5
+        label.TextStrokeColor3 = Color3.new(0, 0, 0)
+        label.Font = Enum.Font.GothamBold
+        label.TextScaled = true
+        label.Text = "..."
+        label.Parent = billboard
+        
+        return billboard
+    end
+    
+    local function updateESP(model)
+        local esp = ESPs[model]
+        if not esp or not model:IsDescendantOf(workspace) then return end
+        
+        local label = esp:FindFirstChild("money")
+        if label then
+            local success, value = pcall(CalculatePlantValue, model)
+            if success and typeof(value) == "number" then
+                label.Text = Comma.Comma(value) .. "¢"
+            end
+        end
+    end
+    
+    local function trackPlant(model)
+        if ESPs[model] then return end
+        UpdateQueue[model] = tick() + math.random()
+    end
+    
+    local function untrackPlant(model)
+        if ESPs[model] then
+            ESPs[model]:Destroy()
+            ESPs[model] = nil
+        end
+        UpdateQueue[model] = nil
+    end
+    
+    local function createesp(model)
+        if ESPs[model] then return end
+        if not model:IsDescendantOf(workspace) then return end
+        
+        local part = model:FindFirstChildWhichIsA("BasePart")
+        if not part then return end
+        
+        if (part.Position - RootPart.Position).Magnitude <= RANGE then
+            local esp = createBillboard(model)
+            ESPs[model] = esp
+            updateESP(model)
+        end
+    end
+    
+    local function removeesp(model)
+        local esp = ESPs[model]
+        if esp and model:IsDescendantOf(workspace) then
+            local part = model:FindFirstChildWhichIsA("BasePart")
+            if part and (part.Position - RootPart.Position).Magnitude > RANGE + 10 then
+                esp:Destroy()
+                ESPs[model] = nil
+            end
+        end
+    end
+    
+    local function enableESP()
+        if espEnabled then return end
+        espEnabled = true
+        
+        -- Initialize existing plants
+        for _, obj in ipairs(workspace:GetDescendants()) do
+            if obj:IsA("Model") and CollectionService:HasTag(obj, "Harvestable") then
+                trackPlant(obj)
+            end
+        end
+        
+        -- Connect signals
+        connections.added = CollectionService:GetInstanceAddedSignal("Harvestable"):Connect(function(obj)
+            if obj:IsA("Model") then
+                trackPlant(obj)
+            end
+        end)
+        
+        connections.removed = CollectionService:GetInstanceRemovedSignal("Harvestable"):Connect(function(obj)
+            if obj:IsA("Model") then
+                untrackPlant(obj)
+            end
+        end)
+        
+        connections.characterAdded = LocalPlayer.CharacterAdded:Connect(function(char)
+            Character = char
+            RootPart = char:WaitForChild("HumanoidRootPart")
+        end)
+        
+        -- Main update loop
+        connections.updateLoop = task.spawn(function()
+            while espEnabled do
+                local now = tick()
+                for model, _ in pairs(UpdateQueue) do
+                    if not model:IsDescendantOf(workspace) then
+                        untrackPlant(model)
+                    else
+                        createesp(model)
+                        removeesp(model)
+                        if ESPs[model] and now >= UpdateQueue[model] then
+                            updateESP(model)
+                            UpdateQueue[model] = now + 3 + math.random()
+                        end
+                    end
+                end
+                task.wait(0.3)
+            end
+        end)
+    end
+    
+    local function disableESP()
+        if not espEnabled then return end
+        espEnabled = false
+        
+        -- Disconnect all connections
+        for _, connection in pairs(connections) do
+            if typeof(connection) == "RBXScriptConnection" then
+                connection:Disconnect()
+            elseif typeof(connection) == "thread" then
+                task.cancel(connection)
+            end
+        end
+        connections = {}
+        
+        -- Clean up all ESPs
+        for model, esp in pairs(ESPs) do
+            esp:Destroy()
+        end
+        ESPs = {}
+        UpdateQueue = {}
+    end
+    
+    -- Return control functions
+    return {
+        enable = enableESP,
+        disable = disableESP,
+        toggle = function()
+            if espEnabled then
+                disableESP()
+            else
+                enableESP()
+            end
+        end,
+        isEnabled = function()
+            return espEnabled
+        end
+    }
+end
