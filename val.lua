@@ -1,4 +1,4 @@
--- Plant Value ESP Script with Toggle Support
+-- Plant Value ESP Script with Toggle Support (Fixed Ownership Detection)
 local Players = game:GetService("Players")
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -12,7 +12,7 @@ local RootPart = Character:WaitForChild("HumanoidRootPart")
 
 local ESPs = {}
 local UpdateQueue = {}
-local RANGE = 100
+local RANGE = 70
 local ESP_ENABLED = false
 
 local function createBillboard(model)
@@ -43,6 +43,65 @@ local function createBillboard(model)
     return billboard
 end
 
+local function isPlantOwnedByPlayer(model)
+    -- Method 1: Check direct Owner value
+    local owner = model:FindFirstChild("Owner") or model:FindFirstChild("owner")
+    if owner then
+        if owner:IsA("StringValue") then
+            return owner.Value == LocalPlayer.Name
+        elseif owner:IsA("ObjectValue") then
+            return owner.Value == LocalPlayer
+        end
+    end
+    
+    -- Method 2: Check Configuration folder
+    local config = model:FindFirstChild("Configuration")
+    if config then
+        local ownerConfig = config:FindFirstChild("Owner") or config:FindFirstChild("owner")
+        if ownerConfig then
+            if ownerConfig:IsA("StringValue") then
+                return ownerConfig.Value == LocalPlayer.Name
+            elseif ownerConfig:IsA("ObjectValue") then
+                return ownerConfig.Value == LocalPlayer
+            end
+        end
+    end
+    
+    -- Method 3: Check if plant is in player's farm area
+    local farm = nil
+    local ws = workspace
+    if ws:FindFirstChild("Farm") then
+        for _, v in next, ws.Farm:GetDescendants() do
+            if v.Name == "Owner" and v:IsA("StringValue") and v.Value == LocalPlayer.Name then
+                farm = v.Parent.Parent
+                break
+            end
+        end
+    end
+    
+    if farm then
+        -- Check if the plant is a descendant of the player's farm
+        return model:IsDescendantOf(farm)
+    end
+    
+    -- Method 4: Check parent hierarchy for ownership
+    local parent = model.Parent
+    while parent and parent ~= workspace do
+        local parentOwner = parent:FindFirstChild("Owner") or parent:FindFirstChild("owner")
+        if parentOwner then
+            if parentOwner:IsA("StringValue") then
+                return parentOwner.Value == LocalPlayer.Name
+            elseif parentOwner:IsA("ObjectValue") then
+                return parentOwner.Value == LocalPlayer
+            end
+        end
+        parent = parent.Parent
+    end
+    
+    -- If no ownership found, don't show ESP (safer approach)
+    return false
+end
+
 local function updateESP(model)
     local esp = ESPs[model]
     if not esp or not model:IsDescendantOf(workspace) then return end
@@ -52,7 +111,7 @@ local function updateESP(model)
     if infoLabel then
         local success, value = pcall(CalculatePlantValue, model)
         if success and typeof(value) == "number" then
-            -- Get weight from the model (assuming it's stored in a NumberValue or similar)
+            -- Get weight from the model
             local weight = "N/A"
             local weightValue = model:FindFirstChild("Weight") or model:FindFirstChild("weight")
             if weightValue and weightValue:IsA("NumberValue") then
@@ -93,29 +152,9 @@ local function createesp(model)
     if ESPs[model] then return end
     if not model:IsDescendantOf(workspace) then return end
     
-    -- Check if plant belongs to local player
-    local owner = model:FindFirstChild("Owner") or model:FindFirstChild("owner")
-    if owner and owner:IsA("StringValue") then
-        if owner.Value ~= LocalPlayer.Name then
-            return -- Don't create ESP for other players' plants
-        end
-    elseif owner and owner:IsA("ObjectValue") then
-        if owner.Value ~= LocalPlayer then
-            return -- Don't create ESP for other players' plants
-        end
-    else
-        -- Try to find owner in Configuration
-        local config = model:FindFirstChild("Configuration")
-        if config then
-            local ownerConfig = config:FindFirstChild("Owner") or config:FindFirstChild("owner")
-            if ownerConfig then
-                if ownerConfig:IsA("StringValue") and ownerConfig.Value ~= LocalPlayer.Name then
-                    return
-                elseif ownerConfig:IsA("ObjectValue") and ownerConfig.Value ~= LocalPlayer then
-                    return
-                end
-            end
-        end
+    -- Use the improved ownership check
+    if not isPlantOwnedByPlayer(model) then
+        return -- Don't create ESP for other players' plants
     end
     
     local part = model:FindFirstChildWhichIsA("BasePart")
@@ -141,7 +180,7 @@ end
 
 local function toggleESP(enabled)
     ESP_ENABLED = enabled
-    print("ESP toggled:", enabled) -- Debug line
+    print("ESP toggled:", enabled)
     
     if not enabled then
         -- Remove all existing ESPs
@@ -151,7 +190,7 @@ local function toggleESP(enabled)
             end
         end
         ESPs = {}
-        print("ESPs cleared") -- Debug line
+        print("ESPs cleared")
     else
         -- Create ESPs for plants in range
         local count = 0
@@ -163,7 +202,7 @@ local function toggleESP(enabled)
                 end
             end
         end
-        print("ESPs created:", count) -- Debug line
+        print("ESPs created:", count)
     end
 end
 
@@ -175,7 +214,7 @@ for _, obj in ipairs(workspace:GetDescendants()) do
         plantCount = plantCount + 1
     end
 end
-print("Found", plantCount, "harvestable plants") -- Debug line
+print("Found", plantCount, "harvestable plants")
 
 CollectionService:GetInstanceAddedSignal("Harvestable"):Connect(function(obj)
     if obj:IsA("Model") then
