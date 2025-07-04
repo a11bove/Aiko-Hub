@@ -12,47 +12,33 @@ local RootPart = Character:WaitForChild("HumanoidRootPart")
 
 local ESPs = {}
 local UpdateQueue = {}
-local RANGE = 50 
+local RANGE = 100
 local ESP_ENABLED = false
 
 local function createBillboard(model)
     local billboard = Instance.new("BillboardGui")
     billboard.Name = "esp"
-    billboard.Size = UDim2.new(0, 140, 0, 60)
+    billboard.Size = UDim2.new(0, 160, 0, 30)
     billboard.StudsOffset = Vector3.new(0, 3, 0)
     billboard.AlwaysOnTop = true
     billboard.LightInfluence = 0
     billboard.ResetOnSpawn = false
     billboard.Parent = model
     
-    -- Plant name and weight label
-    local nameWeightLabel = Instance.new("TextLabel")
-    nameWeightLabel.Name = "plantNameWeight"
-    nameWeightLabel.Size = UDim2.new(1, 0, 0.5, 0)
-    nameWeightLabel.Position = UDim2.new(0, 0, 0, 0)
-    nameWeightLabel.BackgroundTransparency = 1
-    nameWeightLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    nameWeightLabel.TextStrokeTransparency = 0
-    nameWeightLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
-    nameWeightLabel.Font = Enum.Font.GothamBold
-    nameWeightLabel.TextSize = 10
-    nameWeightLabel.Text = (model.Name or "Unknown") .. " | ..."
-    nameWeightLabel.Parent = billboard
-    
-    -- Value label
-    local valueLabel = Instance.new("TextLabel")
-    valueLabel.Name = "money"
-    valueLabel.Size = UDim2.new(1, 0, 0.5, 0)
-    valueLabel.Position = UDim2.new(0, 0, 0.5, 0)
-    valueLabel.BackgroundTransparency = 1
-    valueLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    valueLabel.TextStrokeTransparency = 0
-    valueLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
-    valueLabel.Font = Enum.Font.GothamBold
-    valueLabel.TextSize = 10
-    valueLabel.TextXAlignment = Enum.TextXAlignment.Center
-    valueLabel.Text = "..."
-    valueLabel.Parent = billboard
+    -- Single label for name | weight | price
+    local infoLabel = Instance.new("TextLabel")
+    infoLabel.Name = "plantInfo"
+    infoLabel.Size = UDim2.new(1, 0, 1, 0)
+    infoLabel.Position = UDim2.new(0, 0, 0, 0)
+    infoLabel.BackgroundTransparency = 1
+    infoLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    infoLabel.TextStrokeTransparency = 0
+    infoLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+    infoLabel.Font = Enum.Font.SourceSans
+    infoLabel.TextSize = 10
+    infoLabel.TextXAlignment = Enum.TextXAlignment.Center
+    infoLabel.Text = (model.Name or "Unknown") .. " | ... | ..."
+    infoLabel.Parent = billboard
     
     return billboard
 end
@@ -61,30 +47,30 @@ local function updateESP(model)
     local esp = ESPs[model]
     if not esp or not model:IsDescendantOf(workspace) then return end
     
-    local nameWeightLabel = esp:FindFirstChild("plantNameWeight")
-    local valueLabel = esp:FindFirstChild("money")
+    local infoLabel = esp:FindFirstChild("plantInfo")
     
-    if nameWeightLabel and valueLabel then
+    if infoLabel then
         local success, value = pcall(CalculatePlantValue, model)
         if success and typeof(value) == "number" then
             -- Get weight from the model (assuming it's stored in a NumberValue or similar)
             local weight = "N/A"
             local weightValue = model:FindFirstChild("Weight") or model:FindFirstChild("weight")
             if weightValue and weightValue:IsA("NumberValue") then
-                weight = tostring(weightValue.Value)
+                weight = math.floor(weightValue.Value) .. "kg"
             elseif weightValue and weightValue:IsA("IntValue") then
-                weight = tostring(weightValue.Value)
+                weight = weightValue.Value .. "kg"
             elseif model:FindFirstChild("Configuration") then
                 local config = model:FindFirstChild("Configuration")
                 local weightConfig = config:FindFirstChild("Weight") or config:FindFirstChild("weight")
-                if weightConfig and (weightConfig:IsA("NumberValue") or weightConfig:IsA("IntValue")) then
-                    weight = tostring(weightConfig.Value)
+                if weightConfig and weightConfig:IsA("NumberValue") then
+                    weight = math.floor(weightConfig.Value) .. "kg"
+                elseif weightConfig and weightConfig:IsA("IntValue") then
+                    weight = weightConfig.Value .. "kg"
                 end
             end
             
-            -- Update labels
-            nameWeightLabel.Text = (model.Name or "Unknown") .. " | " .. weight
-            valueLabel.Text = "$" .. tostring(value)
+            -- Update label with name | weight | price format
+            infoLabel.Text = (model.Name or "Unknown") .. " | " .. weight .. " | $" .. Comma.Comma(value)
         end
     end
 end
@@ -155,6 +141,7 @@ end
 
 local function toggleESP(enabled)
     ESP_ENABLED = enabled
+    print("ESP toggled:", enabled) -- Debug line
     
     if not enabled then
         -- Remove all existing ESPs
@@ -164,22 +151,31 @@ local function toggleESP(enabled)
             end
         end
         ESPs = {}
+        print("ESPs cleared") -- Debug line
     else
         -- Create ESPs for plants in range
+        local count = 0
         for model, _ in pairs(UpdateQueue) do
             if model:IsDescendantOf(workspace) then
                 createesp(model)
+                if ESPs[model] then
+                    count = count + 1
+                end
             end
         end
+        print("ESPs created:", count) -- Debug line
     end
 end
 
 -- Initialize plant tracking
+local plantCount = 0
 for _, obj in ipairs(workspace:GetDescendants()) do
     if obj:IsA("Model") and CollectionService:HasTag(obj, "Harvestable") then
         trackPlant(obj)
+        plantCount = plantCount + 1
     end
 end
+print("Found", plantCount, "harvestable plants") -- Debug line
 
 CollectionService:GetInstanceAddedSignal("Harvestable"):Connect(function(obj)
     if obj:IsA("Model") then
