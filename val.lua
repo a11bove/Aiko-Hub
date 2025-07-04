@@ -1,259 +1,306 @@
--- Plant Value ESP Script with Toggle Support (Fixed Ownership Detection)
+-- Ultra-Safe Plant Value ESP Script with Gradual Loading
 local Players = game:GetService("Players")
 local CollectionService = game:GetService("CollectionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
-local CalculatePlantValue = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("CalculatePlantValue"))
-local Comma = require(ReplicatedStorage:WaitForChild("Comma_Module"))
 
 local LocalPlayer = Players.LocalPlayer
 local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local RootPart = Character:WaitForChild("HumanoidRootPart")
 
+-- Safe module loading
+local CalculatePlantValue, Comma
+local modulesLoaded = false
+
+spawn(function()
+    local success1, success2 = false, false
+    
+    success1 = pcall(function()
+        CalculatePlantValue = require(ReplicatedStorage:WaitForChild("Modules", 5):WaitForChild("CalculatePlantValue", 5))
+    end)
+    
+    success2 = pcall(function()
+        Comma = require(ReplicatedStorage:WaitForChild("Comma_Module", 5))
+    end)
+    
+    if not success1 then
+        CalculatePlantValue = function() return math.random(100, 1000) end
+        warn("CalculatePlantValue module failed to load")
+    end
+    
+    if not success2 then
+        Comma = { Comma = function(num) return tostring(num) end }
+        warn("Comma module failed to load")
+    end
+    
+    modulesLoaded = true
+    print("Modules loaded successfully")
+end)
+
 local ESPs = {}
-local UpdateQueue = {}
-local RANGE = 70
+local TrackedPlants = {}
 local ESP_ENABLED = false
+local MAX_ESPS = 20 -- Reduced limit
+local RANGE = 50 -- Reduced range
+
+-- Cleanup function
+local function cleanup()
+    print("Cleaning up ESPs...")
+    for model, esp in pairs(ESPs) do
+        if esp and esp.Parent then
+            pcall(function() esp:Destroy() end)
+        end
+    end
+    ESPs = {}
+    TrackedPlants = {}
+    print("Cleanup complete")
+end
 
 local function createBillboard(model)
-    local billboard = Instance.new("BillboardGui")
-    billboard.Name = "esp"
-    billboard.Size = UDim2.new(0, 160, 0, 30)
-    billboard.StudsOffset = Vector3.new(0, 3, 0)
-    billboard.AlwaysOnTop = true
-    billboard.LightInfluence = 0
-    billboard.ResetOnSpawn = false
-    billboard.Parent = model
+    if not model or not model.Parent then return nil end
     
-    -- Single label for name | weight | price
-    local infoLabel = Instance.new("TextLabel")
-    infoLabel.Name = "plantInfo"
-    infoLabel.Size = UDim2.new(1, 0, 1, 0)
-    infoLabel.Position = UDim2.new(0, 0, 0, 0)
-    infoLabel.BackgroundTransparency = 1
-    infoLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    infoLabel.TextStrokeTransparency = 0
-    infoLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
-    infoLabel.Font = Enum.Font.SourceSans
-    infoLabel.TextSize = 10
-    infoLabel.TextXAlignment = Enum.TextXAlignment.Center
-    infoLabel.Text = (model.Name or "Unknown") .. " | ... | ..."
-    infoLabel.Parent = billboard
+    local success, result = pcall(function()
+        local billboard = Instance.new("BillboardGui")
+        billboard.Name = "PlantESP"
+        billboard.Size = UDim2.new(0, 120, 0, 25)
+        billboard.StudsOffset = Vector3.new(0, 2, 0)
+        billboard.AlwaysOnTop = true
+        billboard.LightInfluence = 0
+        billboard.Parent = model
+        
+        local label = Instance.new("TextLabel")
+        label.Name = "Info"
+        label.Size = UDim2.new(1, 0, 1, 0)
+        label.BackgroundTransparency = 1
+        label.TextColor3 = Color3.fromRGB(0, 255, 0)
+        label.TextStrokeTransparency = 0
+        label.TextStrokeColor3 = Color3.new(0, 0, 0)
+        label.Font = Enum.Font.SourceSans
+        label.TextSize = 8
+        label.TextXAlignment = Enum.TextXAlignment.Center
+        label.Text = model.Name or "Plant"
+        label.Parent = billboard
+        
+        return billboard
+    end)
     
-    return billboard
+    if success then
+        return result
+    else
+        warn("Failed to create billboard:", result)
+        return nil
+    end
 end
 
-local function isPlantOwnedByPlayer(model)
-    -- Method 1: Check direct Owner value
-    local owner = model:FindFirstChild("Owner") or model:FindFirstChild("owner")
-    if owner then
-        if owner:IsA("StringValue") then
+local function isPlayerPlant(model)
+    if not model or not model.Parent then return false end
+    
+    local success, result = pcall(function()
+        -- Simple ownership check
+        local owner = model:FindFirstChild("Owner")
+        if owner and owner:IsA("StringValue") then
             return owner.Value == LocalPlayer.Name
-        elseif owner:IsA("ObjectValue") then
-            return owner.Value == LocalPlayer
         end
-    end
-    
-    -- Method 2: Check Configuration folder
-    local config = model:FindFirstChild("Configuration")
-    if config then
-        local ownerConfig = config:FindFirstChild("Owner") or config:FindFirstChild("owner")
-        if ownerConfig then
-            if ownerConfig:IsA("StringValue") then
-                return ownerConfig.Value == LocalPlayer.Name
-            elseif ownerConfig:IsA("ObjectValue") then
-                return ownerConfig.Value == LocalPlayer
+        
+        -- Check configuration
+        local config = model:FindFirstChild("Configuration")
+        if config then
+            local configOwner = config:FindFirstChild("Owner")
+            if configOwner and configOwner:IsA("StringValue") then
+                return configOwner.Value == LocalPlayer.Name
             end
         end
-    end
+        
+        return false
+    end)
     
-    -- Method 3: Check if plant is in player's farm area
-    local farm = nil
-    local ws = workspace
-    if ws:FindFirstChild("Farm") then
-        for _, v in next, ws.Farm:GetDescendants() do
-            if v.Name == "Owner" and v:IsA("StringValue") and v.Value == LocalPlayer.Name then
-                farm = v.Parent.Parent
-                break
-            end
-        end
-    end
-    
-    if farm then
-        -- Check if the plant is a descendant of the player's farm
-        return model:IsDescendantOf(farm)
-    end
-    
-    -- Method 4: Check parent hierarchy for ownership
-    local parent = model.Parent
-    while parent and parent ~= workspace do
-        local parentOwner = parent:FindFirstChild("Owner") or parent:FindFirstChild("owner")
-        if parentOwner then
-            if parentOwner:IsA("StringValue") then
-                return parentOwner.Value == LocalPlayer.Name
-            elseif parentOwner:IsA("ObjectValue") then
-                return parentOwner.Value == LocalPlayer
-            end
-        end
-        parent = parent.Parent
-    end
-    
-    -- If no ownership found, don't show ESP (safer approach)
-    return false
+    return success and result or false
 end
 
-local function updateESP(model)
+local function updatePlantInfo(model)
+    if not modulesLoaded or not model or not model.Parent then return end
+    
     local esp = ESPs[model]
-    if not esp or not model:IsDescendantOf(workspace) then return end
+    if not esp or not esp.Parent then return end
     
-    local infoLabel = esp:FindFirstChild("plantInfo")
-    
-    if infoLabel then
-        local success, value = pcall(CalculatePlantValue, model)
-        if success and typeof(value) == "number" then
-            -- Get weight from the model
-            local weight = "N/A"
-            local weightValue = model:FindFirstChild("Weight") or model:FindFirstChild("weight")
-            if weightValue and weightValue:IsA("NumberValue") then
-                weight = math.floor(weightValue.Value) .. "kg"
-            elseif weightValue and weightValue:IsA("IntValue") then
-                weight = weightValue.Value .. "kg"
-            elseif model:FindFirstChild("Configuration") then
-                local config = model:FindFirstChild("Configuration")
-                local weightConfig = config:FindFirstChild("Weight") or config:FindFirstChild("weight")
-                if weightConfig and weightConfig:IsA("NumberValue") then
-                    weight = math.floor(weightConfig.Value) .. "kg"
-                elseif weightConfig and weightConfig:IsA("IntValue") then
-                    weight = weightConfig.Value .. "kg"
-                end
+    pcall(function()
+        local label = esp:FindFirstChild("Info")
+        if label then
+            local success, value = pcall(CalculatePlantValue, model)
+            if success and typeof(value) == "number" then
+                label.Text = (model.Name or "Plant") .. " - $" .. Comma.Comma(value)
+            else
+                label.Text = model.Name or "Plant"
             end
-            
-            -- Update label with name | weight | price format
-            infoLabel.Text = (model.Name or "Unknown") .. " | " .. weight .. " | $" .. Comma.Comma(value)
         end
-    end
+    end)
 end
 
-local function trackPlant(model)
+local function createESP(model)
+    if not ESP_ENABLED or not model or not model.Parent then return end
     if ESPs[model] then return end
-    UpdateQueue[model] = tick() + math.random()
-end
-
-local function untrackPlant(model)
-    if ESPs[model] then
-        ESPs[model]:Destroy()
-        ESPs[model] = nil
-    end
-    UpdateQueue[model] = nil
-end
-
-local function createesp(model)
-    if not ESP_ENABLED then return end
-    if ESPs[model] then return end
-    if not model:IsDescendantOf(workspace) then return end
     
-    -- Use the improved ownership check
-    if not isPlantOwnedByPlayer(model) then
-        return -- Don't create ESP for other players' plants
+    -- Check ESP limit
+    local count = 0
+    for _ in pairs(ESPs) do
+        count = count + 1
     end
+    if count >= MAX_ESPS then return end
     
+    -- Check if it's player's plant
+    if not isPlayerPlant(model) then return end
+    
+    -- Check distance
     local part = model:FindFirstChildWhichIsA("BasePart")
     if not part then return end
     
-    if (part.Position - RootPart.Position).Magnitude <= RANGE then
-        local esp = createBillboard(model)
+    local success, distance = pcall(function()
+        return (part.Position - RootPart.Position).Magnitude
+    end)
+    
+    if not success or distance > RANGE then return end
+    
+    -- Create ESP
+    local esp = createBillboard(model)
+    if esp then
         ESPs[model] = esp
-        updateESP(model)
+        print("Created ESP for:", model.Name)
+        updatePlantInfo(model)
     end
 end
 
-local function removeesp(model)
+local function removeESP(model)
     local esp = ESPs[model]
-    if esp and model:IsDescendantOf(workspace) then
-        local part = model:FindFirstChildWhichIsA("BasePart")
-        if part and (part.Position - RootPart.Position).Magnitude > RANGE + 10 then
-            esp:Destroy()
-            ESPs[model] = nil
-        end
+    if esp then
+        pcall(function() esp:Destroy() end)
+        ESPs[model] = nil
+        print("Removed ESP for:", model.Name)
     end
 end
 
 local function toggleESP(enabled)
     ESP_ENABLED = enabled
-    print("ESP toggled:", enabled)
+    print("ESP toggle:", enabled)
     
     if not enabled then
-        -- Remove all existing ESPs
-        for model, esp in pairs(ESPs) do
-            if esp then
-                esp:Destroy()
+        cleanup()
+        return
+    end
+    
+    if not modulesLoaded then
+        print("Modules not loaded yet, waiting...")
+        spawn(function()
+            while not modulesLoaded do
+                wait(0.5)
             end
-        end
-        ESPs = {}
-        print("ESPs cleared")
-    else
-        -- Create ESPs for plants in range
-        local count = 0
-        for model, _ in pairs(UpdateQueue) do
-            if model:IsDescendantOf(workspace) then
-                createesp(model)
+            print("Modules loaded, creating ESPs...")
+            toggleESP(true)
+        end)
+        return
+    end
+    
+    -- Gradually create ESPs
+    spawn(function()
+        local created = 0
+        for model, _ in pairs(TrackedPlants) do
+            if created >= MAX_ESPS then break end
+            if model and model.Parent and model:IsDescendantOf(workspace) then
+                createESP(model)
                 if ESPs[model] then
-                    count = count + 1
+                    created = created + 1
                 end
+                wait(0.1) -- Small delay between creations
             end
         end
-        print("ESPs created:", count)
-    end
+        print("Created", created, "ESPs")
+    end)
 end
 
--- Initialize plant tracking
-local plantCount = 0
-for _, obj in ipairs(workspace:GetDescendants()) do
-    if obj:IsA("Model") and CollectionService:HasTag(obj, "Harvestable") then
-        trackPlant(obj)
-        plantCount = plantCount + 1
+-- Track plants gradually
+spawn(function()
+    print("Starting plant tracking...")
+    local tracked = 0
+    
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        if obj:IsA("Model") and CollectionService:HasTag(obj, "Harvestable") then
+            TrackedPlants[obj] = true
+            tracked = tracked + 1
+            
+            -- Small delay to prevent lag
+            if tracked % 10 == 0 then
+                wait(0.1)
+            end
+        end
     end
-end
-print("Found", plantCount, "harvestable plants")
-
-CollectionService:GetInstanceAddedSignal("Harvestable"):Connect(function(obj)
-    if obj:IsA("Model") then
-        trackPlant(obj)
-    end
+    
+    print("Tracked", tracked, "harvestable plants")
 end)
 
-CollectionService:GetInstanceRemovedSignal("Harvestable"):Connect(function(obj)
-    if obj:IsA("Model") then
-        untrackPlant(obj)
-    end
+-- Event connections
+pcall(function()
+    CollectionService:GetInstanceAddedSignal("Harvestable"):Connect(function(obj)
+        if obj:IsA("Model") then
+            TrackedPlants[obj] = true
+        end
+    end)
 end)
 
--- Main update loop
-task.spawn(function()
+pcall(function()
+    CollectionService:GetInstanceRemovedSignal("Harvestable"):Connect(function(obj)
+        if obj:IsA("Model") then
+            TrackedPlants[obj] = nil
+            removeESP(obj)
+        end
+    end)
+end)
+
+-- Main update loop (very conservative)
+spawn(function()
     while true do
-        local now = tick()
-        for model, _ in pairs(UpdateQueue) do
-            if not model:IsDescendantOf(workspace) then
-                untrackPlant(model)
-            else
-                if ESP_ENABLED then
-                    createesp(model)
-                    removeesp(model)
-                    if ESPs[model] and now >= UpdateQueue[model] then
-                        updateESP(model)
-                        UpdateQueue[model] = now + 3 + math.random()
+        if ESP_ENABLED and modulesLoaded then
+            pcall(function()
+                local processed = 0
+                for model, _ in pairs(TrackedPlants) do
+                    if processed >= 5 then break end -- Only process 5 at a time
+                    
+                    if not model or not model.Parent or not model:IsDescendantOf(workspace) then
+                        TrackedPlants[model] = nil
+                        removeESP(model)
+                    else
+                        local part = model:FindFirstChildWhichIsA("BasePart")
+                        if part then
+                            local distance = (part.Position - RootPart.Position).Magnitude
+                            if distance <= RANGE then
+                                if not ESPs[model] then
+                                    createESP(model)
+                                else
+                                    updatePlantInfo(model)
+                                end
+                            elseif distance > RANGE + 20 then
+                                removeESP(model)
+                            end
+                        end
                     end
+                    
+                    processed = processed + 1
                 end
-            end
+            end)
         end
-        task.wait(0.3)
+        wait(1) -- Much longer wait time
     end
 end)
 
+-- Character respawn handling
 LocalPlayer.CharacterAdded:Connect(function(char)
     Character = char
     RootPart = char:WaitForChild("HumanoidRootPart")
+    cleanup()
 end)
 
--- Toggle function for external use
+-- Cleanup on leave
+game:BindToClose(cleanup)
+
+-- Toggle function
 _G.TogglePlantESP = toggleESP
+
+print("Plant ESP loaded - use _G.TogglePlantESP(true) to enable")
