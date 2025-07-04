@@ -18,26 +18,26 @@ local ESP_ENABLED = false
 local function createBillboard(model)
     local billboard = Instance.new("BillboardGui")
     billboard.Name = "esp"
-    billboard.Size = UDim2.new(0, 120, 0, 40)
+    billboard.Size = UDim2.new(0, 140, 0, 60)
     billboard.StudsOffset = Vector3.new(0, 3, 0)
     billboard.AlwaysOnTop = true
     billboard.LightInfluence = 0
     billboard.ResetOnSpawn = false
     billboard.Parent = model
     
-    -- Plant name label
-    local nameLabel = Instance.new("TextLabel")
-    nameLabel.Name = "plantName"
-    nameLabel.Size = UDim2.new(1, 0, 0.5, 0)
-    nameLabel.Position = UDim2.new(0, 0, 0, 0)
-    nameLabel.BackgroundTransparency = 1
-    nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    nameLabel.TextStrokeTransparency = 0.5
-    nameLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
-    nameLabel.Font = Enum.Font.Cartoon
-    nameLabel.TextSize = 10
-    nameLabel.Text = model.Name or "Unknown Plant"
-    nameLabel.Parent = billboard
+    -- Plant name and weight label
+    local nameWeightLabel = Instance.new("TextLabel")
+    nameWeightLabel.Name = "plantNameWeight"
+    nameWeightLabel.Size = UDim2.new(1, 0, 0.5, 0)
+    nameWeightLabel.Position = UDim2.new(0, 0, 0, 0)
+    nameWeightLabel.BackgroundTransparency = 1
+    nameWeightLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    nameWeightLabel.TextStrokeTransparency = 0
+    nameWeightLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+    nameWeightLabel.Font = Enum.Font.GothamBold
+    nameWeightLabel.TextSize = 10
+    nameWeightLabel.Text = (model.Name or "Unknown") .. " | ..."
+    nameWeightLabel.Parent = billboard
     
     -- Value label
     local valueLabel = Instance.new("TextLabel")
@@ -46,10 +46,11 @@ local function createBillboard(model)
     valueLabel.Position = UDim2.new(0, 0, 0.5, 0)
     valueLabel.BackgroundTransparency = 1
     valueLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    valueLabel.TextStrokeTransparency = 0.5
+    valueLabel.TextStrokeTransparency = 0
     valueLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
-    valueLabel.Font = Enum.Font.Cartoon
+    valueLabel.Font = Enum.Font.GothamBold
     valueLabel.TextSize = 10
+    valueLabel.TextXAlignment = Enum.TextXAlignment.Center
     valueLabel.Text = "..."
     valueLabel.Parent = billboard
     
@@ -60,11 +61,30 @@ local function updateESP(model)
     local esp = ESPs[model]
     if not esp or not model:IsDescendantOf(workspace) then return end
     
+    local nameWeightLabel = esp:FindFirstChild("plantNameWeight")
     local valueLabel = esp:FindFirstChild("money")
-    if valueLabel then
+    
+    if nameWeightLabel and valueLabel then
         local success, value = pcall(CalculatePlantValue, model)
         if success and typeof(value) == "number" then
-            valueLabel.Text = Comma.Comma(value) .. "¢"
+            -- Get weight from the model (assuming it's stored in a NumberValue or similar)
+            local weight = "N/A"
+            local weightValue = model:FindFirstChild("Weight") or model:FindFirstChild("weight")
+            if weightValue and weightValue:IsA("NumberValue") then
+                weight = tostring(weightValue.Value)
+            elseif weightValue and weightValue:IsA("IntValue") then
+                weight = tostring(weightValue.Value)
+            elseif model:FindFirstChild("Configuration") then
+                local config = model:FindFirstChild("Configuration")
+                local weightConfig = config:FindFirstChild("Weight") or config:FindFirstChild("weight")
+                if weightConfig and (weightConfig:IsA("NumberValue") or weightConfig:IsA("IntValue")) then
+                    weight = tostring(weightConfig.Value)
+                end
+            end
+            
+            -- Update labels
+            nameWeightLabel.Text = (model.Name or "Unknown") .. " | " .. weight
+            valueLabel.Text = "$" .. tostring(value)
         end
     end
 end
@@ -86,6 +106,31 @@ local function createesp(model)
     if not ESP_ENABLED then return end
     if ESPs[model] then return end
     if not model:IsDescendantOf(workspace) then return end
+    
+    -- Check if plant belongs to local player
+    local owner = model:FindFirstChild("Owner") or model:FindFirstChild("owner")
+    if owner and owner:IsA("StringValue") then
+        if owner.Value ~= LocalPlayer.Name then
+            return -- Don't create ESP for other players' plants
+        end
+    elseif owner and owner:IsA("ObjectValue") then
+        if owner.Value ~= LocalPlayer then
+            return -- Don't create ESP for other players' plants
+        end
+    else
+        -- Try to find owner in Configuration
+        local config = model:FindFirstChild("Configuration")
+        if config then
+            local ownerConfig = config:FindFirstChild("Owner") or config:FindFirstChild("owner")
+            if ownerConfig then
+                if ownerConfig:IsA("StringValue") and ownerConfig.Value ~= LocalPlayer.Name then
+                    return
+                elseif ownerConfig:IsA("ObjectValue") and ownerConfig.Value ~= LocalPlayer then
+                    return
+                end
+            end
+        end
+    end
     
     local part = model:FindFirstChildWhichIsA("BasePart")
     if not part then return end
@@ -112,6 +157,7 @@ local function toggleESP(enabled)
     ESP_ENABLED = enabled
     
     if not enabled then
+        -- Remove all existing ESPs
         for model, esp in pairs(ESPs) do
             if esp then
                 esp:Destroy()
@@ -119,6 +165,7 @@ local function toggleESP(enabled)
         end
         ESPs = {}
     else
+        -- Create ESPs for plants in range
         for model, _ in pairs(UpdateQueue) do
             if model:IsDescendantOf(workspace) then
                 createesp(model)
@@ -127,6 +174,7 @@ local function toggleESP(enabled)
     end
 end
 
+-- Initialize plant tracking
 for _, obj in ipairs(workspace:GetDescendants()) do
     if obj:IsA("Model") and CollectionService:HasTag(obj, "Harvestable") then
         trackPlant(obj)
@@ -145,6 +193,7 @@ CollectionService:GetInstanceRemovedSignal("Harvestable"):Connect(function(obj)
     end
 end)
 
+-- Main update loop
 task.spawn(function()
     while true do
         local now = tick()
@@ -171,4 +220,5 @@ LocalPlayer.CharacterAdded:Connect(function(char)
     RootPart = char:WaitForChild("HumanoidRootPart")
 end)
 
+-- Toggle function for external use
 _G.TogglePlantESP = toggleESP
