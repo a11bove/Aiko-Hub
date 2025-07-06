@@ -319,9 +319,9 @@ if Response and Response.guild then
 			Tabs.Info:Paragraph(
 			{
 					Title = Response.guild.name,
-					Desc = ' <font color="#52525b">â¢</font> Member Count : ' ..
+					Desc = ' <font color="#52525b">•</font> Member Count : ' ..
 							tostring(Response.approximate_member_count) ..
-									'\n <font color="#16a34a">â¢</font> Online Count : ' .. tostring(Response.approximate_presence_count),
+									'\n <font color="#16a34a">•</font> Online Count : ' .. tostring(Response.approximate_presence_count),
 					Image = "https://cdn.discordapp.com/icons/" ..
 							Response.guild.id .. "/" .. Response.guild.icon .. ".png?size=1024",
 					ImageSize = 50
@@ -345,9 +345,9 @@ if Response and Response.guild then
 
 							if UpdatedResponse and UpdatedResponse and UpdatedResponse.guild then
 									DiscordInfo:SetDesc(
-											' <font color="#52525b">â¢</font> Member Count : ' ..
+											' <font color="#52525b">•</font> Member Count : ' ..
 													tostring(UpdatedResponse.approximate_member_count) ..
-															'\n <font color="#16a34a">â¢</font> Online Count : ' ..
+															'\n <font color="#16a34a">•</font> Online Count : ' ..
 																	tostring(UpdatedResponse.approximate_presence_count)
 									)
 									ui:Notify(
