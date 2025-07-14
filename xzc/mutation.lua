@@ -55,7 +55,13 @@ local config = {
         ["OldAmber"] = false,
         ["Sandy"] = false,
         ["AncientAmber"] = false,
-        ["Ceramic"] = false
+        ["Ceramic"] = false,
+        ["Tempestuous"] = false,
+        ["Wiltproof"] = false,
+        ["Infected"] = false,
+        ["Friendbound"] = false,
+        ["Paradisal"] = false,
+        ["Cloudtouched"] = false
     },
     showTextLabels = true,
     showGlowEffects = true
@@ -70,56 +76,7 @@ local mutationOptions = {
     "Meteoric", "Molten", "Voidtouched", "Dawnbound", "Alienlike",
     "Galactic", "Plasma", "Heavenly", "Disco", "Pollinated", "HoneyGlazed",
     "Verdant", "Choc", "Burnt", "Cooked", "Zombified", "Gold", "Rainbow",
-    "Ripe", "Paradisal", "Fried", "Clay", "Amber", "OldAmber", "Sandy", "AncientAmber", "Ceramic"
-}
-
-local mutationColors = {
-    Wet = Color3.fromRGB(0, 120, 255),
-    Chilled = Color3.fromRGB(0, 255, 255),
-    Moonlit = Color3.fromRGB(160, 32, 240),
-    Windstruck = Color3.fromRGB(173, 216, 230),
-    Bloodlit = Color3.fromRGB(200, 0, 0),
-    Drenched = Color3.fromRGB(0, 100, 200),
-    Twisted = Color3.fromRGB(128, 0, 128),
-    Frozen = Color3.fromRGB(135, 206, 250),
-    Shocked = Color3.fromRGB(255, 255, 0),
-    Sundried = Color3.fromRGB(255, 165, 0),
-    Aurora = Color3.fromRGB(0, 255, 127),
-    Celestial = Color3.fromRGB(200, 150, 255),
-    Meteoric = Color3.fromRGB(255, 69, 0),
-    Molten = Color3.fromRGB(255, 140, 0),
-    Voidtouched = Color3.fromRGB(75, 0, 130),
-    Dawnbound = Color3.fromRGB(255, 218, 185),
-    Alienlike = Color3.fromRGB(50, 205, 50),
-    Galactic = Color3.fromRGB(72, 61, 139),
-    Plasma = Color3.fromRGB(0, 255, 127),
-    Heavenly = Color3.fromRGB(255, 255, 255),
-    Disco = Color3.fromRGB(255, 0, 255),
-    Pollinated = Color3.fromRGB(255, 255, 0),
-    HoneyGlazed = Color3.fromRGB(255, 215, 0),
-    Verdant = Color3.fromRGB(34, 139, 34),
-    Choc = Color3.fromRGB(139, 69, 19),
-    Burnt = Color3.fromRGB(139, 69, 19),
-    Cooked = Color3.fromRGB(160, 82, 45),
-    Zombified = Color3.fromRGB(75, 83, 32),
-    Gold = Color3.fromRGB(255, 215, 0),
-    Rainbow = Color3.fromRGB(255, 255, 255),
-    Ripe = Color3.fromRGB(255, 20, 147),
-    Paradisal = Color3.fromRGB(255, 192, 203),
-    Fried = Color3.fromRGB(255, 140, 0),
-    Clay = Color3.fromRGB(178, 132, 98),
-    Amber = Color3.fromRGB(255, 191, 0),
-    OldAmber = Color3.fromRGB(205, 133, 63),
-    Sandy = Color3.fromRGB(237, 201, 175),
-    AncientAmber = Color3.fromRGB(165, 42, 42),
-    Ceramic = Color3.fromRGB(210, 180, 140),
-    Cloudtouched = Color2.fromRGB(255, 255, 255),
-    Infected = Color3.fromRGB(0, 100, 0),
-    Sandy = Color3.fromRGB(237, 201, 175),
-    Tempestuous = Color3.fromRGB(0, 0, 255),
-    Wiltproof = Color3.fromRGB(0, 255, 0),
-    Friendbound = Color3.fromRGB(255, 0, 0),
-    Paradisal = Color3.fromRGB(255, 192, 203)
+    "Ripe", "Paradisal", "Fried", "Clay", "Amber", "OldAmber", "Sandy", "AncientAmber", "Ceramic", "Tempestuous", "Wiltproof", "Infected", "Friendbound", "Paradisal", "Cloudtouched"
 }
 
 local rarityTiers = {
@@ -134,7 +91,7 @@ local rarityTiers = {
     {
         mutations = {
             "Rainbow", "Moonlit", "Bloodlit", "Plasma", "Disco", "Windstruck",
-            "Drenched", "Twisted", "Aurora", "Molten", "Alienlike", "Heavenly", "Friendbound", "Verdant", "Sundried", "Tempestuous", "Wiltproof", "Sandy"
+            "Drenched", "Twisted", "Aurora", "Molten", "Alienlike", "Heavenly", "Friendbound", "Verdant", "Sundried", "Tempestuous", "Wiltproof"
         },
         tier = 3
     },
@@ -168,7 +125,7 @@ local function cleanupESP()
     processedFruits = {}
 end
 
-local function createGlowEffect(baseColor, parent)
+local function createGlowEffect(parent)
     local glow = Instance.new("BillboardGui")
     glow.Name = "GlowEffect"
     glow.Size = UDim2.fromOffset(6, 6)
@@ -179,7 +136,7 @@ local function createGlowEffect(baseColor, parent)
     image.Size = UDim2.fromScale(1, 1)
     image.BackgroundTransparency = 1
     image.Image = "rbxassetid://1316045217"
-    image.ImageColor3 = baseColor
+    image.ImageColor3 = Color3.fromRGB(255, 255, 255)
     image.ImageTransparency = 0.2
     image.Parent = glow
 
@@ -215,7 +172,7 @@ local function createESP(fruitModel)
         end
     end
 
-    local espColor = mutationColors[primaryMutation] or Color3.fromRGB(255, 255, 255)
+    local espColor = Color3.fromRGB(255, 255, 255)
     local espObjects_current = {}
 
     local highlight = Instance.new("Highlight")
@@ -284,7 +241,7 @@ local function createESP(fruitModel)
         end
 
         if config.showGlowEffects and highestTier >= 2 then
-            local glow = createGlowEffect(espColor, primaryPart)
+            local glow = createGlowEffect(primaryPart)
             glow.Parent = fruitModel
             table.insert(espObjects_current, glow)
 
@@ -295,7 +252,7 @@ local function createESP(fruitModel)
                     orb.Shape = Enum.PartType.Ball
                     orb.Size = Vector3.new(0.3, 0.3, 0.3)
                     orb.Material = Enum.Material.Neon
-                    orb.Color = espColor
+                    orb.Color = Color3.fromRGB(255, 255, 255)
                     orb.CanCollide = false
                     orb.Anchored = true
                     orb.Transparency = 0.3
