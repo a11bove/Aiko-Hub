@@ -220,6 +220,26 @@ local function createESP(fruitModel)
     local espColor = mutationColors[primaryMutation] or Color3.fromRGB(255, 255, 255)
     local espObjects_current = {}
 
+    local highlight = Instance.new("Highlight")
+    highlight.Name = "MutationESP_Highlight"
+    highlight.FillTransparency = 0.7
+    highlight.OutlineColor = espColor
+    highlight.FillColor = espColor
+    highlight.OutlineTransparency = 0
+    highlight.DepthMode = Enum.HighlightDepthMode.Occluded
+    highlight.Adornee = fruitModel
+    highlight.Parent = fruitModel
+    table.insert(espObjects_current, highlight)
+
+    if config.showGlowEffects and highestTier >= 3 then
+        local tweenInfo = TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
+        local pulseUp = TweenService:Create(highlight, tweenInfo, {
+            OutlineTransparency = 0.5,
+            FillTransparency = 0.9
+        })
+        pulseUp:Play()
+    end
+
     local primaryPart = fruitModel.PrimaryPart or fruitModel:FindFirstChildWhichIsA("BasePart")
     if primaryPart then
         if config.showTextLabels then
