@@ -55,10 +55,10 @@ local config = {
         ["OldAmber"] = false,
         ["Sandy"] = false,
         ["AncientAmber"] = false,
-        ["Ceramic"] = false,
+        ["Ceramic"] = false
+        ["Infected"] = false,
         ["Tempestuous"] = false,
         ["Wiltproof"] = false,
-        ["Infected"] = false,
         ["Friendbound"] = false
     },
     showTextLabels = true,
@@ -69,108 +69,79 @@ local espObjects = {}
 local processedFruits = {}
 
 local mutationOptions = {
-    "Wet",
-    "Chilled",
-    "Moonlit",
-    "Windstruck",
-    "Bloodlit",
-    "Drenched",
-    "Twisted",
-    "Frozen",
-    "Shocked",
-    "Sundried",
-    "Aurora",
-    "Celestial",
-    "Meteoric",
-    "Molten",
-    "Voidtouched",
-    "Dawnbound",
-    "Alienlike",
-    "Galactic",
-    "Plasma",
-    "Heavenly",
-    "Disco",
-    "Pollinated",
-    "HoneyGlazed",
-    "Verdant",
-    "Choc",
-    "Burnt",
-    "Cooked",
-    "Zombified",
-    "Gold",
-    "Rainbow",
-    "Ripe",
-    "Paradisal",
-    "Fried",
-    "Clay",
-    "Amber",
-    "OldAmber",
-    "Sandy",
-    "AncientAmber",
-    "Ceramic",
-    "Tempestuous",
-    "Wiltproof",
-    "Infected",
-    "Friendbound",
-    "Cloudtouched"
+    "Wet", "Chilled", "Moonlit", "Windstruck", "Bloodlit", "Drenched",
+    "Twisted", "Frozen", "Shocked", "Sundried", "Aurora", "Celestial",
+    "Meteoric", "Molten", "Voidtouched", "Dawnbound", "Alienlike",
+    "Galactic", "Plasma", "Heavenly", "Disco", "Pollinated", "HoneyGlazed",
+    "Verdant", "Choc", "Burnt", "Cooked", "Zombified", "Gold", "Rainbow",
+    "Ripe", "Paradisal", "Fried", "Clay", "Amber", "OldAmber", "Sandy", "AncientAmber", "Ceramic", "Cloudtouched", "Infected", "Tempestuous", "Wiltproof", "Friendbound"
+}
+
+local mutationColors = {
+    Wet = Color3.fromRGB(0, 120, 255),
+    Chilled = Color3.fromRGB(0, 255, 255),
+    Moonlit = Color3.fromRGB(160, 32, 240),
+    Windstruck = Color3.fromRGB(173, 216, 230),
+    Bloodlit = Color3.fromRGB(200, 0, 0),
+    Drenched = Color3.fromRGB(0, 100, 200),
+    Twisted = Color3.fromRGB(128, 0, 128),
+    Frozen = Color3.fromRGB(135, 206, 250),
+    Shocked = Color3.fromRGB(255, 255, 0),
+    Sundried = Color3.fromRGB(255, 165, 0),
+    Aurora = Color3.fromRGB(0, 255, 127),
+    Celestial = Color3.fromRGB(200, 150, 255),
+    Meteoric = Color3.fromRGB(255, 69, 0),
+    Molten = Color3.fromRGB(255, 140, 0),
+    Voidtouched = Color3.fromRGB(75, 0, 130),
+    Dawnbound = Color3.fromRGB(255, 218, 185),
+    Alienlike = Color3.fromRGB(50, 205, 50),
+    Galactic = Color3.fromRGB(72, 61, 139),
+    Plasma = Color3.fromRGB(0, 255, 127),
+    Heavenly = Color3.fromRGB(255, 255, 255),
+    Disco = Color3.fromRGB(255, 0, 255),
+    Pollinated = Color3.fromRGB(255, 255, 0),
+    HoneyGlazed = Color3.fromRGB(255, 215, 0),
+    Verdant = Color3.fromRGB(34, 139, 34),
+    Choc = Color3.fromRGB(139, 69, 19),
+    Burnt = Color3.fromRGB(139, 69, 19),
+    Cooked = Color3.fromRGB(160, 82, 45),
+    Zombified = Color3.fromRGB(75, 83, 32),
+    Gold = Color3.fromRGB(255, 215, 0),
+    Rainbow = Color3.fromRGB(255, 255, 255),
+    Ripe = Color3.fromRGB(255, 20, 147),
+    Paradisal = Color3.fromRGB(255, 192, 203),
+    Fried = Color3.fromRGB(255, 140, 0),
+    Clay = Color3.fromRGB(178, 132, 98),
+    Amber = Color3.fromRGB(255, 191, 0),
+    OldAmber = Color3.fromRGB(205, 133, 63),
+    Sandy = Color3.fromRGB(237, 201, 175),
+    AncientAmber = Color3.fromRGB(165, 42, 42),
+    Ceramic = Color3.fromRGB(210, 180, 140),
+    Cloudtouched = Color3.fromRGB(255, 255, 255),
+    Infected = Color3.fromRGB(0, 100, 0),
+    Tempestuous = Color3.fromRGB(0, 0, 255),
+    Wiltproof = Color3.fromRGB(0, 255, 0),
+    Friendbound = Color3.fromRGB(255, 0, 0)
 }
 
 local rarityTiers = {
     {mutations = {"Wet", "Ripe"}, tier = 1},
     {
         mutations = {
-            "Gold",
-            "Frozen",
-            "Choc",
-            "Chilled",
-            "Shocked",
-            "Burnt",
-            "Cooked",
-            "Pollinated",
-            "HoneyGlazed",
-            "Cloudtouched"
+            "Gold", "Frozen", "Choc", "Chilled", "Shocked", "Burnt",
+            "Cooked", "Pollinated", "HoneyGlazed", "Cloudtouched"
         },
         tier = 2
     },
     {
         mutations = {
-            "Rainbow",
-            "Moonlit",
-            "Bloodlit",
-            "Plasma",
-            "Disco",
-            "Windstruck",
-            "Drenched",
-            "Twisted",
-            "Aurora",
-            "Molten",
-            "Alienlike",
-            "Heavenly",
-            "Friendbound",
-            "Verdant",
-            "Sundried",
-            "Tempestuous",
-            "Wiltproof"
+            "Rainbow", "Moonlit", "Bloodlit", "Plasma", "Disco", "Windstruck",
+            "Drenched", "Twisted", "Aurora", "Molten", "Alienlike", "Heavenly", "Friendbound", "Verdant", "Sundried", "Tempestuous", "Wiltproof", "Sandy"
         },
         tier = 3
     },
     {
-        mutations = {
-            "Celestial",
-            "Zombified",
-            "Meteoric",
-            "Voidtouched",
-            "Dawnbound",
-            "Galactic",
-            "Paradisal",
-            "Fried",
-            "Clay",
-            "Amber",
-            "Sandy",
-            "OldAmber",
-            "AncientAmber",
-            "Ceramic",
-            "Infected"
+        mutations = {"Celestial", "Zombified", "Meteoric", "Voidtouched", "Dawnbound", "Galactic", "Paradisal", "Fried", "Clay", "Amber", "Sandy", "OldAmber", "AncientAmber", "Ceramic", "Paradisal", "Infected"
         },
         tier = 4
     }
@@ -186,13 +157,11 @@ local function getMutationTier(mutation)
 end
 
 local function cleanupESP()
-    for fruitModel, objList in pairs(espObjects) do
-        if objList and typeof(objList) == "table" then
-            for _, obj in pairs(objList) do
-                if obj and obj.Parent then
-                    pcall(function()
-                        obj:Destroy()
-                    end)
+    for _, obj in pairs(espObjects) do
+        if obj and typeof(obj) == "table" then
+            for _, item in pairs(obj) do
+                if item and item.Parent then
+                    item:Destroy()
                 end
             end
         end
@@ -201,11 +170,7 @@ local function cleanupESP()
     processedFruits = {}
 end
 
-local function createGlowEffect(parent)
-    if not parent or not parent.Parent then
-        return nil
-    end
-    
+local function createGlowEffect(baseColor, parent)
     local glow = Instance.new("BillboardGui")
     glow.Name = "GlowEffect"
     glow.Size = UDim2.fromOffset(6, 6)
@@ -216,7 +181,7 @@ local function createGlowEffect(parent)
     image.Size = UDim2.fromScale(1, 1)
     image.BackgroundTransparency = 1
     image.Image = "rbxassetid://1316045217"
-    image.ImageColor3 = Color3.fromRGB(255, 255, 255)
+    image.ImageColor3 = baseColor
     image.ImageTransparency = 0.2
     image.Parent = glow
 
@@ -225,11 +190,6 @@ end
 
 local function createESP(fruitModel)
     if not config.espEnabled or not fruitModel or not fruitModel:IsA("Model") or processedFruits[fruitModel] then
-        return
-    end
-
-    -- Check if fruitModel still exists and has a parent
-    if not fruitModel.Parent then
         return
     end
 
@@ -257,120 +217,85 @@ local function createESP(fruitModel)
         end
     end
 
-    local espColor = Color3.fromRGB(255, 255, 255)
+    local espColor = mutationColors[primaryMutation] or Color3.fromRGB(255, 255, 255)
     local espObjects_current = {}
 
-    -- Create highlight with error handling
-    pcall(function()
-        local highlight = Instance.new("Highlight")
-        highlight.Name = "MutationESP_Highlight"
-        highlight.FillTransparency = 0.7
-        highlight.OutlineColor = espColor
-        highlight.FillColor = espColor
-        highlight.OutlineTransparency = 0
-        highlight.DepthMode = Enum.HighlightDepthMode.Occluded
-        highlight.Adornee = fruitModel
-        highlight.Parent = fruitModel
-        table.insert(espObjects_current, highlight)
-
-        if config.showGlowEffects and highestTier >= 3 then
-            local tweenInfo = TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true)
-            local pulseUp = TweenService:Create(
-                highlight,
-                tweenInfo,
-                {
-                    OutlineTransparency = 0.5,
-                    FillTransparency = 0.9
-                }
-            )
-            pulseUp:Play()
-        end
-    end)
-
     local primaryPart = fruitModel.PrimaryPart or fruitModel:FindFirstChildWhichIsA("BasePart")
-    if primaryPart and primaryPart.Parent then
+    if primaryPart then
         if config.showTextLabels then
-            pcall(function()
-                local billboard = Instance.new("BillboardGui")
-                billboard.Name = "MutationESP_Billboard"
-                billboard.Adornee = primaryPart
-                billboard.Size = UDim2.fromOffset(150, 30)
-                billboard.StudsOffset = Vector3.new(0, 2, 0)
-                billboard.AlwaysOnTop = true
-                billboard.MaxDistance = 70
+            local billboard = Instance.new("BillboardGui")
+            billboard.Name = "MutationESP_Billboard"
+            billboard.Adornee = primaryPart
+            billboard.Size = UDim2.fromOffset(150, 30)
+            billboard.StudsOffset = Vector3.new(0, 2, 0)
+            billboard.AlwaysOnTop = true
+            billboard.MaxDistance = 100
 
-                local frame = Instance.new("Frame")
-                frame.Size = UDim2.fromScale(1, 1)
-                frame.BackgroundTransparency = 1
+            local frame = Instance.new("Frame")
+            frame.Size = UDim2.fromScale(1, 1)
+            frame.BackgroundTransparency = 1
 
-                local nameLabel = Instance.new("TextLabel")
-                nameLabel.Size = UDim2.new(1, 0, 0.4, 0)
-                nameLabel.Position = UDim2.new(0, 0, 0, 2)
-                nameLabel.BackgroundTransparency = 1
-                nameLabel.Text = fruitModel.Name or "Unknown"
-                nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-                nameLabel.TextSize = 13
-                nameLabel.Font = Enum.Font.SourceSans
-                nameLabel.TextStrokeTransparency = 0
-                nameLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-                nameLabel.Parent = frame
+            local nameLabel = Instance.new("TextLabel")
+            nameLabel.Size = UDim2.new(1, 0, 0.4, 0)
+            nameLabel.Position = UDim2.new(0, 0, 0, 2)
+            nameLabel.BackgroundTransparency = 1
+            nameLabel.Text = fruitModel.Name
+            nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            nameLabel.TextSize = 14
+            nameLabel.Font = Enum.Font.SourceSans
+            nameLabel.TextStrokeTransparency = 0
+            nameLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+            nameLabel.Parent = frame
 
-                local mutationText = table.concat(activeMutations, " + ")
-                local mutationLabel = Instance.new("TextLabel")
-                mutationLabel.Size = UDim2.new(1, 0, 0.6, 0)
-                mutationLabel.Position = UDim2.new(0, 0, 0.4, 0)
-                mutationLabel.BackgroundTransparency = 1
-                mutationLabel.Text = mutationText
-                mutationLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-                mutationLabel.TextSize = 13
-                mutationLabel.Font = Enum.Font.SourceSans
-                mutationLabel.TextStrokeTransparency = 0
-                mutationLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-                mutationLabel.Parent = frame
+            local mutationText = table.concat(activeMutations, " + ")
+            local mutationLabel = Instance.new("TextLabel")
+            mutationLabel.Size = UDim2.new(1, 0, 0.6, 0)
+            mutationLabel.Position = UDim2.new(0, 0, 0.4, 0)
+            mutationLabel.BackgroundTransparency = 1
+            mutationLabel.Text = mutationText
+            mutationLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            mutationLabel.TextSize = 14
+            mutationLabel.Font = Enum.Font.SourceSans
+            mutationLabel.TextStrokeTransparency = 0
+            mutationLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+            mutationLabel.Parent = frame
 
-                frame.Parent = billboard
-                billboard.Parent = fruitModel
-                table.insert(espObjects_current, billboard)
-            end)
+            frame.Parent = billboard
+            billboard.Parent = fruitModel
+            table.insert(espObjects_current, billboard)
         end
 
         if config.showGlowEffects and highestTier >= 2 then
-            local glow = createGlowEffect(primaryPart)
-            if glow then
-                glow.Parent = fruitModel
-                table.insert(espObjects_current, glow)
-            end
+            local glow = createGlowEffect(espColor, primaryPart)
+            glow.Parent = fruitModel
+            table.insert(espObjects_current, glow)
 
             if highestTier >= 4 then
                 for i = 1, 3 do
-                    pcall(function()
-                        local orb = Instance.new("Part")
-                        orb.Name = "MutationOrb_" .. i
-                        orb.Shape = Enum.PartType.Ball
-                        orb.Size = Vector3.new(0.3, 0.3, 0.3)
-                        orb.Material = Enum.Material.Neon
-                        orb.Color = Color3.fromRGB(255, 255, 255)
-                        orb.CanCollide = false
-                        orb.Anchored = true
-                        orb.Transparency = 0.3
-                        orb.Parent = fruitModel
+                    local orb = Instance.new("Part")
+                    orb.Name = "MutationOrb_" .. i
+                    orb.Shape = Enum.PartType.Ball
+                    orb.Size = Vector3.new(0.3, 0.3, 0.3)
+                    orb.Material = Enum.Material.Neon
+                    orb.Color = espColor
+                    orb.CanCollide = false
+                    orb.Anchored = true
+                    orb.Transparency = 0.3
+                    orb.Parent = fruitModel
 
-                        spawn(function()
-                            local offset = (i - 1) * (2 * math.pi / 3)
-                            while orb and orb.Parent and primaryPart and primaryPart.Parent do
-                                pcall(function()
-                                    local t = tick() * 2 + offset
-                                    local radius = 2
-                                    local height = math.sin(t) * 0.5
-                                    local pos = primaryPart.Position + Vector3.new(math.cos(t) * radius, height + 1, math.sin(t) * radius)
-                                    orb.Position = pos
-                                end)
-                                Rs.Heartbeat:Wait()
-                            end
-                        end)
-
-                        table.insert(espObjects_current, orb)
+                    spawn(function()
+                        local offset = (i - 1) * (2 * math.pi / 3)
+                        while orb and orb.Parent do
+                            local t = tick() * 2 + offset
+                            local radius = 2
+                            local height = math.sin(t) * 0.5
+                            local pos = primaryPart.Position + Vector3.new(math.cos(t) * radius, height + 1, math.sin(t) * radius)
+                            orb.Position = pos
+                            Rs.Heartbeat:Wait()
+                        end
                     end)
+
+                    table.insert(espObjects_current, orb)
                 end
             end
         end
@@ -378,20 +303,12 @@ local function createESP(fruitModel)
 
     espObjects[fruitModel] = espObjects_current
 
-    -- Safe connection handling
-    local connection
-    connection = fruitModel.AncestryChanged:Connect(function(_, parent)
+    fruitModel.AncestryChanged:Connect(function(_, parent)
         if not parent then
-            pcall(function()
-                connection:Disconnect()
-            end)
-            
             if espObjects[fruitModel] then
                 for _, obj in pairs(espObjects[fruitModel]) do
                     if obj and obj.Parent then
-                        pcall(function()
-                            obj:Destroy()
-                        end)
+                        obj:Destroy()
                     end
                 end
                 espObjects[fruitModel] = nil
@@ -402,47 +319,31 @@ local function createESP(fruitModel)
 end
 
 local function updateESP()
-    if not config.espEnabled then
-        return
-    end
+    if not config.espEnabled then return end
 
     local farms = {}
-    local farmFolder = ws:FindFirstChild("Farm")
-    
-    if not farmFolder then
+
+    if not ws:FindFirstChild("Farm") then
         return
     end
 
-    for _, farm in ipairs(farmFolder:GetChildren()) do
-        if farm and farm:IsA("Model") then
-            local important = farm:FindFirstChild("Important")
-            if important then
-                local data = important:FindFirstChild("Data")
-                if data then
-                    local owner = data:FindFirstChild("Owner")
-                    if owner and owner.Value == player.Name then
-                        table.insert(farms, farm)
-                    end
-                end
-            end
+    for _, farm in ipairs(ws.Farm:GetChildren()) do
+        local data = farm:FindFirstChild("Important") and farm.Important:FindFirstChild("Data")
+        if data and data:FindFirstChild("Owner") and data.Owner.Value == player.Name then
+            table.insert(farms, farm)
         end
     end
 
     for _, farm in ipairs(farms) do
-        if farm and farm.Parent then
-            local important = farm:FindFirstChild("Important")
-            if important then
-                local plantsFolder = important:FindFirstChild("Plants_Physical")
-                if plantsFolder then
-                    for _, plantModel in ipairs(plantsFolder:GetChildren()) do
-                        if plantModel and plantModel:IsA("Model") and plantModel.Parent then
-                            local fruitsFolder = plantModel:FindFirstChild("Fruits")
-                            if fruitsFolder then
-                                for _, fruitModel in ipairs(fruitsFolder:GetChildren()) do
-                                    if fruitModel and fruitModel:IsA("Model") and fruitModel.Parent then
-                                        createESP(fruitModel)
-                                    end
-                                end
+        local plantsFolder = farm.Important:FindFirstChild("Plants_Physical")
+        if plantsFolder then
+            for _, plantModel in ipairs(plantsFolder:GetChildren()) do
+                if plantModel:IsA("Model") then
+                    local fruitsFolder = plantModel:FindFirstChild("Fruits")
+                    if fruitsFolder then
+                        for _, fruitModel in ipairs(fruitsFolder:GetChildren()) do
+                            if fruitModel:IsA("Model") then
+                                createESP(fruitModel)
                             end
                         end
                     end
@@ -459,39 +360,31 @@ local function setupFruitMonitoring()
     end
 
     for _, farm in ipairs(farms:GetChildren()) do
-        if farm and farm:IsA("Model") then
-            local important = farm:FindFirstChild("Important")
-            if important then
-                local data = important:FindFirstChild("Data")
-                if data then
-                    local owner = data:FindFirstChild("Owner")
-                    if owner and owner.Value == player.Name then
-                        local plantsFolder = important:FindFirstChild("Plants_Physical")
-                        if plantsFolder then
-                            plantsFolder.ChildAdded:Connect(function(plantModel)
-                                if plantModel and plantModel:IsA("Model") then
-                                    task.spawn(function()
-                                        local fruitsFolder = plantModel:FindFirstChild("Fruits") or plantModel:WaitForChild("Fruits", 10)
-                                        if fruitsFolder then
-                                            fruitsFolder.ChildAdded:Connect(function(fruitModel)
-                                                if fruitModel and fruitModel:IsA("Model") then
-                                                    task.wait(0.2)
-                                                    createESP(fruitModel)
-                                                end
-                                            end)
+        local data = farm:FindFirstChild("Important") and farm.Important:FindFirstChild("Data")
+        if data and data:FindFirstChild("Owner") and data.Owner.Value == player.Name then
+            local plantsFolder = farm.Important:FindFirstChild("Plants_Physical")
+            if plantsFolder then
+                plantsFolder.ChildAdded:Connect(function(plantModel)
+                    if plantModel:IsA("Model") then
+                        task.spawn(function()
+                            local fruitsFolder = plantModel:FindFirstChild("Fruits") or plantModel:WaitForChild("Fruits", 10)
+                            if fruitsFolder then
+                                fruitsFolder.ChildAdded:Connect(function(fruitModel)
+                                    if fruitModel:IsA("Model") then
+                                        task.wait(0.2)
+                                        createESP(fruitModel)
+                                    end
+                                end)
 
-                                            for _, fruitModel in ipairs(fruitsFolder:GetChildren()) do
-                                                if fruitModel and fruitModel:IsA("Model") then
-                                                    createESP(fruitModel)
-                                                end
-                                            end
-                                        end
-                                    end)
+                                for _, fruitModel in ipairs(fruitsFolder:GetChildren()) do
+                                    if fruitModel:IsA("Model") then
+                                        createESP(fruitModel)
+                                    end
                                 end
-                            end)
-                        end
+                            end
+                        end)
                     end
-                end
+                end)
             end
         end
     end
@@ -502,9 +395,7 @@ local function initializeMutationESP()
 
     spawn(function()
         while config.espEnabled do
-            pcall(function()
-                updateESP()
-            end)
+            updateESP()
             wait(2)
         end
     end)
@@ -512,6 +403,7 @@ end
 
 _G.MutationESP = {
     config = config,
+
     enable = function()
         config.espEnabled = true
         for mutation, _ in pairs(config.mutations) do
@@ -520,10 +412,12 @@ _G.MutationESP = {
         initializeMutationESP()
         updateESP()
     end,
+
     disable = function()
         config.espEnabled = false
         cleanupESP()
     end,
+
     toggle = function()
         if config.espEnabled then
             _G.MutationESP.disable()
@@ -532,38 +426,38 @@ _G.MutationESP = {
         end
         return config.espEnabled
     end,
+
     updateESP = updateESP,
     cleanupESP = cleanupESP,
+
     enableMutation = function(mutation)
         if config.mutations[mutation] ~= nil then
             config.mutations[mutation] = true
-            if config.espEnabled then
-                updateESP()
-            end
+            if config.espEnabled then updateESP() end
         end
     end,
+
     disableMutation = function(mutation)
         if config.mutations[mutation] ~= nil then
             config.mutations[mutation] = false
-            if config.espEnabled then
-                updateESP()
-            end
+            if config.espEnabled then updateESP() end
         end
     end,
+
     enableAllMutations = function()
         for mutation, _ in pairs(config.mutations) do
             config.mutations[mutation] = true
         end
-        if config.espEnabled then
-            updateESP()
-        end
+        if config.espEnabled then updateESP() end
     end,
+
     disableAllMutations = function()
         for mutation, _ in pairs(config.mutations) do
             config.mutations[mutation] = false
         end
         cleanupESP()
     end,
+
     setTextLabels = function(enabled)
         config.showTextLabels = enabled
         if config.espEnabled then
@@ -571,6 +465,7 @@ _G.MutationESP = {
             updateESP()
         end
     end,
+
     setGlowEffects = function(enabled)
         config.showGlowEffects = enabled
         if config.espEnabled then
@@ -578,6 +473,7 @@ _G.MutationESP = {
             updateESP()
         end
     end,
+
     getStatus = function()
         return {
             enabled = config.espEnabled,
