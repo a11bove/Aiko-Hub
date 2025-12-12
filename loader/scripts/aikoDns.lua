@@ -15,14 +15,20 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local player = Players.LocalPlayer
 
+local autoKM_Running = false
+local dupe_Running = false
+
 local function autoFarmKm(state)
+    autoKM_Running = state
+
     if state then
         task.spawn(function()
-            while state and player.Character do
+            while autoKM_Running and player.Character do
                 local hum = player.Character:FindFirstChild("Humanoid")
                 if hum and hum.SeatPart then
                     local car = hum.SeatPart.Parent
-                    if car.Body:FindFirstChild("#Weight") then
+
+                    if car:FindFirstChild("Body") and car.Body:FindFirstChild("#Weight") then
                         car.PrimaryPart = car.Body["#Weight"]
                     end
 
@@ -33,7 +39,7 @@ local function autoFarmKm(state)
                         task.wait()
                         car.PrimaryPart.Velocity = car.PrimaryPart.CFrame.LookVector * 550
                         car:PivotTo(CFrame.new(car.PrimaryPart.Position, pos1))
-                    until not state or (player.Character.PrimaryPart.Position - pos1).Magnitude < 50
+                    until not autoKM_Running or (player.Character.PrimaryPart.Position - pos1).Magnitude < 50
 
                     car.PrimaryPart.Velocity = Vector3.new()
 
@@ -41,10 +47,11 @@ local function autoFarmKm(state)
                         task.wait()
                         car.PrimaryPart.Velocity = car.PrimaryPart.CFrame.LookVector * 550
                         car:PivotTo(CFrame.new(car.PrimaryPart.Position, pos2))
-                    until not state or (player.Character.PrimaryPart.Position - pos2).Magnitude < 50
+                    until not autoKM_Running or (player.Character.PrimaryPart.Position - pos2).Magnitude < 50
 
                     car.PrimaryPart.Velocity = Vector3.new()
                 end
+
                 task.wait(0.1)
             end
         end)
@@ -55,23 +62,25 @@ local function activateExp()
     pcall(function()
         local ls = player:FindFirstChild("leaderstats")
         if ls and ls:FindFirstChild("Exp") then
-            ls.Exp.Value = 47823
+            ls.Exp.Value = 82917
         end
     end)
 end
 
 local function duplicateCoin(state)
+    dupe_Running = state
+
     local RS = ReplicatedStorage
     local WS = Workspace
     local Remotes = RS:WaitForChild("Remotes")
     local RecieveCoin = Remotes:WaitForChild("RecieveCoin")
     local Jeepnies = WS:WaitForChild("Jeepnies")
-    local Player = Players.LocalPlayer
+
     if state then
-        spawn(function()
-            while state do
+        task.spawn(function()
+            while dupe_Running do
                 pcall(function()
-                    local Jeep = Jeepnies:FindFirstChild(Player.Name)
+                    local Jeep = Jeepnies:FindFirstChild(player.Name)
                     if Jeep then
                         local PV = Jeep:FindFirstChild("PassengerValues")
                         if PV then
@@ -90,44 +99,65 @@ local function duplicateCoin(state)
     end
 end
 
-local Library = loadstring(game:HttpGet(
-    "https://raw.githubusercontent.com/x2zu/OPEN-SOURCE-UI-ROBLOX/refs/heads/main/X2ZU%20UI%20ROBLOX%20OPEN%20SOURCE/DummyUi-leak-by-x2zu/fetching-main/Tools/Framework.luau"
-))()
+local Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/discoart/FluentPlus/refs/heads/main/Beta.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
-local Window = Library:Window({
+local Window = Fluent:CreateWindow({
     Title = "@aiko",
-    Desc = "Made by untog ;p",
-    Icon = 140356301069419,
+    SubTitle = "made by untog !",
+    Search = false,
+    Icon = "rbxassetid://140356301069419",
+    TabWidth = 120,
+    Size = UDim2.fromOffset(420, 320),
+    Acrylic = false,
     Theme = "Dark",
-    Config = {
-        Keybind = Enum.KeyCode.LeftControl,
-        Size = UDim2.new(0, 400, 0, 300)
-    },
-    CloseUIButton = {Enabled = true, Text = "AIKO"}
+    MinimizeKey = Enum.KeyCode.LeftControl,
+    UserInfo = false,
 })
 
-local Tab = Window:Tab({Title = "Main", Icon = "house"})
+local Tabs = {
+    Main = Window:AddTab({ Title = "Main",  Icon = "star" }),
+}
 
-Tab:Toggle({
-    Title = "Duplicate Coin",
-    Value = false,
-    Callback = function(v)
-        duplicateCoin(v)
-    end
+local Minimizer = Fluent:CreateMinimizer({
+    Icon = "rbxassetid://140356301069419",
+    Size = UDim2.fromOffset(44, 44),
+    Position = UDim2.new(0, 320, 0, 24),
+    Acrylic = true,
+    Corner = 10,
+    Transparency = 1,
+    Draggable = true,
+    Visible = true
 })
 
-Tab:Toggle({
-    Title = "Auto Farm KM",
-    Value = false,
-    Callback = function(v)
-        autoFarmKm(v)
-    end
-})
+local Options = Fluent.Options
 
-Tab:Button({
-    Title = "Add Exp",
-    Desc = "Visual but usable in talyer.",
-    Callback = function()
-        activateExp()
-    end
-})
+do
+
+    local DupeToggle = Tabs.Main:AddToggle("dupeCoin", {
+        Title = "Duplicate Coin",
+        Default = false
+    })
+
+    DupeToggle:OnChanged(function(value)
+        duplicateCoin(value)
+    end)
+
+    local KmToggle = Tabs.Main:AddToggle("autoKM", {
+        Title = "Auto KM Farm",
+        Default = false
+    })
+
+    KmToggle:OnChanged(function(value)
+        autoFarmKm(value)
+    end)
+end
+
+    Tabs.Main:AddButton({
+        Title = "Add Exp",
+        Description = "Visual but usable in talyer.",
+        Callback = function()
+            activateExp()
+        end
+    })
