@@ -3,7 +3,7 @@ if not game:IsLoaded() then
 end
 
 game:GetService("StarterGui"):SetCore("SendNotification", {
-    Title = "@aiko",
+    Title = "Aiko Hub",
     Text = "Diesel 'N Steel Script Loaded!",
     Icon = "rbxassetid://140356301069419",
     Duration = 2
@@ -104,8 +104,8 @@ local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/d
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
 local Window = Fluent:CreateWindow({
-    Title = "@aiko",
-    SubTitle = "made by untog !",
+    Title = "Aiko Hub",
+    SubTitle = "| made by untog !",
     Search = false,
     Icon = "rbxassetid://140356301069419",
     TabWidth = 120,
@@ -160,6 +160,7 @@ do
     end)
 
     Tabs.Main:AddSection({ Title = "Visual", "eye" })
+    
     Tabs.Main:AddParagraph({
         Content = "I recommend to use the add exp if you're only going to buy something in talyer, then rejoin so your exp wont get reset if you bump into other jeeps or walls."
     })
