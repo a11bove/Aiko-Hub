@@ -4,7 +4,7 @@ end
 
 game:GetService("StarterGui"):SetCore("SendNotification", {
     Title = "Aiko Hub",
-    Text = "Diesel 'N Steel Script Loaded!",
+    Text = "[AIKO]: Diesel 'N Steel Script Loaded!",
     Icon = "rbxassetid://140356301069419",
     Duration = 2
 })
@@ -138,7 +138,8 @@ do
     Tabs.Main:AddSection({ Title = "Exploit", "star" })
 
     Tabs.Main:AddParagraph({
-        Content = "Tip: Sobrahan niyo ng sukli para dalawang beses mag dupe yung coin."
+        Icon = "rbxassetid://140356301069419",
+        Content = "[TIP]: Sobrahan niyo ng sukli para dalawang beses mag dupe yung coin."
     })
 
     local DupeToggle = Tabs.Main:AddToggle("dupeCoin", {
@@ -162,6 +163,7 @@ do
     Tabs.Main:AddSection({ Title = "Visual", "eye" })
     
     Tabs.Main:AddParagraph({
+        Icon = "rbxassetid://140356301069419",
         Content = "I recommend to use the add exp if you're only going to buy something in talyer, then rejoin so your exp wont get reset if you bump into other jeeps or walls."
     })
     
@@ -174,10 +176,12 @@ do
     })
 
 Tabs.Info:AddParagraph({
+    Icon = "rbxassetid://140356301069419",
     Content = "[Warning]: I made this script for testing purposes only, I am not responsible for any bans or any other consequences."
 })
 
 Tabs.Info:AddParagraph({
+    Icon = "rbxassetid://140356301069419",
     Content = "You can join to our discord server for more information."
 })
 
@@ -186,8 +190,8 @@ Tabs.Info:AddButton({
     Callback = function()
             setclipboard("https://discord.gg/VW4MffdPJg")
         Fluent:Notify({
-            Title = "@aiko",
-            Content = "Link Copied!",
+            Title = "Aiko Hub",
+            Content = "[AIKO]: Link Copied!",
             Duration = 3
         })
     end
