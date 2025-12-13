@@ -184,7 +184,7 @@ Tabs.Info:AddParagraph({
 Tabs.Info:AddButton({
     Title = "Copy Discord Link",
     Callback = function()
-            setclipboard("https://discord.gg/VW4MffdPJg")
+            setclipboard("https://discord.gg/JccfFGpDNV")
         Fluent:Notify({
             Title = "@aiko",
             Content = "[AIKO]: Link Copied!",
