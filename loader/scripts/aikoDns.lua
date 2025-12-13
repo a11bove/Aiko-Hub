@@ -118,6 +118,7 @@ local Window = Fluent:CreateWindow({
 
 local Tabs = {
     Main = Window:AddTab({ Title = "Main",  Icon = "star" }),
+    Info = Window:AddTab({ Title = "Info", Icon = "info" }),
 }
 
 local Minimizer = Fluent:CreateMinimizer({
@@ -134,9 +135,20 @@ local Minimizer = Fluent:CreateMinimizer({
 local Options = Fluent.Options
 
 do
+    Tabs.Main:AddParagraph({
+        Content = "I recommend to use the add exp if you're only going to buy something in talyer, then rejoin so your exp wont get reset if you bump into other jeeps or walls."
+    })
+    
+    Tabs.Main:AddButton({
+        Title = "Add Exp",
+        Description = "Visual but usable in talyer.",
+        Callback = function()
+            activateExp()
+        end
+    })
 
     local DupeToggle = Tabs.Main:AddToggle("dupeCoin", {
-        Title = "Duplicate Coin",
+        Title = "Manual Duplicate Coin",
         Default = false
     })
 
@@ -152,12 +164,26 @@ do
     KmToggle:OnChanged(function(value)
         autoFarmKm(value)
     end)
+
+Tabs.Info:AddParagraph({
+    Content = "[Warning]: I made this script for testing purposes only, I am not responsible for any bans or any other consequences."
+})
+
+Tabs.Info:AddParagraph({
+    Content = "You can join to our discord server for more information."
+})
+
+Tabs.Info:AddButton({
+    Title = "Copy Discord Link",
+    Callback = function()
+            setclipboard("https://discord.gg/VW4MffdPJg")
+        Fluent:Notify({
+            Title = "@aiko",
+            Content = "Link Copied!",
+            Duration = 3
+        })
+    end
+})
 end
 
-    Tabs.Main:AddButton({
-        Title = "Add Exp",
-        Description = "Visual but usable in talyer.",
-        Callback = function()
-            activateExp()
-        end
-    })
+Window:SelectTab(1)
