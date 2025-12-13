@@ -3,7 +3,7 @@ if not game:IsLoaded() then
 end
 
 game:GetService("StarterGui"):SetCore("SendNotification", {
-    Title = "Aiko Hub",
+    Title = "@aiko",
     Text = "[AIKO]: Diesel 'N Steel Script Loaded!",
     Icon = "rbxassetid://140356301069419",
     Duration = 2
@@ -104,8 +104,8 @@ local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/d
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
 local Window = Fluent:CreateWindow({
-    Title = "Aiko Hub",
-    SubTitle = "| made by untog !",
+    Title = "@aiko",
+    SubTitle = "| made by @a11bove a.k.a untog",
     Search = false,
     Icon = "rbxassetid://140356301069419",
     TabWidth = 120,
@@ -127,7 +127,7 @@ local Minimizer = Fluent:CreateMinimizer({
     Position = UDim2.new(0, 320, 0, 24),
     Acrylic = true,
     Corner = 10,
-    Transparency = 1,
+    Transparency = 0.5,
     Draggable = true,
     Visible = true
 })
@@ -138,7 +138,6 @@ do
     local Section = Tabs.Main:AddSection("Exploit", "star")
 
     Tabs.Main:AddParagraph({
-        Icon = "rbxassetid://140356301069419",
         Content = "[TIP]: Sobrahan niyo ng sukli para dalawang beses mag dupe yung coin."
     })
 
@@ -163,7 +162,6 @@ do
     local Section = Tabs.Main:AddSection("Visual", "eye")
     
     Tabs.Main:AddParagraph({
-        Icon = "rbxassetid://140356301069419",
         Content = "I recommend to use the add exp if you're only going to buy something in talyer, then rejoin so your exp wont get reset if you bump into other jeeps or walls."
     })
     
@@ -176,12 +174,10 @@ do
     })
 
 Tabs.Info:AddParagraph({
-    Icon = "rbxassetid://140356301069419",
-    Content = "[Warning]: I made this script for testing purposes only, I am not responsible for any bans or any other consequences."
+    Content = "[WARNING]: I made this script for testing purposes only, I am not responsible for any bans or any other consequences."
 })
 
 Tabs.Info:AddParagraph({
-    Icon = "rbxassetid://140356301069419",
     Content = "You can join to our discord server for more information."
 })
 
@@ -190,7 +186,7 @@ Tabs.Info:AddButton({
     Callback = function()
             setclipboard("https://discord.gg/VW4MffdPJg")
         Fluent:Notify({
-            Title = "Aiko Hub",
+            Title = "@aiko",
             Content = "[AIKO]: Link Copied!",
             Duration = 3
         })
