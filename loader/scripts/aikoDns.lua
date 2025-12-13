@@ -135,16 +135,10 @@ local Minimizer = Fluent:CreateMinimizer({
 local Options = Fluent.Options
 
 do
+    Tabs.Main:AddSection({ Title = "Exploit", "star" })
+
     Tabs.Main:AddParagraph({
-        Content = "I recommend to use the add exp if you're only going to buy something in talyer, then rejoin so your exp wont get reset if you bump into other jeeps or walls."
-    })
-    
-    Tabs.Main:AddButton({
-        Title = "Add Exp",
-        Description = "Visual but usable in talyer.",
-        Callback = function()
-            activateExp()
-        end
+        Content = "Tip: Sobrahan niyo ng sukli para dalawang beses mag dupe yung coin."
     })
 
     local DupeToggle = Tabs.Main:AddToggle("dupeCoin", {
@@ -164,6 +158,19 @@ do
     KmToggle:OnChanged(function(value)
         autoFarmKm(value)
     end)
+
+    Tabs.Main:AddSection({ Title = "Visual", "eye" })
+    Tabs.Main:AddParagraph({
+        Content = "I recommend to use the add exp if you're only going to buy something in talyer, then rejoin so your exp wont get reset if you bump into other jeeps or walls."
+    })
+    
+    Tabs.Main:AddButton({
+        Title = "Add Exp",
+        Description = "Visual but usable in talyer.",
+        Callback = function()
+            activateExp()
+        end
+    })
 
 Tabs.Info:AddParagraph({
     Content = "[Warning]: I made this script for testing purposes only, I am not responsible for any bans or any other consequences."
