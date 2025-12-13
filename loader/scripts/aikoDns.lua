@@ -135,7 +135,7 @@ local Minimizer = Fluent:CreateMinimizer({
 local Options = Fluent.Options
 
 do
-    Tabs.Main:AddSection({ Title = "Exploit", "star" })
+    local Section = Tabs.Main:AddSection(Title = "Exploit", "star")
 
     Tabs.Main:AddParagraph({
         Icon = "rbxassetid://140356301069419",
@@ -160,7 +160,7 @@ do
         autoFarmKm(value)
     end)
 
-    Tabs.Main:AddSection({ Title = "Visual", "eye" })
+    local Section = Tabs.Main:AddSection(Title = "Visual", "eye")
     
     Tabs.Main:AddParagraph({
         Icon = "rbxassetid://140356301069419",
