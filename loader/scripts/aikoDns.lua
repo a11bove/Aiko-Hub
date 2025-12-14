@@ -3,8 +3,8 @@ if not game:IsLoaded() then
 end
 
 game:GetService("StarterGui"):SetCore("SendNotification", {
-    Title = "@aiko",
-    Text = "[AIKO]: Diesel 'N Steel Script Loaded!",
+    Title = "/aikohub",
+    Text = "Diesel 'N Steel Script Loaded!",
     Icon = "rbxassetid://140356301069419",
     Duration = 2
 })
@@ -104,7 +104,7 @@ local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/d
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
 local Window = Fluent:CreateWindow({
-    Title = "@aiko",
+    Title = "/aikohub",
     SubTitle = "| made by @a11bove a.k.a untog",
     Search = false,
     Icon = "rbxassetid://140356301069419",
