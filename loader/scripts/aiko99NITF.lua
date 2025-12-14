@@ -888,14 +888,6 @@ end
                         end
 
                         wait(2)
-                    else
-                        Fluent:Notify({
-                            Title = "AutoPlant",
-                            Icon = "bell-ring",
-                            Content = "No More Sapling Found",
-                            Duration = 3,
-                        })
-                        wait(2)
                     end
                 end
             end) 
