@@ -1,19 +1,3 @@
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local rs = game:GetService("ReplicatedStorage")
-local Workspace = game:GetService("Workspace")
-local LocalPlayer = Players.LocalPlayer
-local Lighting = game:GetService("Lighting")
-local effect = Lighting:FindFirstChild("VibrantEffect")
-local vibrantEffect = Lighting:FindFirstChild("VibrantEffect")
-local RunService = game:GetService("RunService")
-
-Lighting.ClockTime = 14
-Lighting.GlobalShadows = false
-
-local VirtualUser = game:GetService("VirtualUser")
-
 local Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/discoart/FluentPlus/refs/heads/main/Beta.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
