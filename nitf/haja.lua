@@ -1,23 +1,39 @@
 repeat task.wait() until game:IsLoaded()
 
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local PlayerGui = player:WaitForChild("PlayerGui", 10)
+if not PlayerGui then
+    warn("PlayerGui not found")
+    return
+end
+
 local settings = {
-    playerGui = game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui"),
+    playerGui = PlayerGui,
     interface = nil,
     fishingCatchFrame = nil,
     timingBar = nil,
     successArea = nil
 }
 
-settings.interface = settings.playerGui and settings.playerGui:FindFirstChild("Interface")
-settings.fishingCatchFrame = settings.interface and settings.interface:FindFirstChild("FishingCatchFrame")
-settings.timingBar = settings.fishingCatchFrame and settings.fishingCatchFrame:FindFirstChild("TimingBar")
-settings.successArea = settings.timingBar and settings.timingBar:FindFirstChild("SuccessArea")
+settings.interface = settings.playerGui:WaitForChild("Interface", 10)
+if not settings.interface then
+    warn("Interface not found")
+    return
+end
+
+settings.fishingCatchFrame = settings.interface:WaitForChild("FishingCatchFrame", 10)
+settings.timingBar = settings.fishingCatchFrame and settings.fishingCatchFrame:WaitForChild("TimingBar", 10)
+settings.successArea = settings.timingBar and settings.timingBar:WaitForChild("SuccessArea", 10)
 
 if settings.successArea then
     settings.successArea:GetPropertyChangedSignal("Size"):Connect(function()
-        settings.successArea.Position = UDim2.new(0.5, 0, 0, 0)
-        settings.successArea.Size = UDim2.new(1, 0, 1, 0)
-        end)
+        if settings.successArea then
+            settings.successArea.Position = UDim2.new(0.5, 0, 0, 0)
+            settings.successArea.Size = UDim2.new(1, 0, 1, 0)
+        end
+    end)
 end
 
 local Players = game:GetService("Players")
@@ -36,9 +52,40 @@ Lighting.GlobalShadows = false
 
 local VirtualUser = game:GetService("VirtualUser")
 
-local Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/discoart/FluentPlus/refs/heads/main/Beta.lua"))()
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+local Fluent, SaveManager, InterfaceManager
+
+do
+    local ok, res = pcall(function()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/discoart/FluentPlus/refs/heads/main/Beta.lua"))()
+    end)
+    if not ok or not res then
+        warn("Failed to load Fluent")
+        return
+    end
+    Fluent = res
+end
+
+do
+    local ok, res = pcall(function()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+    end)
+    if not ok or not res then
+        warn("Failed to load SaveManager")
+        return
+    end
+    SaveManager = res
+end
+
+do
+    local ok, res = pcall(function()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+    end)
+    if not ok or not res then
+        warn("Failed to load InterfaceManager")
+        return
+    end
+    InterfaceManager = res
+end
 
 local scan_map = false
 
