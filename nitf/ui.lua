@@ -1991,7 +1991,8 @@ local Options = Fluent.Options
                 Lighting.FogStart = OriginalFogStart
                 Lighting.FogEnd = OriginalFogEnd
             end
-        end)
+        end
+		})
 
         RunService.Heartbeat:Connect(function()
             if NoFogToggle then
@@ -2004,7 +2005,6 @@ local Options = Fluent.Options
                 end
             end
         end
-		})
 
         if not vibrantEffect then
             Lighting.ClockTime = 14
