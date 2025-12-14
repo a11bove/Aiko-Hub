@@ -2,6 +2,93 @@ local Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/discoa
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
+local Stats = game:GetService("Stats")
+        local Players = game:GetService("Players")
+        local UserInputService = game:GetService("UserInputService")
+        local Camera = workspace.CurrentCamera
+
+        local showFPS, showPing, showPlayers = true, true, false
+        local fpsCounter, fpsLastUpdate, fpsValue = 0, tick(), 0
+
+        local function createText(yOffset)
+            local textObj = Drawing.new("Text")
+            textObj.Size = 16
+            textObj.Position = Vector2.new(Camera.ViewportSize.X - 110, yOffset)
+            textObj.Color = Color3.fromRGB(0, 255, 0)
+            textObj.Center = false
+            textObj.Outline = true
+            textObj.Visible = true
+            return textObj
+        end
+
+        local fpsText = createText(10)
+        local msText = createText(30)
+        local playersText = createText(50)
+
+        Camera:GetPropertyChangedSignal("ViewportSize"):Connect(function()
+            fpsText.Position = Vector2.new(Camera.ViewportSize.X - 110, 10)
+            msText.Position = Vector2.new(Camera.ViewportSize.X - 110, 30)
+            playersText.Position = Vector2.new(Camera.ViewportSize.X - 110, 50)
+        end)
+
+        RunService.RenderStepped:Connect(function()
+            fpsCounter += 1
+
+            if tick() - fpsLastUpdate >= 1 then
+                fpsValue = fpsCounter
+                fpsCounter = 0
+                fpsLastUpdate = tick()
+
+                if showFPS then
+                    fpsText.Text = string.format("FPS: %d", fpsValue)
+                    fpsText.Color = fpsValue >= 50 and Color3.fromRGB(0, 255, 0)
+                        or fpsValue >= 30 and Color3.fromRGB(255, 165, 0)
+                        or Color3.fromRGB(255, 0, 0)
+                    fpsText.Visible = true
+                else
+                    fpsText.Visible = false
+                end
+
+                if showPing then
+                    local pingStat = Stats.Network.ServerStatsItem["Data Ping"]
+                    local ping = pingStat and math.floor(pingStat:GetValue()) or 0
+                    local color, label = Color3.fromRGB(0, 255, 0), "Wifi Ping: "
+
+                    if ping > 120 then
+                        color, label = Color3.fromRGB(255, 0, 0), "Wifi Ping: "
+                    elseif ping > 60 then
+                        color = Color3.fromRGB(255, 165, 0)
+                    end
+
+                    msText.Text = string.format("%s%d ms", label, ping)
+                    msText.Color = color
+                    msText.Visible = true
+                else
+                    msText.Visible = false
+                end
+
+                if showPlayers then
+                    local currentPlayers = #Players:GetPlayers()
+                    local maxPlayers = Players.MaxPlayers
+                    local color = Color3.fromRGB(0, 255, 0) 
+
+                    if currentPlayers >= maxPlayers - 1 then
+                        color = Color3.fromRGB(255, 0, 0) 
+                    elseif currentPlayers >= maxPlayers - 4 then
+                        color = Color3.fromRGB(255, 165, 0) 
+                    elseif currentPlayers <= 4 then
+                        color = Color3.fromRGB(135, 206, 235) 
+                    end
+
+                    playersText.Text = string.format("Players: %d/%d", currentPlayers, maxPlayers)
+                    playersText.Color = color
+                    playersText.Visible = true
+                else
+                    playersText.Visible = false
+                end
+            end
+        end)
+
 local Window = Fluent:CreateWindow({
             Title = "@aoki",
             SubTitle = "| 99 Nights in The Forest | made by @untog!",
