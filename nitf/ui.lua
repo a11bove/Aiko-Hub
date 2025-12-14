@@ -2004,7 +2004,7 @@ local Options = Fluent.Options
                     print("[] hi 3")
                 end
             end
-        end
+        end)
 
         if not vibrantEffect then
             Lighting.ClockTime = 14
