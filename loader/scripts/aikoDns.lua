@@ -105,7 +105,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 
 local Window = Fluent:CreateWindow({
     Title = "@aiko",
-    SubTitle = "| made by @a11bove a.k.a untog",
+    SubTitle = "| made by untog !",
     Search = false,
     Icon = "rbxassetid://140356301069419",
     TabWidth = 120,
@@ -138,7 +138,7 @@ do
     local Section = Tabs.Main:AddSection("Exploit", "star")
 
     Tabs.Main:AddParagraph({
-        Content = "[TIP]: Sobrahan niyo ng sukli para dalawang beses mag dupe yung coin."
+        Content = "Tip: Sobrahan niyo ng sukli para dalawang beses mag dupe yung coin."
     })
 
     local DupeToggle = Tabs.Main:AddToggle("dupeCoin", {
@@ -174,7 +174,7 @@ do
     })
 
 Tabs.Info:AddParagraph({
-    Content = "[WARNING]: I made this script for testing purposes only, I am not responsible for any bans or any other consequences."
+    Content = "Warning: I made this script for testing purposes only, I am not responsible for any bans or any other consequences."
 })
 
 Tabs.Info:AddParagraph({
