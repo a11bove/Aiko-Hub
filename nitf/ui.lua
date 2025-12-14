@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 local Window = Fluent:CreateWindow({
             Title = "@aoki",
             SubTitle = "| 99 Nights in The Forest | made by @untog!",
-            Icon = "home", -- optional
+            Icon = "zap", -- optional
             TabWidth = 120,
             Size = UDim2.fromOffset(420, 320),
             Acrylic = false,
@@ -14,10 +14,10 @@ local Window = Fluent:CreateWindow({
         })
 
         local Tabs = {
-            Main = Window:AddTab({ Title = "Home", Icon = "house" }),
+            Main = Window:AddTab({ Title = "Home", Icon = "home" }),
             Combat = Window:AddTab({ Title = "Combat", Icon = "sword" }),
             Fun = Window:AddTab({ Title = "Fun", Icon = "star" }),
-            Camp = Window:AddTab({ Title = "Auto", Icon = "repeat-2" }),
+            Camp = Window:AddTab({ Title = "Auto", Icon = "fire" }),
             br = Window:AddTab({ Title = "Bring", Icon = "package" }),
             Fly = Window:AddTab({ Title = "Player", Icon = "user" }),
             esp = Window:AddTab({ Title = "Esp", Icon = "eye" }),
@@ -30,7 +30,7 @@ local Window = Fluent:CreateWindow({
         }
 
         local Minimizer = Fluent:CreateMinimizer({
-          Icon = "home",
+          Icon = "heart",
           Size = UDim2.fromOffset(44, 44),
           Position = UDim2.new(0, 320, 0, 24),
           Acrylic = true,
@@ -44,10 +44,9 @@ local Options = Fluent.Options
         do
             local Section = Tabs.Main:AddSection("Info", "info")
 
-            local Toggle = Tabs.Main:AddToggle("antiAfk", {Title = "Anti AFK", Default = false })
-
-            Toggle:OnChanged(function(state)
-                if state then
+            local Toggle = Tabs.Main:AddToggle("antiAfk", {Title = "Anti AFK", Default = false,
+                  Callback = function(state)
+                        if state then
                         task.spawn(function()
                             while state do
                                 if not LocalPlayer then
@@ -60,36 +59,32 @@ local Options = Fluent.Options
                         end)
                     else
                     end
-                end)
+                end
+                        })
 
         local Section = Tabs.Main:AddSection("Visual Settings", "settings-2")
 
-        local Toggle2 = Tabs.Main:AddToggle("showFps", {Title = "Show FPS", Default = false })
-
-        Toggle2:OnChanged(function(val)
+        local Toggle2 = Tabs.Main:AddToggle("showFps", {Title = "Show FPS", Default = false, Callback = function(val)
         showFPS = val
         fpsText.Visible = val
-        end)
+        end
+                        })
 
-        local Toggle3 = Tabs.Main:AddToggle("showPing", {Title = "Show Ping", Default = false })
-
-        Toggle3:OnChanged(function(val)
+        local Toggle3 = Tabs.Main:AddToggle("showPing", {Title = "Show Ping", Default = false, Callback = function(val)
         showPing = val
         msText.Visible = val
-        end)
+        end
+                        })
 
-        local Toggle4 = Tabs.Main:AddToggle("showPlayers", {Title = "Show Players", Default = false })
-
-        Toggle4:OnChanged(function(val)
+        local Toggle4 = Tabs.Main:AddToggle("showPlayers", {Title = "Show Players", Default = false, Callback = function(val)
         showPlayers = val
         playersText.Visible = val
-        end)
+        end
+                        })
 
         local Section = Tabs.Combat:AddSection("Aura", "star")
 
-        local Toggle5 = Tabs.Combat:AddToggle("killAura", {Title = "Kill Aura", Default = false })
-
-            Toggle5:OnChanged(function(state)
+        local Toggle5 = Tabs.Combat:AddToggle("killAura", {Title = "Kill Aura", Default = false, Callback = function(state)
                 killAuraToggle = state
                 if state then
                     task.spawn(killAuraLoop)
@@ -97,11 +92,10 @@ local Options = Fluent.Options
                     local tool, _ = getAnyToolWithDamageID(false)
                     unequipTool(tool)
                 end
-            end)
+            end
+                        })
 
-        local Toggle6 = Tabs.Combat:AddToggle("chopAura", {Title = "Chop Aura", Default = false })
-
-        Toggle6:OnChanged(function(state)
+        local Toggle6 = Tabs.Combat:AddToggle("chopAura", {Title = "Chop Aura", Default = false, Callback = function(state)
         chopAuraToggle = state
                 if state then
                     task.spawn(chopAuraLoop)
@@ -109,7 +103,8 @@ local Options = Fluent.Options
                     local tool, _ = getAnyToolWithDamageID(true)
                     unequipTool(tool)
                 end
-        end)
+                                    end
+})
 
         local Section = Tabs.Combat:AddSection("Settings", "settings")
 
@@ -131,12 +126,11 @@ local Options = Fluent.Options
                 Values = MobsList,
                 Multi = true,
                 Search = true,
-            })
-
-            Dropdown1:OnChanged(function(options)
+                Callback = function(options)
                 SelectedMobs = options
                 UpdateHitboxes()
-        end)
+        end
+                        })
 
         local Slider2 = Tabs.Combat:AddSlider("hbSize", {
                 Title = "Hitbox Size",
@@ -159,9 +153,7 @@ local Options = Fluent.Options
         end
     })
 
-        local Toggle7 = Tabs.Combat:AddToggle("addHb", {Title = "Add Hitbox", Default = false })
-
-        Toggle7:OnChanged(function(state)
+        local Toggle7 = Tabs.Combat:AddToggle("addHb", {Title = "Add Hitbox", Default = false, Callback = function(state)
         if state then
                     pcall(function()
                         AddAllHitboxes()
@@ -169,13 +161,12 @@ local Options = Fluent.Options
                 else
                         RemoveAllHitboxes()
                 end
-        end)
+        end
+                        })
 
         local Section = Tabs.Misc:AddSection("Chests", "package-2")
 
-        local Toggle8 = Tabs.Misc:AddToggle("autoOpenChest", {Title = "Auto Open Chests", Default = false })
-
-        Toggle8:OnChanged(function(v)
+        local Toggle8 = Tabs.Misc:AddToggle("autoOpenChest", {Title = "Auto Open Chests", Default = false, Callback = function(v)
         local character = player.Character or player.CharacterAdded:Wait()
                 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
                 if not _G.AutoChestData then
@@ -231,7 +222,8 @@ local Options = Fluent.Options
                         humanoidRootPart.CFrame = _G.AutoChestData.originalCFrame
                     end
                 end
-        end)
+        end
+})
 
         local Section = Tabs.Misc:AddSection("Auto Feed", "utensils")
 
@@ -261,9 +253,7 @@ local Options = Fluent.Options
         end
             })
 
-        local Toggle9 = Tabs.Misc:AddToggle("autoEat", {Title = "Auto Eat", Default = false })
-
-        Toggle9:OnChanged(function(state)
+        local Toggle9 = Tabs.Misc:AddToggle("autoEat", {Title = "Auto Eat", Default = false, Callback = function(state)
         autoFeedToggle = state
                 if state then
                     task.spawn(function()
@@ -302,13 +292,12 @@ local Options = Fluent.Options
                         end
                     end)
                 end
-        end)
+        end
+                        })
 
         local Section = Tabs.Camp:AddSection("Auto Plant", "sprout")
 
-        local Toggle10 = Tabs.Camp:AddToggle("autoPlant", {Title = "Auto Plant", Default = false })
-
-        Toggle10:OnChanged(function(state)
+        local Toggle10 = Tabs.Camp:AddToggle("autoPlant", {Title = "Auto Plant", Default = false, Callback = function(state)
         if state then
                     pcall(function()
                         StartAutoPlant()
@@ -316,7 +305,8 @@ local Options = Fluent.Options
                 else
                     StopAutoPlant()
                 end
-        end)
+        end
+                        })
 
         local Section = Tabs.Combat:AddSection("Hitbox Mobs", "swords")
 
@@ -325,12 +315,11 @@ local Options = Fluent.Options
                 Values = MobsList,
                 Multi = true,
                 Search = true,
-            })
-
-            Dropdown3:OnChanged(function(options)
+                Callback = function(options)
                 SelectedMobs = options
                 UpdateHitboxes()
-        end)
+			end
+                        })
 
         local Slider2 = Tabs.Combat:AddSlider("plantRadius", {
                 Title = "Plant Radius",
@@ -352,15 +341,12 @@ local Options = Fluent.Options
                 Values = campfireFuelItems,
                 Multi = true,
                 Search = true,
-            })
+	    Callback = function(options)
+	selectedCampfireItems = options or {}
+        end
+		})
 
-            Dropdown4:OnChanged(function(options)
-                selectedCampfireItems = options or {}
-        end)
-
-        local Toggle11 = Tabs.Main:AddToggle("autoUpgCf", {Title = "Auto Upgrade Campfire", Default = false })
-
-        Toggle11:OnChanged(function(checked)
+        local Toggle11 = Tabs.Main:AddToggle("autoUpgCf", {Title = "Auto Upgrade Campfire", Default = false, Callback = function(checked)
         autoUpgradeCampfireEnabled = checked
                 if checked then
                     task.spawn(function()
@@ -385,7 +371,8 @@ local Options = Fluent.Options
                         end
                     end)
                 end
-        end)
+        end
+		})
 
         local Section = Tabs.Camp:AddSection("Auto Scrap", "cog")
 
@@ -394,15 +381,12 @@ local Options = Fluent.Options
                 Values = scrapjunkItems,
                 Multi = false,
                 Search = true,
-            })
+	    Callback = function(option)		
+	    selectedScrapItem = option
+        end
+		})
 
-            Dropdown5:OnChanged(function(option)
-                selectedScrapItem = option
-        end)
-
-        local Toggle12 = Tabs.Camp:AddToggle("autoScrap", {Title = "Auto Scrap", Default = false })
-
-        Toggle12:OnChanged(function(checked)
+        local Toggle12 = Tabs.Camp:AddToggle("autoScrap", {Title = "Auto Scrap", Default = false, Callback = function(checked)
         autoScrapItemsEnabled = checked
                 if checked then
                     task.spawn(function()
@@ -426,7 +410,8 @@ local Options = Fluent.Options
                         end
                     end)
                 end
-        end)
+        end
+		})
 
         local Section = Tabs.Camp:AddSection("Auto Cook", "flame")
 
@@ -435,19 +420,17 @@ local Options = Fluent.Options
                 Values = autocookItems,
                 Multi = true,
                 Search = true,
-            })
-
-            Dropdown6:OnChanged(function(options)
+                Callback = function(options)
                 for _, itemName in ipairs(autocookItems) do
                     autoCookEnabledItems[itemName] = table.find(options, itemName) ~= nil
                 end
-        end)
+        end
+		})
 
-        local Toggle13 = Tabs.Camp:AddToggle("autoCookFood", {Title = "Auto Cook", Default = false })
-
-        Toggle13:OnChanged(function(state)
+        local Toggle13 = Tabs.Camp:AddToggle("autoCookFood", {Title = "Auto Cook", Default = false, Callback = function(state)
         autoCookEnabled = state
-        end)
+        end
+})
 
         coroutine.wrap(function()
             while true do
@@ -473,15 +456,12 @@ local Options = Fluent.Options
                 Values = craftableItems,
                 Multi = true,
                 Search = true,
-            })
-
-            Dropdown7:OnChanged(function(options)
+                Callback = function(options)
                 selectedCraftItems = options or {}
-        end)
+        end
+		})
 
-        local Toggle14 = Tabs.Camp:AddToggle("autoCraftIT", {Title = "Auto Craft Items", Default = false })
-
-        Toggle14:OnChanged(function(checked)
+        local Toggle14 = Tabs.Camp:AddToggle("autoCraftIT", {Title = "Auto Craft Items", Default = false, Callback = function(checked)
         autoCraftEnabled = checked
                 if checked then
                     task.spawn(function()
@@ -499,7 +479,8 @@ local Options = Fluent.Options
                         end
                     end)
                 end
-        end)
+        end
+		})
 
         local Section = Tabs.Camp:AddSection("Crafting Bench", "wrench")
 
@@ -508,15 +489,12 @@ local Options = Fluent.Options
                 Values = craftingBenchItems,
                 Multi = true,
                 Search = true,
-            })
-
-            Dropdown8:OnChanged(function(options)
+                Callback = function(options)
                 selectedBenchItems = options or {}
-        end)
+        end
+		})
 
-        local Toggle14 = Tabs.Camp:AddToggle("autoupgradebench", {Title = "Auto Upgrade Bench", Default = false })
-
-        Toggle14:OnChanged(function(checked)
+        local Toggle14 = Tabs.Camp:AddToggle("autoupgradebench", {Title = "Auto Upgrade Bench", Default = false, Callback = function(checked)
         autoUpgradeBenchEnabled = checked
                 if checked then
                     task.spawn(function()
@@ -534,13 +512,12 @@ local Options = Fluent.Options
                         end
                     end)
                 end
-        end)
+        end
+		})
 
   local Section = Tabs.Tp:AddSection("Scan Map", "map")
 
-        local Toggle15 = Tabs.Tp:AddToggle("scanmap", {Title = "Scan Map", Desc = "Might not work for some executors.", Default = false })
-
-        Toggle15:OnChanged(function(state)
+        local Toggle15 = Tabs.Tp:AddToggle("scanmap", {Title = "Scan Map", Desc = "Might not work for some executors.", Default = false, Callback = function(state)
         scan_map = state
 
             if not state then
@@ -601,7 +578,8 @@ local Options = Fluent.Options
                     task.wait(0.25)
                 end
             end)
-        end)
+        end
+		})
 
         local Section = Tabs.Tp:AddSection("Teleport", "map-pin")
 
@@ -694,11 +672,10 @@ local Options = Fluent.Options
                 Values = currentMobNames,
                 Multi = false,
                 Search = true,
-            })
-
-            Dropdown9:OnChanged(function(options)
+                Callback = function(options)
         selectedMob = options[#options] or currentMobNames[1] or nil
-        end)
+        end
+		})
 
         Tabs.Tp:AddButton({
             Title = "Refresh List",
@@ -744,11 +721,10 @@ local Options = Fluent.Options
             Values = currentChestNames,
             Multi = false,
             Search = true,
-        })
-
-        Dropdown10:OnChanged(function(options)
+            Callback = function(options)
         selectedChest = options[#options] or currentChestNames[1] or nil
-        end)
+        end
+		})
 
         Tabs.Tp:AddButton({
             Title = "Refresh List",
@@ -789,9 +765,7 @@ local Options = Fluent.Options
             end
         })
 
-        local Toggle16 = Tabs.br:AddToggle("scanmap2", {Title = "Scan Map", Default = false })
-
-        Toggle16:OnChanged(function(state)
+        local Toggle16 = Tabs.br:AddToggle("scanmap2", {Title = "Scan Map", Default = false, Callback = function(state)
         scan_map = state
 
             if not state then
@@ -853,7 +827,8 @@ local Options = Fluent.Options
                     task.wait(0.25)
                 end
             end)
-        end)
+        end
+		})
 
         Tabs.br:AddButton({
             Title = "Reveal Whole Map",
@@ -875,15 +850,12 @@ local Options = Fluent.Options
             Values = selectedBlueprintItems,
             Multi = true,
             Search = true,
-        })
-
-        Dropdown12:OnChanged(function(options)
+            Callback = function(options)
         selectedBlueprintItems = options
-        end)
+        end
+		})
 
-        local Toggle17 = Tabs.br:AddToggle("bringBps", {Title = "Bring Blueprints", Default = false })
-
-        Toggle17:OnChanged(function(value)
+        local Toggle17 = Tabs.br:AddToggle("bringBps", {Title = "Bring Blueprints", Default = false, Callback = function(value)
         BlueprintToggleEnabled = value
 
             if value then
@@ -909,7 +881,8 @@ local Options = Fluent.Options
             else
                 BlueprintLoopRunning = false
             end
-        end)
+        end
+		})
 
         local Section = Tabs.br:AddSection("Pelts", "shirt")
 
@@ -918,15 +891,12 @@ local Options = Fluent.Options
             Values = PeltsItems,
             Multi = true,
             Search = true,
-        })
-
-        Dropdown13:OnChanged(function(options)
+            Callback = function(options)
         selectedPeltsItems = options
-        end)
+        end
+		})
 
-        local Toggle18 = Tabs.br:AddToggle("bringPelts", {Title = "Bring Pelts", Default = false })
-
-        Toggle18:OnChanged(function(value)
+        local Toggle18 = Tabs.br:AddToggle("bringPelts", {Title = "Bring Pelts", Default = false, Callback = function(value)
         PeltsToggleEnabled = value
 
         if value then
@@ -952,7 +922,8 @@ local Options = Fluent.Options
         else
         PeltsLoopRunning = false
         end
-        end)
+        end
+		})
 
         local Section = Tabs.br:AddSection("Junk", "box")
 
@@ -961,15 +932,12 @@ local Options = Fluent.Options
             Values = junkItems,
             Multi = true,
             Search = true,
-        })
-
-        Dropdown14:OnChanged(function(options)
+            Callback = function(options)
         selectedJunkItems = options
-        end)
+        end
+		})
 
-        local Toggle19 = Tabs.br:AddToggle("bringJunkz", {Title = "Bring Junks", Default = false })
-
-        Toggle19:OnChanged(function(value)
+        local Toggle19 = Tabs.br:AddToggle("bringJunkz", {Title = "Bring Junks", Default = false, Callback = function(options)
         junkToggleEnabled = value
 
         if value then
@@ -995,7 +963,8 @@ local Options = Fluent.Options
         else
         junkLoopRunning = false
         end
-        end)
+        end
+		})
 
         local Section = Tabs.br:AddSection("Fuel", "flame")
 
@@ -1004,15 +973,12 @@ local Options = Fluent.Options
             Values = fuelItems,
             Multi = true,
             Search = true,
-        })
-
-        Dropdown15:OnChanged(function(options)
+            Callback = function(options)
         selectedFuelItems = options
-        end)
+        end
+		})
 
-        local Toggle20 = Tabs.br:AddToggle("bringFuelz", {Title = "Bring Fuels", Default = false })
-
-        Toggle20:OnChanged(function(value)
+        local Toggle20 = Tabs.br:AddToggle("bringFuelz", {Title = "Bring Fuels", Default = false, Callback = function(value)
         fuelToggleEnabled = value
 
             if value then
@@ -1038,7 +1004,8 @@ local Options = Fluent.Options
             else
                 fuelLoopRunning = false
             end
-        end)
+        end
+		})
 
         local Section = Tabs.br:AddSection("Food", "utensils")
 
@@ -1047,15 +1014,12 @@ local Options = Fluent.Options
             Values = foodItems,
             Multi = true,
             Search = true,
-        })
-
-        Dropdown16:OnChanged(function(options)
+            Callback = function(options)
         selectedFoodItems = options
-        end)
+        end
+		})
 
-        local Toggle20 = Tabs.br:AddToggle("bringFoodz", {Title = "Bring Foods", Default = false })
-
-        Toggle20:OnChanged(function(value)
+        local Toggle20 = Tabs.br:AddToggle("bringFoodz", {Title = "Bring Foods", Default = false, Callback = function(value)
         foodToggleEnabled = value
 
             if value then
@@ -1082,7 +1046,8 @@ local Options = Fluent.Options
             else
                 foodLoopRunning = false          
             end
-        end)
+        end
+		})
 
         local Section = Tabs.br:AddSection("Medicine", "bandage")
 
@@ -1091,15 +1056,12 @@ local Options = Fluent.Options
             Values = medicalItems,
             Multi = true,
             Search = true,
-        })
-
-        Dropdown17:OnChanged(function(options)
+            Callback = function(options)
         selectedMedicalItems = options
-        end)
+        end
+		})
 
-        local Toggle21= Tabs.br:AddToggle("bringMedz", {Title = "Bring Medical Items", Default = false })
-
-        Toggle21:OnChanged(function(value)
+        local Toggle21= Tabs.br:AddToggle("bringMedz", {Title = "Bring Medical Items", Default = false, Callback = function(value)
         medicalToggleEnabled = value
 
             if value then
@@ -1126,7 +1088,8 @@ local Options = Fluent.Options
             else
                 medicalLoopRunning = false
             end
-        end)
+        end
+		})
 
         local Section = Tabs.br:AddSection("Mobs", "bow-arrow")
 
@@ -1135,15 +1098,12 @@ local Options = Fluent.Options
             Values = cultistItems,
             Multi = true,
             Search = true,
-        })
-
-        Dropdown18:OnChanged(function(options)
+            Callback = function(options)
         selectedCultistItems = options
-        end)
+        end
+		})
 
-        local Toggle21 = Tabs.br:AddToggle("bringmobz", {Title = "Bring Mobs", Default = false })
-
-        Toggle21:OnChanged(function(value)
+        local Toggle21 = Tabs.br:AddToggle("bringmobz", {Title = "Bring Mobs", Default = false, Callback = function(value)
         cultistToggleEnabled = value
 
             if value then
@@ -1170,7 +1130,8 @@ local Options = Fluent.Options
             else
                 cultistLoopRunning = false
             end
-        end)
+        end
+		})
 
         local Section = Tabs.br:AddSection("Equipment", "sword")
 
@@ -1179,15 +1140,12 @@ local Options = Fluent.Options
             Values = equipmentItems,
             Multi = true,
             Search = true,
-        })
-
-        Dropdown19:OnChanged(function(options)
+            Callback = function(options)
         selectedEquipmentItems = options
-        end)
+        end
+		})
 
-        local Toggle22 = Tabs.br:AddToggle("bringequipments", {Title = "Bring Equiments", Default = false })
-
-        Toggle22:OnChanged(function(value)
+        local Toggle22 = Tabs.br:AddToggle("bringequipments", {Title = "Bring Equiments", Default = false, Callback = function(value)
         equipmentToggleEnabled = value
 
         if value then
@@ -1213,13 +1171,12 @@ local Options = Fluent.Options
         else
         equipmentLoopRunning = false
         end
-        end)
+        end
+		})
 
         local Section = Tabs.br:AddSection("Sapling", "sprout")
 
-        local Toggle23 = Tabs.br:AddToggle("bringsap", {Title = "Bring Saplings", Default = false })
-
-        Toggle23:OnChanged(function(value)
+        local Toggle23 = Tabs.br:AddToggle("bringsap", {Title = "Bring Saplings", Default = false, Callback = function(value)
         autoPlantEnabled = value
 
             if value then
@@ -1246,7 +1203,8 @@ local Options = Fluent.Options
             else
                 autoPlantLoop = false
             end
-        end)
+        end
+		})
 
         local Section = Tabs.Fly:AddSection("Player", "user")
 
@@ -1309,18 +1267,15 @@ local Options = Fluent.Options
             end
         })
 
-        local enablerHh = Tabs.Fly:AddToggle("HHenabler", {Title = "Enable Hip Height", Default = false })
-
-        enablerHh:OnChanged(function(PH)
+        local enablerHh = Tabs.Fly:AddToggle("HHenabler", {Title = "Enable Hip Height", Default = false, Callback = function(PH)
         _G.HipHeightOn = PH
         if PH then
         game.Players.LocalPlayer.Character.Humanoid.HipHeight = _G.HipHeight or 2
         end
-        end)
+        end
+		})
 
-        local enablerfly = Tabs.Fly:AddToggle("flyenabler", {Title = "Enable Fly", Default = false })
-
-        enablerfly:OnChanged(function(state)
+        local enablerfly = Tabs.Fly:AddToggle("flyenabler", {Title = "Enable Fly", Default = false, Callback = function(state)
         flyToggle = state
         if flyToggle then
         if game:GetService("UserInputService").TouchEnabled then
@@ -1332,22 +1287,20 @@ local Options = Fluent.Options
         NOFLY()
         UnMobileFly()
         end
-        end)
+        end
+		})
 
-        local enablernigga = Tabs.Fly:AddToggle("niggaenabler", {Title = "Enable Walkspeed", Default = false })
-
-        enablernigga:OnChanged(function(state)
+        local enablernigga = Tabs.Fly:AddToggle("niggaenabler", {Title = "Enable Walkspeed", Default = false, Callback = function(state)
         setSpeed(state and speed or 16)
-        end)
+        end
+		})
 
         local Section = Tabs.Fly:AddSection("Misc", "flame")
 
         local RunService = game:GetService("RunService")
         local noclipConnection
 
-        local noclipz = Tabs.Fly:AddToggle("clipnoz", {Title = "No Clip", Default = false })
-
-        noclipz:OnChanged(function(state)
+        local noclipz = Tabs.Fly:AddToggle("clipnoz", {Title = "No Clip", Default = false, Callback = function(state)
         if state then
         noclipConnection = RunService.Stepped:Connect(function()
         local char = Players.LocalPlayer.Character
@@ -1365,14 +1318,13 @@ local Options = Fluent.Options
         noclipConnection = nil
         end
         end
-        end)
+        end
+		})
 
         local UserInputService = game:GetService("UserInputService")
         local infJumpConnection
 
-        local infj = Tabs.Fly:AddToggle("Infj", {Title = "Inf Jump", Default = false })
-
-        infj:OnChanged(function(state)
+        local infj = Tabs.Fly:AddToggle("Infj", {Title = "Inf Jump", Default = false, Callback = function(state)
         if state then
                 infJumpConnection = UserInputService.JumpRequest:Connect(function()
                     local char = Players.LocalPlayer.Character
@@ -1387,11 +1339,10 @@ local Options = Fluent.Options
                     infJumpConnection = nil
                 end
             end
-        end)
+        end
+		})
 
-  local esplay = Tabs.esp:AddToggle("espPlayer", {Title = "Esp Players", Default = false })
-
-esplay:OnChanged(function(enable)
+  local esplay = Tabs.esp:AddToggle("espPlayer", {Title = "Esp Players", Default = false, Callback = function(enable)
         _G.EspPlayerOn = enable
         if enable then
             pcall(function()
@@ -1400,17 +1351,16 @@ esplay:OnChanged(function(enable)
                 else
                     _G.EspPlayerOn = false
         end
-        end)
+        end})
 
-  local esptrre = Tabs.esp:AddToggle("espTree", {Title = "Esp Tree Health", Default = false })
-
-esptogol:OnChanged(function(enable)
+  local esptrre = Tabs.esp:AddToggle("espTree", {Title = "Esp Tree Health", Default = false, Callback = function(enable)
         if enable then
                 enableTreeESP()
             else
                 disableTreeESP()
             end
-        end)
+        end
+		})
 
         local Section = Tabs.esp:AddSection("Esp Items", "package")
 
@@ -1420,9 +1370,7 @@ esptogol:OnChanged(function(enable)
             Multi = true,
             Search = true,
             Default = {},
-        })
-
-        espItemz:OnChanged(function(options)
+            Callback = function(options)
         selectedItems = options
         if espItemsEnabled then
         for _, name in ipairs(ie) do
@@ -1437,11 +1385,10 @@ esptogol:OnChanged(function(enable)
         Desp(name, "item")
         end
         end
-        end)
+			end
+		})
 
-        local esptogol = Tabs.esp:AddToggle("espToggle", {Title = "Enable Esp", Default = false })
-
-        esptogol:OnChanged(function(state)
+        local esptogol = Tabs.esp:AddToggle("espToggle", {Title = "Enable Esp", Default = false, Callback = function(state)
         espItemsEnabled = state
         for _, name in ipairs(ie) do
         if state and table.find(selectedItems, name) then
@@ -1471,7 +1418,8 @@ esptogol:OnChanged(function(enable)
         espConnections["Items"] = nil
         end
         end
-        end)
+        end
+		})
 
         local Section = Tabs.esp:AddSection("Esp Entity", "user")
 
@@ -1481,9 +1429,7 @@ esptogol:OnChanged(function(enable)
             Multi = true,
             Search = true,
             Default = {},
-        })
-
-        espItemz:OnChanged(function(options)
+            Callback = function(options)
         selectedMobs = options
             if espMobsEnabled then
                 for _, name in ipairs(me) do
@@ -1498,11 +1444,10 @@ esptogol:OnChanged(function(enable)
                     Desp(name, "mob")
                 end
             end
-        end)
+        end
+		})
 
-        local esptogol2 = Tabs.esp:AddToggle("esptoggle2", {Title = "Enable Esp", Default = false })
-
-        esptogol:OnChanged(function(state)
+        local esptogol2 = Tabs.esp:AddToggle("esptoggle2", {Title = "Enable Esp", Default = false, Callback = function(state)
         espMobsEnabled = state
             for _, name in ipairs(me) do
                 if state and table.find(selectedMobs, name) then
@@ -1532,7 +1477,8 @@ esptogol:OnChanged(function(enable)
                     espConnections["Mobs"] = nil
                 end
             end
-        end)
+        end
+		})
 
         local Section = Tabs.Misc:AddSection("Miscellaneous", "settings")
 
@@ -1540,9 +1486,7 @@ esptogol:OnChanged(function(enable)
         local instantInteractConnection
         local originalHoldDurations = {}
 
-        local instantin = Tabs.Misc:AddToggle("intantIn", {Title = "Instant Interact", Default = false })
-
-        instantin:OnChanged(function(state)
+        local instantin = Tabs.Misc:AddToggle("intantIn", {Title = "Instant Interact", Default = false, Callback = function(state)
         instantInteractEnabled = state
 
             if state then
@@ -1571,11 +1515,10 @@ esptogol:OnChanged(function(enable)
                 end
                 originalHoldDurations = {}
             end
-        end)
+        end
+		})
 
-        local autocoins = Tabs.Misc:AddToggle("autoCollectCoins", {Title = "Auto Collect Coin Stacks", Default = false })
-
-        autocoins:OnChanged(function(value)
+        local autocoins = Tabs.Misc:AddToggle("autoCollectCoins", {Title = "Auto Collect Coin Stacks", Default = false, Callback = function(value)
         if value then
             _G.AutoCollectCoins = true
             coroutine.wrap(function()
@@ -1593,11 +1536,10 @@ esptogol:OnChanged(function(enable)
         else
             _G.AutoCollectCoins = false
         end
-        end)
+        end
+		})
 
-        local autoanvil = Tabs.Misc:AddToggle("autoAnvil", {Title = "Auto Build Anvil", Default = false })
-
-        autoanvil:OnChanged(function(state)
+        local autoanvil = Tabs.Misc:AddToggle("autoAnvil", {Title = "Auto Build Anvil", Default = false, Callback = function(state)
         autoBuildAnvil = state
         task.spawn(function()
             while autoBuildAnvil do
@@ -1611,7 +1553,8 @@ esptogol:OnChanged(function(enable)
                 end
             end
         end)
-        end)
+        end
+		})
 
         local Section = Tabs.Misc:AddSection("Anti's", "skull")
 
@@ -1619,9 +1562,7 @@ esptogol:OnChanged(function(enable)
         local ReplicatedStorage = game:GetService("ReplicatedStorage")
         local torchLoop = nil
 
-        local stunder = Tabs.Misc:AddToggle("stunDeer", {Title = "Auto Stun Deer", Default = false })
-
-        stunder:OnChanged(function(state)
+        local stunder = Tabs.Misc:AddToggle("stunDeer", {Title = "Auto Stun Deer", Default = false, Callback = function(state)
         if state then
             torchLoop = RunService.RenderStepped:Connect(function()
                 pcall(function()
@@ -1641,7 +1582,8 @@ esptogol:OnChanged(function(enable)
                 torchLoop = nil
             end
         end
-        end)
+        end
+		})
 
         local RunService = game:GetService("RunService")
         local player = Players.LocalPlayer
@@ -1661,9 +1603,7 @@ esptogol:OnChanged(function(enable)
         local escapeLoopDeer
         local escapeLoopRam
 
-        local escowl = Tabs.Misc:AddToggle("escOwl", {Title = "Auto Escape From Owl", Default = false })
-
-        escowl:OnChanged(function(state)
+        local escowl = Tabs.Misc:AddToggle("escOwl", {Title = "Auto Escape From Owl", Default = false, Callback = function(state)
         if state then
             escapeLoopOwl = RunService.RenderStepped:Connect(function()
                 pcall(function()
@@ -1686,11 +1626,10 @@ esptogol:OnChanged(function(enable)
                 escapeLoopOwl = nil
             end
         end
-        end)
+        end
+		})
 
-        local esder = Tabs.Misc:AddToggle("esDer", {Title = "Auto Escape From Deer", Default = false })
-
-        esder:OnChanged(function(state)
+        local esder = Tabs.Misc:AddToggle("esDer", {Title = "Auto Escape From Deer", Default = false, Callback = function(state)
         if state then
             escapeLoopDeer = RunService.RenderStepped:Connect(function()
                 pcall(function()
@@ -1713,11 +1652,10 @@ esptogol:OnChanged(function(enable)
                 escapeLoopDeer = nil
             end
         end
-        end)
+        end
+		})
 
-        local esrm = Tabs.Misc:AddToggle("esRm", {Title = "Auto Escape From Ram", Default = false })
-
-        esrm:OnChanged(function(state)
+        local esrm = Tabs.Misc:AddToggle("esRm", {Title = "Auto Escape From Ram", Default = false, Callback = function(state)
         if state then
             escapeLoopRam = RunService.RenderStepped:Connect(function()
                 pcall(function()
@@ -1740,7 +1678,8 @@ esptogol:OnChanged(function(enable)
                 escapeLoopRam = nil
             end
         end
-        end)
+			end
+		})
 
         local Section = Tabs.Fun:AddSection("Fun", "star")
 
@@ -1764,23 +1703,20 @@ esptogol:OnChanged(function(enable)
 
         RunService.Heartbeat:Connect(autoDelete)
 
-        local deowl = Tabs.Fun:AddToggle("deOwl", {Title = "Auto Delete Owl", Default = false })
-
-        deowl:OnChanged(function(state)
+        local deowl = Tabs.Fun:AddToggle("deOwl", {Title = "Auto Delete Owl", Default = false, Callback = function(state)
             deleteSettings.Owl = state
-        end)
+        end
+		})
 
-        local dedr = Tabs.Fun:AddToggle("deDr", {Title = "Auto Delete Deer", Default = false })
-
-        dedr:OnChanged(function(state)
+        local dedr = Tabs.Fun:AddToggle("deDr", {Title = "Auto Delete Deer", Default = false, Callback = function(state)
             deleteSettings.Deer = state
-        end)
+        end
+		})
 
-        local drm = Tabs.Fun:AddToggle("dRm", {Title = "Auto Delete Ram", Default = false })
-
-        drm:OnChanged(function(state)
+        local drm = Tabs.Fun:AddToggle("dRm", {Title = "Auto Delete Ram", Default = false, Callback = function(state)
             deleteSettings.Ram = state
-        end)
+        end
+		})
 
         local sldier = Tabs.Main:AddSlider("grvSl", {
             Title = "Gravity",
@@ -1834,9 +1770,7 @@ esptogol:OnChanged(function(enable)
             end
         end)
 
-        local hbar = Tabs.Fun:AddToggle("hbae", {Title = "No Health Bar", Default = false })
-
-        hbar:OnChanged(function(state)
+        local hbar = Tabs.Fun:AddToggle("hbae", {Title = "No Health Bar", Default = false, Callback = function(state)
         _G.GodModeEnabled = state
         _G.ApplyGodMode(state)
         if state then
@@ -1852,11 +1786,10 @@ esptogol:OnChanged(function(enable)
                         Duration = 2,
                     })
         end
-        end)
+        end
+		})
 
-        local gmd = Tabs.Fun:AddToggle("gMd", {Title = "God Mode", Default = false })
-
-        gmd:OnChanged(function(value)
+        local gmd = Tabs.Fun:AddToggle("gMd", {Title = "God Mode", Default = false, Callback = function(value)
         if value then
             _G.GodModeToggle = true
             spawn(function()
@@ -1877,7 +1810,8 @@ esptogol:OnChanged(function(enable)
         else
             _G.GodModeToggle = false
         end
-        end)
+        end
+		})
 
         Tabs.Fun:AddButton({
             Title = "Auto Days Farm GUI",
@@ -1928,9 +1862,7 @@ esptogol:OnChanged(function(enable)
 
         storeColorCorrectionParent()
 
-        local nfog = Tabs.Vision:AddToggle("nflg", {Title = "Disable Fog", Default = false })
-
-        nfog:OnChanged(function(state)
+        local nfog = Tabs.Vision:AddToggle("nflg", {Title = "Disable Fog", Default = false, Callback = function(state)
             local Lighting = game:GetService("Lighting")
 
             if state then
@@ -1970,7 +1902,8 @@ esptogol:OnChanged(function(enable)
 
 
             end
-        end)
+        end
+		})
 
         local originalLightingValues = {
             Brightness = nil,
@@ -1996,9 +1929,7 @@ esptogol:OnChanged(function(enable)
 
         storeOriginalLighting()
 
-        local nfre = Tabs.Vision:AddToggle("nfrr", {Title = "Disable Night Campfire Effect", Default = false })
-
-        nfre:OnChanged(function(state)
+        local nfre = Tabs.Vision:AddToggle("nfrr", {Title = "Disable Night Campfire Effect", Default = false, Callback = function(state)
             local Lighting = game:GetService("Lighting")
 
             if state then
@@ -2023,11 +1954,10 @@ esptogol:OnChanged(function(enable)
                     colorCorrection.Parent = Lighting
                 end
             end
-        end)
+        end
+		})
 
-        local fbr = Tabs.Vision:AddToggle("fbrr", {Title = "Full Bright", Default = false })
-
-        fbr:OnChanged(function(state)
+        local fbr = Tabs.Vision:AddToggle("fbrr", {Title = "Full Bright", Default = false, Callback = function(state)
         if state then
             Lighting.ClockTime = 14
             Lighting.Brightness = 2.2
@@ -2044,16 +1974,15 @@ esptogol:OnChanged(function(enable)
             Lighting.GlobalShadows = originalLightingValues.GlobalShadows
             Lighting.Technology = originalLightingValues.Technology
         end
-        end)
+        end
+		})
 
 
         local NoFogToggle = false
         local OriginalFogStart = Lighting.FogStart
         local OriginalFogEnd = Lighting.FogEnd
 
-        local rfog = Tabs.Vision:AddToggle("rfg", {Title = "Remove Fog", Default = false })
-
-        rfog:OnChanged(function(state)
+        local rfog = Tabs.Vision:AddToggle("rfg", {Title = "Remove Fog", Default = false, Callback = function(state)
             NoFogToggle = state
 
             if not state then
@@ -2074,7 +2003,8 @@ esptogol:OnChanged(function(enable)
                     print("[] hi 3")
                 end
             end
-        end)
+        end
+		})
 
         if not vibrantEffect then
             Lighting.ClockTime = 14
@@ -2088,9 +2018,7 @@ esptogol:OnChanged(function(enable)
             vibrantEffect.Parent = Lighting
         end
 
-        local vibr = Tabs.Vision:AddToggle("vclr", {Title = "Vibrant Colors", Default = false })
-
-        vibr:OnChanged(function(state)
+        local vibr = Tabs.Vision:AddToggle("vclr", {Title = "Vibrant Colors", Default = false, Callback = function(state)
         if state then
             Lighting.ClockTime = 14
             Lighting.GlobalShadows = false
@@ -2112,7 +2040,8 @@ esptogol:OnChanged(function(enable)
             Lighting.ColorShift_Top = Color3.new(0, 0, 0)
             Lighting.ColorShift_Bottom = Color3.new(0, 0, 0)
         end
-        end)
+        end
+		})
 
         Tabs.Vision:AddButton({
             Title = "Remove Gameplay Paused",
@@ -2182,9 +2111,7 @@ esptogol:OnChanged(function(enable)
 
         local Section = Tabs.Codes:AddSection("Lobby", "eye")
 
-        local cod = Tabs.Codes:AddToggle("codez", {Title = "Redeem All Codes", Default = false })
-
-        cod:OnChanged(function(value)
+        local cod = Tabs.Codes:AddToggle("codez", {Title = "Redeem All Codes", Default = false, Callback = function(value)
         if value then
             local codes = {
                 "AFTERPARTY",
@@ -2200,7 +2127,8 @@ esptogol:OnChanged(function(enable)
                 task.wait(0.25)
             end
         end
-        end)
+        end
+		})
 
         end
 
