@@ -87,6 +87,8 @@ do
     InterfaceManager = res
 end
 
+local WindUI = Fluent
+
 local scan_map = false
 
 local killAuraToggle = false
