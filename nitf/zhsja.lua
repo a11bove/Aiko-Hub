@@ -458,7 +458,6 @@ end
                         Players.LocalPlayer.Character:FindFirstChildOfClass('Humanoid').PlatformStand = false
                     end
                 end)
-            end
             flyKeyDown = IYMouse.InputBegan:Connect(function(input)
                 if input.UserInputType == Enum.UserInputType.Keyboard then
                     local KEY = input.KeyCode.Name
@@ -498,6 +497,7 @@ end
             end)
             FLY()
         end
+end
 
         local function NOFLY()
             FLYING = false
