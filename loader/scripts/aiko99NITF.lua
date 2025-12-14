@@ -20,5 +20,6 @@ if settings.successArea then
         end)
 end
 
-loadstring(game:HttGet("https://raw.githubusercontent.com/a11bove/Aiko-Hub/refs/heads/main/nitf/func.lua"))()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/Aiko-Hub/refs/heads/main/nitf/ui.lua"))()
+-- loadstring(game:HttGet("https://raw.githubusercontent.com/a11bove/Aiko-Hub/refs/heads/main/nitf/func.lua"))()
+-- loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/Aiko-Hub/refs/heads/main/nitf/ui.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/Aiko-Hub/refs/heads/main/nitf/zhsja.lua"))()
