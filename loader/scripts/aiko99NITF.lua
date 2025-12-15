@@ -1,10 +1,3 @@
-print("SCRIPT STARTED")
-
-task.delay(5, function()
-    print("SCRIPT STILL RUNNING")
-end)
-
-
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
