@@ -2,12 +2,115 @@ if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
-game:GetService("StarterGui"):SetCore("SendNotification", {
-    Title = "@aiko",
-    Text = "Diesel 'N Steel Script Loaded!",
-    Icon = "rbxassetid://140356301069419",
-    Duration = 2
+local existingGui = game.CoreGui:FindFirstChild("aikoware")
+if existingGui then
+    existingGui:Destroy()
+end
+
+local existingHirimi = game.CoreGui:FindFirstChild("HirimiGui")
+if existingHirimi then
+    existingHirimi:Destroy()
+end
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Mc4121ban/Fluriore-UI/main/source.lua"))()
+
+Library:MakeNotify({
+    Title = "@aikoware",
+    Description = "",
+    Content = "Diesel 'N Steel Script Loaded!",
+    Color = Color3.fromRGB(255,100,100),
+    Delay = 3
 })
+
+local Window = Library:MakeGui({
+    NameHub = "@aikoware",
+    Description = " | made by untog !",
+    Color = Color3.fromRGB(81, 40, 128)
+})
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "aikoware"
+gui.IgnoreGuiInset = true
+gui.ResetOnSpawn = false
+gui.Parent = game.CoreGui
+
+local button = Instance.new("ImageButton")
+button.Size = UDim2.new(0, 53, 0, 53)
+button.Position = UDim2.new(0, 60, 0, 60)
+button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+button.BackgroundTransparency = 0.5
+button.Image = "rbxassetid://140356301069419"
+button.Name = "aikowaretoggle"
+button.AutoButtonColor = true
+button.Parent = gui
+
+local corner = Instance.new("UICorner", button)
+corner.CornerRadius = UDim.new(0, 12)
+
+local stroke = Instance.new("UIStroke")
+stroke.Thickness = 1.5
+stroke.Color = Color3.fromRGB(45, 45, 45)
+stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+stroke.Parent = button
+
+local gradient = Instance.new("UIGradient")
+gradient.Color =
+    ColorSequence.new {
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 100)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 0, 0))
+}
+gradient.Rotation = 45
+gradient.Parent = stroke
+
+local dragging, dragInput, dragStart, startPos
+
+button.InputBegan:Connect(
+    function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = button.Position
+
+            input.Changed:Connect(
+                function()
+                    if input.UserInputState == Enum.UserInputState.End then
+                        dragging = false
+                    end
+                end
+            )
+        end
+    end
+)
+
+button.InputChanged:Connect(
+    function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end
+)
+
+game:GetService("UserInputService").InputChanged:Connect(
+    function(input)
+        if input == dragInput and dragging then
+            local delta = input.Position - dragStart
+            button.Position =
+                UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end
+)
+
+button.MouseButton1Click:Connect(
+    function()
+        local HirimiGui = game.CoreGui:FindFirstChild("HirimiGui")
+        if HirimiGui then
+            local DropShadowHolder = HirimiGui:FindFirstChild("DropShadowHolder")
+            if DropShadowHolder then
+                DropShadowHolder.Visible = not DropShadowHolder.Visible
+            end
+        end
+    end
+)
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
@@ -99,99 +202,82 @@ local function duplicateCoin(state)
     end
 end
 
-local Fluent = loadstring(game:HttpGet("https://raw.githubusercontent.com/discoart/FluentPlus/refs/heads/main/Beta.lua"))()
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
-
-local Window = Fluent:CreateWindow({
-    Title = "@aiko",
-    SubTitle = "| made by untog !",
-    Search = false,
-    Icon = "rbxassetid://140356301069419",
-    TabWidth = 120,
-    Size = UDim2.fromOffset(420, 320),
-    Acrylic = false,
-    Theme = "Dark",
-    MinimizeKey = Enum.KeyCode.LeftControl,
-    UserInfo = false,
+local main = Window:CreateTab({
+    Name = "Main",
+    Icon = "rbxassetid://10723407389"
 })
 
-local Tabs = {
-    Main = Window:AddTab({ Title = "Main",  Icon = "star" }),
-    Info = Window:AddTab({ Title = "Info", Icon = "info" }),
-}
+local expsec = main:AddSection("Exploit")
 
-local Minimizer = Fluent:CreateMinimizer({
-    Icon = "rbxassetid://140356301069419",
-    Size = UDim2.fromOffset(44, 44),
-    Position = UDim2.new(0, 320, 0, 24),
-    Acrylic = true,
-    Corner = 10,
-    Transparency = 0.5,
-    Draggable = true,
-    Visible = true
+expsec:AddParagraph({
+    Title = "Tip:",
+    Content = "Sobrahan niyo ng sukli para dalawang beses mag duplicate yung coins."
 })
 
-local Options = Fluent.Options
-
-do
-    local Section = Tabs.Main:AddSection("Exploit", "star")
-
-    Tabs.Main:AddParagraph({
-        Content = "Tip: Sobrahan niyo ng sukli para dalawang beses mag dupe yung coin."
-    })
-
-    local DupeToggle = Tabs.Main:AddToggle("dupeCoin", {
-        Title = "Manual Duplicate Coin",
-        Default = false
-    })
-
-    DupeToggle:OnChanged(function(value)
+expsec:AddToggle({
+    Title = "Manual Duplicate Coins",
+    Content = "",
+    Default = false,
+    Callback = function(value)
         duplicateCoin(value)
-    end)
+    end
+})
 
-    local KmToggle = Tabs.Main:AddToggle("autoKM", {
-        Title = "Auto KM Farm",
-        Default = false
-    })
-
-    KmToggle:OnChanged(function(value)
+expsec:AddToggle({
+    Title = "Auto Farm KM",
+    Content = "",
+    Default = false,
+    Callback = function(value)
         autoFarmKm(value)
-    end)
-
-    local Section = Tabs.Main:AddSection("Visual", "eye")
-    
-    Tabs.Main:AddParagraph({
-        Content = "I recommend to use the add exp if you're only going to buy something in talyer, then rejoin so your exp wont get reset if you bump into other jeeps or walls."
-    })
-    
-    Tabs.Main:AddButton({
-        Title = "Add Exp",
-        Description = "Visual but usable in talyer.",
-        Callback = function()
-            activateExp()
-        end
-    })
-
-Tabs.Info:AddParagraph({
-    Content = "Warning: I made this script for testing purposes only, I am not responsible for any bans or any other consequences."
+    end
 })
 
-Tabs.Info:AddParagraph({
-    Content = "You can join to our discord server for more information."
+local visec = main:AddSection("Visual")
+
+visec:AddParagraph({
+    Title = "Recommend:",
+    Content = "Use the add exp if you're only going to buy something in talyer, then rejoin so your exp wont get reset if you bump into other jeeps or walls."
 })
 
-Tabs.Info:AddButton({
-    Title = "Copy Discord Link",
+visec:AddButton({
+    Title = "Add Exp",
+    Content = "Visual but usable in talyer.",
     Callback = function()
-            setclipboard("https://discord.gg/JccfFGpDNV")
-        Fluent:Notify({
-            Title = "@aiko",
-            Content = "[AIKO]: Link Copied!",
-            Duration = 3
+        activateExp()
+        Library:MakeNotify({
+            Title = "@aikoware",
+            Description = "",
+            Content = "Exp Added!"
         })
     end
 })
-end
 
-Window:SelectTab(1)
+local info = Window:CreateTab({
+    Title = "Information",
+    Icon = "rbxassetid://10723415903"
+})
+
+local infosec = info:AddSection("Info")
+
+infosec:AddParagraph({
+    Title = "Warning:",
+    Content = "I made this script for testing purposes only, I am not responsible for any bans or any other consequences."
+})
+
+infosec:AddParagraph({
+    Title = "Discord:",
+    Content = "Join to our discord server for more updates and information."
+})
+
+infosec:AddButton({
+    Title = "Copy Server Invite",
+    Content = "",
+    Callback = function()
+            setclipboard("https://discord.gg/JccfFGpDNV")
+        Library:MakeNotify({
+            Title = "@aikoware",
+            Description = "",
+            Content = "Link Copied!"
+        })
+    end
+})
