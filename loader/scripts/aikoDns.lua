@@ -253,7 +253,7 @@ visec:AddButton({
 })
 
 local info = Window:CreateTab({
-    Title = "Information",
+    Name = "Information",
     Icon = "rbxassetid://10723415903"
 })
 
