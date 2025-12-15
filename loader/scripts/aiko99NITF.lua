@@ -1,5 +1,24 @@
+print("SCRIPT STARTED")
+
+task.delay(5, function()
+    print("SCRIPT STILL RUNNING")
+end)
+
+
 if not game:IsLoaded() then
     game.Loaded:Wait()
+end
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+while not Players.LocalPlayer do
+    task.wait()
+end
+
+local player = Players.LocalPlayer
+if not player.Character then
+    player.CharacterAdded:Wait()
 end
 
 local existingGui = game.CoreGui:FindFirstChild("aikoware")
@@ -28,9 +47,6 @@ local Window = Library:MakeGui({
     Color = Color3.fromRGB(81, 40, 128)
 })
 
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local rs = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local LocalPlayer = Players.LocalPlayer
