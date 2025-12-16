@@ -12,7 +12,7 @@ if existingHirimi then
     existingHirimi:Destroy()
 end
 
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/loader/uisrc.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Mc4121ban/Fluriore-UI/main/source.lua"))()
 
 Library:MakeNotify({
     Title = "@aikoware",
@@ -23,11 +23,11 @@ Library:MakeNotify({
 })
 
 local Window = Library:MakeGui({
-    NameHub = "@aikoware",
-    Description = " | made by untog !",
+    NameHub = "@aikoware ",
+    Description = "| made by untog !",
     Color = Color3.fromRGB(81, 40, 128),
-    ["Tab Width"] = 150,
-    ["Show Player Info"] = false
+    ["Logo Player"] = "",
+	["Name Player"] = ""
 })
 
 local gui = Instance.new("ScreenGui")
