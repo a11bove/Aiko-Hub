@@ -28,8 +28,7 @@ local Window = Library:MakeGui({
         Color = Color3.fromRGB(81, 40, 128),
         ["Logo Player"] = "https://www.roblox.com/headshot-thumbnail/image?userId=544503914&width=420&height=420&format=png",
         ["Name Player"] = "Protected By @aikoware"
-    })
-end)
+})
 
 local gui = Instance.new("ScreenGui")
 gui.Name = "aikoware"
@@ -161,8 +160,7 @@ end)
 local main = Window:CreateTab({
         Name = "Home",
         Icon = "rbxassetid://10723407389"
-    })
-end)
+})
 
 local fsh = Window:CreateTab({
     Name = "Fishing",
