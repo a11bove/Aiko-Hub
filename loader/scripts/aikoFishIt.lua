@@ -1,4 +1,3 @@
-
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
@@ -382,7 +381,7 @@ lgt:AddToggle({
     end
 })
 
-local fis = fsh:AddSection("Fishing")
+local fis = fsh:AddSection("Instant")
 
 local InstantFishEnabled = false
 local CancelDelay = 0.1
@@ -475,6 +474,7 @@ local CancelDelayInput = fis:AddInput({
     end
 })
 
+local super = fsh:AddSection("Super Instant")
 -- Super Instant Fishing
 local SuperInstantEnabled = false
 local SuperReelDelay = 2
@@ -513,7 +513,7 @@ local function StopSuperInstant()
     SuperInstantEnabled = false
 end
 
-fis:AddToggle({
+super:AddToggle({
     Title = "Super Instant Fishing",
     Content = "Setting depends on your rod.",
           Default = false,
@@ -526,7 +526,7 @@ fis:AddToggle({
     end
 })
 
-local SuperReelDelayInput = fis:AddInput({
+local SuperReelDelayInput = super:AddInput({
     Title = "Custom Delay Reel",
     Content = "Enter delay in seconds",
     Placeholder = "Enter number...",
@@ -540,7 +540,7 @@ local SuperReelDelayInput = fis:AddInput({
     end
 })
 
-local SuperCompleteDelayInput = fis:AddInput({
+local SuperCompleteDelayInput = super:AddInput({
     Title = "Custom Complete Delay",
     Content = "Enter delay in seconds",
     Placeholder = "Enter number...",
@@ -553,6 +553,8 @@ local SuperCompleteDelayInput = fis:AddInput({
         end
     end
 })
+
+local sper2 = fsh:AddSection("Super Instant V2")
 
 local SuperInstantV2Enabled = false
 local ScytheReelDelay = 1.05
@@ -591,7 +593,7 @@ local function StopSuperInstantV2()
     SuperInstantV2Enabled = false
 end
 
-fis:AddToggle({
+sper2:AddToggle({
     Title = "Super Instant Fishing V2",
     Content = "For scythe rod users.",
           Default = false,
@@ -604,7 +606,7 @@ fis:AddToggle({
     end
 })
 
-local ScytheCompleteDelayInput = fis:AddInput({
+local ScytheCompleteDelayInput = sper2:AddInput({
     Title = "Custom Complete Delay",
     Content = "Enter delay in seconds",
     Placeholder = "Enter number...",
@@ -618,7 +620,7 @@ local ScytheCompleteDelayInput = fis:AddInput({
     end
 })
 
-local ScytheReelDelayInput = fis:AddInput({
+local ScytheReelDelayInput = sper2:AddInput({
     Title = "Custom Cancel Delay",
     Content = "Enter delay in seconds",
     Placeholder = "Enter number...",
