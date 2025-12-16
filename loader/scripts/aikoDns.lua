@@ -12,7 +12,7 @@ if existingHirimi then
     existingHirimi:Destroy()
 end
 
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Mc4121ban/Fluriore-UI/main/source.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/loader/src.lua"))()
 
 Library:MakeNotify({
     Title = "@aikoware",
