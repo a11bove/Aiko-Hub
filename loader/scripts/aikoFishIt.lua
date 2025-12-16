@@ -373,7 +373,7 @@ lgt:AddToggle({
 	end
 })
 
-local fis = fsh:AddSection("Fishing")
+local fis = fsh:AddSection("Instant Fishing")
 
 local InstantFishEnabled = false
 local CancelDelay = 0.1
