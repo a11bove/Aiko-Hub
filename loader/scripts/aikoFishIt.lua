@@ -12,8 +12,38 @@ if existingHirimi then
     existingHirimi:Destroy()
 end
 
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/loader/src.lua"))()
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+
+-- Clean up existing GUIs
+local existingGui = game.CoreGui:FindFirstChild("aikoware")
+if existingGui then
+    existingGui:Destroy()
+end
+
+local existingHirimi = game.CoreGui:FindFirstChild("HirimiGui")
+if existingHirimi then
+    existingHirimi:Destroy()
+end
+
+-- Add error handling for library loading
+local success, Library = pcall(function()
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/loader/src.lua"))()
+end)
+
+if not success then
+    warn("Failed to load library:", Library)
+    return
+end
+
+if not Library then
+    warn("Library is nil after loading")
+    return
+end
+
 print("Library loaded successfully:", Library)
+print("Library type:", type(Library))
 
 Library:MakeNotify({
     Title = "@aikoware",
@@ -23,13 +53,48 @@ Library:MakeNotify({
     Delay = 3
 })
 
-local Window = Library:MakeGui({
-    NameHub = "@aikoware ",
-    Description = "| made by untog !",
-    Color = Color3.fromRGB(81, 40, 128),
-    ["Logo Player"] = "https://www.roblox.com/headshot-thumbnail/image?userId=544503914&width=420&height=420&format=png",
-["Name Player"] = "Protected By @aikoware"
-})
+-- Check if MakeNotify exists
+if Library.MakeNotify then
+    print("MakeNotify exists")
+    Library:MakeNotify({
+        Title = "@aikoware",
+        Description = "",
+        Content = "Fish It Script Loaded!",
+        Color = Color3.fromRGB(255,100,100),
+        Delay = 3
+    })
+else
+    warn("MakeNotify does not exist in Library")
+end
+
+-- Check if MakeGui exists
+if not Library.MakeGui then
+    warn("MakeGui does not exist in Library")
+    return
+end
+
+local windowSuccess, Window = pcall(function()
+    return Library:MakeGui({
+        NameHub = "@aikoware ",
+        Description = "| made by untog !",
+        Color = Color3.fromRGB(81, 40, 128),
+        ["Logo Player"] = "https://www.roblox.com/headshot-thumbnail/image?userId=544503914&width=420&height=420&format=png",
+        ["Name Player"] = "Protected By @aikoware"
+    })
+end)
+
+if not windowSuccess then
+    warn("Failed to create window:", Window)
+    return
+end
+
+if not Window then
+    warn("Window is nil after creation")
+    return
+end
+
+print("Window created successfully:", Window)
+print("Window type:", type(Window))
 
 local gui = Instance.new("ScreenGui")
 gui.Name = "aikoware"
@@ -158,40 +223,86 @@ local lockPositionState = {
     position = nil
 }
 
-local main = Window:CreateTab({
-    Name = "Home",
-    Icon = "rbxassetid://10723407389"
-})
+if not Window.CreateTab then
+    warn("CreateTab does not exist in Window")
+    warn("Available Window methods:")
+    for k, v in pairs(Window) do
+        print(k, type(v))
+    end
+    return
+end
+
+-- Try creating tabs with error handling
+local tabSuccess, main = pcall(function()
+    return Window:CreateTab({
+        Name = "Home",
+        Icon = "rbxassetid://10723407389"
+    })
+end)
+
+if not tabSuccess then
+    warn("Failed to create main tab:", main)
+    return
+end
+
 print("Main tab created:", main)
+print("Main tab type:", type(main))
+
+-- If main tab was created successfully, check its methods
+if main then
+    print("Available main tab methods:")
+    for k, v in pairs(main) do
+        print(k, type(v))
+    end
+end
+
+-- Continue with other tabs
 local fsh = Window:CreateTab({
-        Name = "Fishing",
-        Icon = "rbxassetid://10734966248"
+    Name = "Fishing",
+    Icon = "rbxassetid://10734966248"
 })
+print("Fishing tab created:", fsh)
 
 local shp = Window:CreateTab({
-        Name = "Shop",
-        Icon = "rbxassetid://10734921935"
+    Name = "Shop",
+    Icon = "rbxassetid://10734921935"
 })
+print("Shop tab created:", shp)
 
 local qst = Window:CreateTab({
-        Name = "Quest",
-        Icon = "rbxassetid://10734965572"
+    Name = "Quest",
+    Icon = "rbxassetid://10734965572"
 })
+print("Quest tab created:", qst)
 
 local utl = Window:CreateTab({
-        Name = "Utility",
-        Icon = "rbxassetid://10709810948"
+    Name = "Utility",
+    Icon = "rbxassetid://10734964600"
 })
+print("Utility tab created:", utl)
 
 local tp = Window:CreateTab({
-        Name = "Teleport",
-        Icon = "rbxassetid://10734886004"
+    Name = "Teleport",
+    Icon = "rbxassetid://10734886004"
 })
+print("Teleport tab created:", tp)
 
 local msc = Window:CreateTab({
-        Name = "Misc",
-        Icon = "rbxassetid://10734964600"
+    Name = "Misc",
+    Icon = "rbxassetid://10734964600"
 })
+print("Misc tab created:", msc)
+
+-- Test adding a section
+if main and main.AddSection then
+    print("AddSection exists on main tab")
+    local testSection = main:AddSection("Test Section")
+    print("Test section created:", testSection)
+else
+    warn("AddSection does not exist on main tab")
+end
+
+print("Script initialization complete")
 
 local uset = main:AddSection("User Settings")
 
