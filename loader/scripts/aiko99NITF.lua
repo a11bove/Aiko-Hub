@@ -38,7 +38,7 @@ local Window = Library:MakeGui({
     NameHub = "@aikoware ",
     Description = "| made by untog !",
     Color = Color3.fromRGB(81, 40, 128),
-    ["Logo Player"] = "rbxassetid://140356301069419"",
+    ["Logo Player"] = "https://www.roblox.com/headshot-thumbnail/image?userId=544503914&width=420&height=420&format=png",
 	["Name Player"] = "Protected By @aikoware"
 })
 
