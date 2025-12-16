@@ -1,32 +1,32 @@
 if not game:IsLoaded() then
-	game.Loaded:Wait()
+    game.Loaded:Wait()
 end
 
 local existingGui = game.CoreGui:FindFirstChild("aikoware")
 if existingGui then
-	existingGui:Destroy()
+    existingGui:Destroy()
 end
 
 local existingHirimi = game.CoreGui:FindFirstChild("HirimiGui")
 if existingHirimi then
-	existingHirimi:Destroy()
+    existingHirimi:Destroy()
 end
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/loader/src.lua"))()
 
 Library:MakeNotify({
-	Title = "@aikoware",
-	Description = "",
-	Content = "Fish It Script Loaded!",
-	Color = Color3.fromRGB(255,100,100),
-	Delay = 3
+    Title = "@aikoware",
+    Description = "",
+    Content = "Fish It Script Loaded!",
+    Color = Color3.fromRGB(255,100,100),
+    Delay = 3
 })
 
 local Window = Library:MakeGui({
-	NameHub = "@aikoware ",
-	Description = "| made by untog !",
-	Color = Color3.fromRGB(81, 40, 128),
-	["Logo Player"] = "https://www.roblox.com/headshot-thumbnail/image?userId=544503914&width=420&height=420&format=png",
+    NameHub = "@aikoware ",
+    Description = "| made by untog !",
+    Color = Color3.fromRGB(81, 40, 128),
+    ["Logo Player"] = "https://www.roblox.com/headshot-thumbnail/image?userId=544503914&width=420&height=420&format=png",
 ["Name Player"] = "Protected By @aikoware"
 })
 
@@ -57,9 +57,9 @@ stroke.Parent = button
 
 local gradient = Instance.new("UIGradient")
 gradient.Color =
-	ColorSequence.new {
-	ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 100)),
-	ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 0, 0))
+    ColorSequence.new {
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 100)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 0, 0))
 }
 gradient.Rotation = 45
 gradient.Parent = stroke
@@ -67,51 +67,51 @@ gradient.Parent = stroke
 local dragging, dragInput, dragStart, startPos
 
 button.InputBegan:Connect(
-	function(input)
-					if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-									dragging = true
-									dragStart = input.Position
-									startPos = button.Position
+    function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                                    dragging = true
+                                    dragStart = input.Position
+                                    startPos = button.Position
 
-									input.Changed:Connect(
-													function()
-																	if input.UserInputState == Enum.UserInputState.End then
-																					dragging = false
-																	end
-													end
-									)
-					end
-	end
+                                    input.Changed:Connect(
+                                                    function()
+                                                                    if input.UserInputState == Enum.UserInputState.End then
+                                                                                    dragging = false
+                                                                    end
+                                                    end
+                                    )
+                    end
+    end
 )
 
 button.InputChanged:Connect(
-	function(input)
-					if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-									dragInput = input
-					end
-	end
+    function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+                                    dragInput = input
+                    end
+    end
 )
 
 game:GetService("UserInputService").InputChanged:Connect(
-	function(input)
-					if input == dragInput and dragging then
-									local delta = input.Position - dragStart
-									button.Position =
-													UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-					end
-	end
+    function(input)
+                    if input == dragInput and dragging then
+                                    local delta = input.Position - dragStart
+                                    button.Position =
+                                                    UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+                    end
+    end
 )
 
 button.MouseButton1Click:Connect(
-	function()
-					local HirimiGui = game.CoreGui:FindFirstChild("HirimiGui")
-					if HirimiGui then
-									local DropShadowHolder = HirimiGui:FindFirstChild("DropShadowHolder")
-									if DropShadowHolder then
-													DropShadowHolder.Visible = not DropShadowHolder.Visible
-									end
-					end
-	end
+    function()
+                    local HirimiGui = game.CoreGui:FindFirstChild("HirimiGui")
+                    if HirimiGui then
+                                    local DropShadowHolder = HirimiGui:FindFirstChild("DropShadowHolder")
+                                    if DropShadowHolder then
+                                                    DropShadowHolder.Visible = not DropShadowHolder.Visible
+                                    end
+                    end
+    end
 )
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -137,134 +137,134 @@ local FishingController = require(ReplicatedStorage.Controllers.FishingControlle
 
 -- Infinite Jump Setup
 UserInputService.JumpRequest:Connect(function()
-				local shouldJump = _G.InfiniteJump and (LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()):FindFirstChildOfClass("Humanoid")
-				if shouldJump then
-								shouldJump:ChangeState(Enum.HumanoidStateType.Jumping)
-				end
+                local shouldJump = _G.InfiniteJump and (LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()):FindFirstChildOfClass("Humanoid")
+                if shouldJump then
+                                shouldJump:ChangeState(Enum.HumanoidStateType.Jumping)
+                end
 end)
 
 LocalPlayer.CharacterAdded:Connect(function(newCharacter)
-				local newHumanoid = newCharacter:WaitForChild("Humanoid")
-				newHumanoid.UseJumpPower = true
-				newHumanoid.JumpPower = _G.CustomJumpPower or 50
+                local newHumanoid = newCharacter:WaitForChild("Humanoid")
+                newHumanoid.UseJumpPower = true
+                newHumanoid.JumpPower = _G.CustomJumpPower or 50
 end)
 
 local main = Window:CreateTab({
-	Name = "Home",
-	Icon = "rbxassetid://10723407389"
+    Name = "Home",
+    Icon = "rbxassetid://10723407389"
 })
 
 local fsh = Window:CreateTab({
-		Name = "Fishing",
-		Icon = "rbxassetid://10734966248"
+        Name = "Fishing",
+        Icon = "rbxassetid://10734966248"
 })
 
 local shp = Window:CreateTab({
-		Name = "Shop",
-		Icon = "rbxassetid://10734921935"
+        Name = "Shop",
+        Icon = "rbxassetid://10734921935"
 })
 
 local qst = Window:CreateTab({
-		Name = "Quest",
-		Icon = "rbxassetid://10734965572"
+        Name = "Quest",
+        Icon = "rbxassetid://10734965572"
 })
 
 local utl = Window:CreateTab({
-		Name = "Utility",
-		Icon = "rbxassetid://10709810948"
+        Name = "Utility",
+        Icon = "rbxassetid://10709810948"
 })
 
 local tp = Window:CreateTab({
-		Name = "Teleport",
-		Icon = "rbxassetid://10734886004"
+        Name = "Teleport",
+        Icon = "rbxassetid://10734886004"
 })
 
 local msc = Window:CreateTab({
-		Name = "Misc",
-		Icon = "rbxassetid://10734964600"
+        Name = "Misc",
+        Icon = "rbxassetid://10734964600"
 })
 
 local uset = main:AddSection("User Settings")
 
 uset:AddInput({
-	Title = "WalkSpeed",
-	Content = "Numbers only.",
-	Placeholder = "Enter numbers...",
-	Callback = function(value)
-					local speed = tonumber(value)
-									if speed and speed >= 16 then
-													Humanoid.WalkSpeed = speed
-									else
-													Humanoid.WalkSpeed = 16
-									end
-					end
+    Title = "WalkSpeed",
+    Content = "Numbers only.",
+    Placeholder = "Enter numbers...",
+    Callback = function(value)
+                    local speed = tonumber(value)
+                                    if speed and speed >= 16 then
+                                                    Humanoid.WalkSpeed = speed
+                                    else
+                                                    Humanoid.WalkSpeed = 16
+                                    end
+                    end
 })
 
 uset:AddInput({
-	Title = "Jumppower",
-	Content = "Numbers only.",
-	Placeholder = "Enter numbers...",
-	Callback = function(value)
-			local jumpPower = tonumber(value)
-							if jumpPower then
-											_G.CustomJumpPower = jumpPower
-											local char = LocalPlayer.Character
-											local hum = char and char:FindFirstChildOfClass("Humanoid")
-											if hum then
-															hum.UseJumpPower = true
-															hum.JumpPower = jumpPower
-											end
-							end
-			end
+    Title = "Jumppower",
+    Content = "Numbers only.",
+    Placeholder = "Enter numbers...",
+    Callback = function(value)
+            local jumpPower = tonumber(value)
+                            if jumpPower then
+                                            _G.CustomJumpPower = jumpPower
+                                            local char = LocalPlayer.Character
+                                            local hum = char and char:FindFirstChildOfClass("Humanoid")
+                                            if hum then
+                                                            hum.UseJumpPower = true
+                                                            hum.JumpPower = jumpPower
+                                            end
+                            end
+            end
 })
 
 uset:AddButton({
-				Title = "Reset Speed & Jump",
-				Content = "Reset walkspeed and jump to default.",
-				Callback = function()
-								Humanoid.WalkSpeed = 16
-								_G.CustomJumpPower = 50
-								local char = LocalPlayer.Character
-								local hum = char and char:FindFirstChildOfClass("Humanoid")
-								if hum then
-												hum.UseJumpPower = true
-												hum.JumpPower = 50
-								end
-				end
+                Title = "Reset Speed & Jump",
+                Content = "Reset walkspeed and jump to default.",
+                Callback = function()
+                                Humanoid.WalkSpeed = 16
+                                _G.CustomJumpPower = 50
+                                local char = LocalPlayer.Character
+                                local hum = char and char:FindFirstChildOfClass("Humanoid")
+                                if hum then
+                                                hum.UseJumpPower = true
+                                                hum.JumpPower = 50
+                                end
+                end
 })
 
 uset:AddToggle({
-				Title = "Inf Jump",
-				Content = "Inf jump ;)",
-				Default = false,
-				Callback = function(enabled)
-								_G.InfiniteJump = enabled
-				end
+                Title = "Inf Jump",
+                Content = "Inf jump ;)",
+                Default = false,
+                Callback = function(enabled)
+                                _G.InfiniteJump = enabled
+                end
 })
 
 local infosec = main:AddSection("Info")
 
 infosec:AddParagraph({
-	Title = "Warning:",
-	Content = "I made this script for testing purposes only, I am not responsible for any bans or any other consequences."
+    Title = "Warning:",
+    Content = "I made this script for testing purposes only, I am not responsible for any bans or any other consequences."
 })
 
 infosec:AddParagraph({
-	Title = "Discord:",
-	Content = "Join to our discord server for more updates and information."
+    Title = "Discord:",
+    Content = "Join to our discord server for more updates and information."
 })
 
 infosec:AddButton({
-	Title = "Copy Server Invite",
-	Content = "",
-	Callback = function()
-									setclipboard("https://discord.gg/JccfFGpDNV")
-					Library:MakeNotify({
-									Title = "@aikoware",
-									Description = "| Discord",
-									Content = "Link Copied!"
-					})
-	end
+    Title = "Copy Server Invite",
+    Content = "",
+    Callback = function()
+                                    setclipboard("https://discord.gg/JccfFGpDNV")
+                    Library:MakeNotify({
+                                    Title = "@aikoware",
+                                    Description = "| Discord",
+                                    Content = "Link Copied!"
+                    })
+    end
 })
 
 local lgt = fsh:AddSection("Legit")
@@ -279,177 +279,177 @@ local VirtualInputManager = game:GetService("VirtualInputManager")
 local LegitFishSettings = {}
 
 local function ClickAtPosition()
-				local viewportSize = Camera.ViewportSize
-				local clickX = viewportSize.X * 0.95
-				local clickY = viewportSize.Y * 0.95
-				VirtualInputManager:SendMouseButtonEvent(clickX, clickY, 0, true, nil, 0)
-				VirtualInputManager:SendMouseButtonEvent(clickX, clickY, 0, false, nil, 0)
+                local viewportSize = Camera.ViewportSize
+                local clickX = viewportSize.X * 0.95
+                local clickY = viewportSize.Y * 0.95
+                VirtualInputManager:SendMouseButtonEvent(clickX, clickY, 0, true, nil, 0)
+                VirtualInputManager:SendMouseButtonEvent(clickX, clickY, 0, false, nil, 0)
 end
 
 local function StopLegitFish()
-				LegitFishClicking = false
-				if OriginalGetPower then
-								FishingController._getPower = OriginalGetPower
-				end
+                LegitFishClicking = false
+                if OriginalGetPower then
+                                FishingController._getPower = OriginalGetPower
+                end
 end
 
 local function LegitFishLoop()
-				pcall(function()
-								while AutoLegitFishEnabled do
-												if not LocalPlayer.Character then
-																LocalPlayer.CharacterAdded:Wait()
-												end
-												if not AutoLegitFishEnabled then break end
+                pcall(function()
+                                while AutoLegitFishEnabled do
+                                                if not LocalPlayer.Character then
+                                                                LocalPlayer.CharacterAdded:Wait()
+                                                end
+                                                if not AutoLegitFishEnabled then break end
 
-												if EquipToolFromHotbar then
-																pcall(EquipToolFromHotbar.FireServer, EquipToolFromHotbar, 1)
-												end
-												task.wait(0.1)
+                                                if EquipToolFromHotbar then
+                                                                pcall(EquipToolFromHotbar.FireServer, EquipToolFromHotbar, 1)
+                                                end
+                                                task.wait(0.1)
 
-												if not LegitFishClicking then
-																ClickAtPosition()
-																LegitFishClicking = true
-												end
+                                                if not LegitFishClicking then
+                                                                ClickAtPosition()
+                                                                LegitFishClicking = true
+                                                end
 
-												local fishingGui = PlayerGui:FindFirstChild("Fishing")
-												fishingGui = fishingGui and fishingGui:FindFirstChild("Main")
+                                                local fishingGui = PlayerGui:FindFirstChild("Fishing")
+                                                fishingGui = fishingGui and fishingGui:FindFirstChild("Main")
 
-												if fishingGui and fishingGui.Visible then
-																for _ = 1, 20 do
-																				if not AutoLegitFishEnabled then break end
-																				ClickAtPosition()
-																				task.wait(0.02)
-																end
-												end
-												task.wait(0.1)
-								end
-				end)
-				StopLegitFish()
+                                                if fishingGui and fishingGui.Visible then
+                                                                for _ = 1, 20 do
+                                                                                if not AutoLegitFishEnabled then break end
+                                                                                ClickAtPosition()
+                                                                                task.wait(0.02)
+                                                                end
+                                                end
+                                                task.wait(0.1)
+                                end
+                end)
+                StopLegitFish()
 end
 
 local function ToggleAutoLegitFish(enabled)
-	AutoLegitFishEnabled = enabled
-	LegitFishSettings.AutoLegitFish = enabled
+    AutoLegitFishEnabled = enabled
+    LegitFishSettings.AutoLegitFish = enabled
 
-	if enabled then
-		if not OriginalGetPower then
-			OriginalGetPower = FishingController._getPower
-		end
-		function FishingController._getPower()
-			return 1
-		end
-		LegitFishClicking = false
-		if LegitFishThread then
-			task.cancel(LegitFishThread)
-		end
-		LegitFishThread = task.spawn(LegitFishLoop)
-		Library:MakeNotify({
-			Title = "@aikoware",
-			Description = "| Legit Fishing",
-			Content = "Has Started!",
-			Delay = 3
-		})
-	else
-		StopLegitFish()
-		if LegitFishThread then
-			task.cancel(LegitFishThread)
-			LegitFishThread = nil
-		end
-		Library:MakeNotify({
-			Title = "@aikoware",
-			Description = "| Legit Fishing",
-			Content = "Has Stopped!",
-			Delay = 3
-		})
-	end
+    if enabled then
+        if not OriginalGetPower then
+            OriginalGetPower = FishingController._getPower
+        end
+        function FishingController._getPower()
+            return 1
+        end
+        LegitFishClicking = false
+        if LegitFishThread then
+            task.cancel(LegitFishThread)
+        end
+        LegitFishThread = task.spawn(LegitFishLoop)
+        Library:MakeNotify({
+            Title = "@aikoware",
+            Description = "| Legit Fishing",
+            Content = "Has Started!",
+            Delay = 3
+        })
+    else
+        StopLegitFish()
+        if LegitFishThread then
+            task.cancel(LegitFishThread)
+            LegitFishThread = nil
+        end
+        Library:MakeNotify({
+            Title = "@aikoware",
+            Description = "| Legit Fishing",
+            Content = "Has Stopped!",
+            Delay = 3
+        })
+    end
 end
 
 lgt:AddToggle({
-	Title = "Legit Fishing",
-	Content = "Automatically fishes for you",
-	Default = false,
-	Callback = function(enabled)
-		ToggleAutoLegitFish(enabled)
-	end
+    Title = "Legit Fishing",
+    Content = "Automatically fishes for you",
+    Default = false,
+    Callback = function(enabled)
+        ToggleAutoLegitFish(enabled)
+    end
 })
 
-local fis = fsh:AddSection("Instant Fishing")
+local fis = fsh:AddSection("Fishing")
 
 local InstantFishEnabled = false
 local CancelDelay = 0.1
 local CompleteDelay = 1
 
 local function EquipFishingRod()
-				pcall(function()
-								EquipToolFromHotbar:FireServer(1)
-				end)
+                pcall(function()
+                                EquipToolFromHotbar:FireServer(1)
+                end)
 end
 
 local function InstantFishCycle()
-				if InstantFishEnabled then
-								pcall(function()
-												ChargeFishingRod:InvokeServer(1756863567.217075)
-												RequestFishingMinigame:InvokeServer(-139.63796997070312, 0.9964792798079721)
-								end)
-								task.wait(CancelDelay)
+                if InstantFishEnabled then
+                                pcall(function()
+                                                ChargeFishingRod:InvokeServer(1756863567.217075)
+                                                RequestFishingMinigame:InvokeServer(-139.63796997070312, 0.9964792798079721)
+                                end)
+                                task.wait(CancelDelay)
 
-								pcall(function()
-												CancelFishingInputs:InvokeServer()
-								end)
+                                pcall(function()
+                                                CancelFishingInputs:InvokeServer()
+                                end)
 
-								if InstantFishEnabled then
-												pcall(function()
-																ChargeFishingRod:InvokeServer(1756863567.217075)
-																RequestFishingMinigame:InvokeServer(-139.63796997070312, 0.9964792798079721)
-												end)
-												task.wait(CompleteDelay)
+                                if InstantFishEnabled then
+                                                pcall(function()
+                                                                ChargeFishingRod:InvokeServer(1756863567.217075)
+                                                                RequestFishingMinigame:InvokeServer(-139.63796997070312, 0.9964792798079721)
+                                                end)
+                                                task.wait(CompleteDelay)
 
-												pcall(function()
-																FishingCompleted:FireServer()
-												end)
-												task.spawn(InstantFishCycle)
-								end
-				end
+                                                pcall(function()
+                                                                FishingCompleted:FireServer()
+                                                end)
+                                                task.spawn(InstantFishCycle)
+                                end
+                end
 end
 
 local function StartInstantFish()
-				if not InstantFishEnabled then
-								InstantFishEnabled = true
-								EquipFishingRod()
-								task.wait(0.5)
-								task.spawn(InstantFishCycle)
-				end
+                if not InstantFishEnabled then
+                                InstantFishEnabled = true
+                                EquipFishingRod()
+                                task.wait(0.5)
+                                task.spawn(InstantFishCycle)
+                end
 end
 
 local function StopInstantFish()
-				InstantFishEnabled = false
+                InstantFishEnabled = false
 end
 
 fis:AddToggle({
-				Title = "Instant Fishing",
-				Content = "Blatantly Auto fishing for you.",
-		  Default = false,
-				Callback = function(enabled)
-								if enabled then
-												StartInstantFish()
-								else
-												StopInstantFish()
-								end
-				end
+                Title = "Instant Fishing",
+                Content = "Blatantly Auto fishing for you.",
+          Default = false,
+                Callback = function(enabled)
+                                if enabled then
+                                                StartInstantFish()
+                                else
+                                                StopInstantFish()
+                                end
+                end
 })
 
 local CompleteDelayInput = fis:AddInput({
-	Title = "Custom Complete Delay",
-	Content = "Enter delay in seconds.",
-	Placeholder = "Enter number...",
-	Callback = function(value)
-					local delay = tonumber(value)
-									if delay and delay > 0 then
-													CompleteDelay = delay
-									elseif CompleteDelayInput then
-													CompleteDelayInput:Set(tostring(CompleteDelay))
-									end
-					end
+    Title = "Custom Complete Delay",
+    Content = "Enter delay in seconds.",
+    Placeholder = "Enter number...",
+    Callback = function(value)
+                    local delay = tonumber(value)
+                                    if delay and delay > 0 then
+                                                    CompleteDelay = delay
+                                    elseif CompleteDelayInput then
+                                                    CompleteDelayInput:Set(tostring(CompleteDelay))
+                                    end
+                    end
 })
 
 local CancelDelayInput = fis:AddInput({
@@ -507,8 +507,8 @@ end
 fis:AddToggle({
     Title = "Super Instant Fishing",
     Content = "Setting depends on your rod.",
-		  Default = false,
-		  Callback = function(enabled)
+          Default = false,
+          Callback = function(enabled)
         if enabled then
             StartSuperInstant()
         else
@@ -585,7 +585,7 @@ end
 fis:AddToggle({
     Title = "Super Instant Fishing V2",
     Content = "For scythe rod users.",
-		  Default = false,
+          Default = false,
     Callback = function(enabled)
         if enabled then
             StartSuperInstantV2()
@@ -758,13 +758,13 @@ sell:AddInput({
             Library:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Threshold Updated",
-						Content = "Fish will be sold automatically when catch reaches " .. sellThreshold,
+                        Content = "Fish will be sold automatically when catch reaches " .. sellThreshold,
                 Delay = 2
             })
         else
             Library:MakeNotify({
                 Title = "@aikoware",
-				Description = "| Invalid Input",
+                Description = "| Invalid Input",
                 Content = "Please enter a number, not text.",
                 Delay = 2
             })
@@ -776,13 +776,13 @@ local dsq = qst:AddSection("Deep Sea")
 
 local QuestSettings = {player = Players.LocalPlayer}
 local DeepSeaParagraph = dsq:AddParagraph({
-		Title = "Deep Sea Panel",
-		Content = ""
+        Title = "Deep Sea Panel",
+        Content = ""
 })
 
 dsq:AddToggle({
     Title = "Auto Deep Sea Quest",
-		Content = "Automatically complete the Deep Sea Quest.",
+        Content = "Automatically complete the Deep Sea Quest.",
     Default = false,
     Callback = function(enabled)
         QuestSettings.autoDeepSea = enabled
@@ -790,10 +790,10 @@ dsq:AddToggle({
             while QuestSettings.autoDeepSea do
                 local menuRings = workspace:FindFirstChild("!!! MENU RINGS")
                 local deepSeaTracker = menuRings and menuRings:FindFirstChild("Deep Sea Tracker")
-                
+
                 if deepSeaTracker then
                     local content = deepSeaTracker:FindFirstChild("Board") and deepSeaTracker.Board:FindFirstChild("Gui") and deepSeaTracker.Board.Gui:FindFirstChild("Content")
-                    
+
                     if content then
                         local progressLabel
                         for _, child in ipairs(content:GetChildren()) do
@@ -802,11 +802,11 @@ dsq:AddToggle({
                                 break
                             end
                         end
-                        
+
                         if progressLabel then
                             local progressText = string.lower(progressLabel.Text)
                             local hrp = QuestSettings.player.Character and QuestSettings.player.Character:FindFirstChild("HumanoidRootPart")
-                            
+
                             if hrp then
                                 if string.find(progressText, "100%%") then
                                     hrp.CFrame = CFrame.new(-3763, -135, -995) * CFrame.Angles(0, math.rad(180), 0)
@@ -1128,3 +1128,519 @@ local function AutoFarmArtifactsCycle()
     })
     task.wait(5)
 end
+
+local ArtifactOverlay = Instance.new("ScreenGui")
+ArtifactOverlay.Name = "ArtifactOverlay"
+ArtifactOverlay.ResetOnSpawn = false
+ArtifactOverlay.IgnoreGuiInset = true
+ArtifactOverlay.Parent = PlayerGui
+ArtifactOverlay.Enabled = false
+
+local OverlayBackground = Instance.new("Frame")
+OverlayBackground.Size = UDim2.new(1, 0, 1, 0)
+OverlayBackground.BackgroundColor3 = Color3.new(0, 0, 0)
+OverlayBackground.BackgroundTransparency = 0.6
+OverlayBackground.Parent = ArtifactOverlay
+
+local OverlayContent = Instance.new("Frame")
+OverlayContent.AnchorPoint = Vector2.new(0.5, 0.5)
+OverlayContent.Position = UDim2.new(0.5, 0, 0.5, 0)
+OverlayContent.Size = UDim2.new(0, 400, 0, 320)
+OverlayContent.BackgroundTransparency = 1
+OverlayContent.Parent = ArtifactOverlay
+
+local OverlayIcon = Instance.new("ImageLabel")
+OverlayIcon.Size = UDim2.new(0, 120, 0, 120)
+OverlayIcon.Position = UDim2.new(0.5, 0, 0, 0)
+OverlayIcon.AnchorPoint = Vector2.new(0.5, 0)
+OverlayIcon.BackgroundTransparency = 1
+OverlayIcon.Image = "rbxassetid://99464676738903"
+OverlayIcon.Parent = OverlayContent
+
+local OverlayTitle = Instance.new("TextLabel")
+OverlayTitle.Size = UDim2.new(1, 0, 0, 35)
+OverlayTitle.Position = UDim2.new(0.5, 0, 0, 120)
+OverlayTitle.AnchorPoint = Vector2.new(0.5, 0)
+OverlayTitle.BackgroundTransparency = 1
+OverlayTitle.Text = "@aikoware"
+OverlayTitle.Font = Enum.Font.GothamBold
+OverlayTitle.TextSize = 30
+OverlayTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+OverlayTitle.TextStrokeTransparency = 0.3
+OverlayTitle.Parent = OverlayContent
+
+local OverlayMessage = Instance.new("TextLabel")
+OverlayMessage.Size = UDim2.new(0.9, 0, 0, 60)
+OverlayMessage.Position = UDim2.new(0.5, 0, 0, 160)
+OverlayMessage.AnchorPoint = Vector2.new(0.5, 0)
+OverlayMessage.BackgroundTransparency = 1
+OverlayMessage.Text = "Do not interrupt!"
+OverlayMessage.Font = Enum.Font.Gotham
+OverlayMessage.TextSize = 18
+OverlayMessage.TextWrapped = true
+OverlayMessage.TextColor3 = Color3.fromRGB(255, 255, 255)
+OverlayMessage.TextStrokeTransparency = 0.5
+OverlayMessage.Parent = OverlayContent
+
+local OverlayLink = Instance.new("TextLabel")
+OverlayLink.Size = UDim2.new(1, 0, 0, 25)
+OverlayLink.Position = UDim2.new(0.5, 0, 0, 220)
+OverlayLink.AnchorPoint = Vector2.new(0.5, 0)
+OverlayLink.BackgroundTransparency = 1
+OverlayLink.Text = "https://discord.gg/JccfFGpDNV"
+OverlayLink.Font = Enum.Font.GothamSemibold
+OverlayLink.TextSize = 16
+OverlayLink.TextColor3 = Color3.fromRGB(220, 170, 255)
+OverlayLink.TextStrokeTransparency = 0.6
+OverlayLink.Parent = OverlayContent
+
+local function UpdateOverlay(visible, title, message, link, iconId)
+    ArtifactOverlay.Enabled = visible
+    if title then OverlayTitle.Text = title end
+    if message then OverlayMessage.Text = message end
+    if link then OverlayLink.Text = link end
+    if iconId then OverlayIcon.Image = "rbxassetid://" .. tostring(iconId) end
+end
+
+arti:AddToggle({
+    Title = "Auto Farm Artifact",
+    Content = "Automatically farm artifacts and place levers.",
+    Default = false,
+    Callback = function(enabled)
+        AutoFarmArtifactsRunning = enabled
+        if enabled then
+            UpdateOverlay(true)
+            task.spawn(AutoFarmArtifactsCycle)
+        else
+            ToggleArtifactFishing(false)
+            UpdateOverlay(false)
+        end
+    end
+})
+
+local loc = Tp:AddSection("Location")
+
+loc:AddDropdown({
+    Title = "Select Location",
+    Content = "Select a location to teleport.",
+    Multi = false,
+    Options = {"Esoteric Island", "Kohana", "Kohana Volcano", "Kohana 1", "Kohana 2",
+        "Coral Refs", "Enchant Room", "Tropical Grove", "Weather Machine", "Spawn",
+        "Coral Refs 1", "Coral Reefs 2", "Coral Reefs 3", "Volcano", "Sisyphus Statue",
+        "Treasure Room", "Crater Island Top", "Crater Island Ground", "Lost Shore",
+        "Stingray Shores", "Tropical Grove", "Ice Sea", "Tropical Grove Cave 1",
+        "Tropical Grove Cave 2", "Tropical Grove Highground", "Fisherman Island Underground",
+        "Fisherman Island Mid", "Fisherman Island Left", "Fisherman Island Right",
+        "Jungle", "Temple Guardian", "Underground Cellar", "Sacred Temple"},
+    Default = {},
+    Callback = function(locationName)
+        local TeleportLocations = {
+            ["Esoteric Island"] = Vector3.new(1990, 5, 1398),
+            ["Kohana"] = Vector3.new(-603, 3, 719),
+            ["Coral Refs"] = Vector3.new(-2855, 47, 1996),
+            ["Enchant Room"] = Vector3.new(3221, -1303, 1406),
+            ["Spawn"] = Vector3.new(33, 9, 2810),
+            ["Volcano"] = Vector3.new(-632, 55, 197),
+            ["Treasure Room"] = Vector3.new(-3602.01, -266.57, -1577.18),
+            ["Sisyphus Statue"] = Vector3.new(-3703.69, -135.57, -1017.17),
+            ["Crater Island Top"] = Vector3.new(1011.29, 22.68, 5076.27),
+            ["Crater Island Ground"] = Vector3.new(1079.57, 3.64, 5080.35),
+            ["Coral Reefs 1"] = Vector3.new(-3031.88, 2.52, 2276.36),
+            ["Coral Reefs 2"] = Vector3.new(-3270.86, 2.5, 2228.1),
+            ["Coral Reefs 3"] = Vector3.new(-3136.1, 2.61, 2126.11),
+            ["Lost Shore"] = Vector3.new(-3737.97, 5.43, -854.68),
+            ["Weather Machine"] = Vector3.new(-1524.88, 2.87, 1915.56),
+            ["Kohana Volcano"] = Vector3.new(-561.81, 21.24, 156.72),
+            ["Kohana 1"] = Vector3.new(-367.77, 6.75, 521.91),
+            ["Kohana 2"] = Vector3.new(-623.96, 19.25, 419.36),
+            ["Stingray Shores"] = Vector3.new(44.41, 28.83, 3048.93),
+            ["Tropical Grove"] = Vector3.new(-2018.91, 9.04, 3750.59),
+            ["Ice Sea"] = Vector3.new(2164, 7, 3269),
+            ["Tropical Grove Cave 1"] = Vector3.new(-2151, 3, 3671),
+            ["Tropical Grove Cave 2"] = Vector3.new(-2018, 5, 3756),
+            ["Tropical Grove Highground"] = Vector3.new(-2139, 53, 3624),
+            ["Fisherman Island Underground"] = Vector3.new(-62, 3, 2846),
+            ["Fisherman Island Mid"] = Vector3.new(33, 3, 2764),
+            ["Fisherman Island Left"] = Vector3.new(-26, 10, 2686),
+            ["Fisherman Island Right"] = Vector3.new(95, 10, 2684),
+            ["Jungle"] = Vector3.new(1491.21667, 6.35540199, -848.057617),
+            ["Temple Guardian"] = Vector3.new(1481.58691, 127.624985, -596.321777),
+            ["Underground Cellar"] = Vector3.new(2113.85693, -91.1985855, -699.206787),
+            ["Sacred Temple"] = Vector3.new(1478.45508, -21.8498955, -630.773315)
+        }
+        
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(TeleportLocations[locationName])
+        end
+        end
+})
+
+local event = Tp:AddSection("Event")
+
+local EventTeleportSettings = {
+    enabled = false,
+    selectedEvent = nil,
+    originalPosition = nil,
+    platform = nil,
+    isAtEvent = false
+}
+
+event:AddDropdown({
+    Title = "Select Event",
+    Content = "Select an event to teleport to.",
+    Options = {"Megalodon Hunt", "Admin Event", "Ghost Worm", "Worm Hunt", "Shark Hunt", "Ghost Shark Hunt", "Shocked", "Black Hole", "Meteor Rain"},
+    Multi = true,
+    Callback = function(selected)
+        EventTeleportSettings.selectedEvent = selected
+    end
+})
+
+local FloatPlayer
+
+event:AddToggle({
+    Title = "Auto Teleport Spawned Event",
+    Content = "Automatically teleports to selected event.",
+    Default = false,
+    Callback = function(enabled)
+        EventTeleportSettings.enabled = enabled
+        if not enabled and EventTeleportSettings.isAtEvent and EventTeleportSettings.originalPosition then
+            if LocalPlayer and LocalPlayer.Character and LocalPlayer.Character.PrimaryPart then
+                local hrp = LocalPlayer.Character.PrimaryPart
+                if hrp.Anchored then
+                    hrp.Anchored = false
+                    task.wait(0.1)
+                end
+                hrp.CFrame = EventTeleportSettings.originalPosition
+                if lockPositionState.enabled then
+                    lockPositionState.position = hrp.CFrame
+                end
+            end
+            EventTeleportSettings.isAtEvent = false
+        end
+    end
+})
+
+local function FindEventInWorkspace(eventName)
+    local menuRings = workspace:FindFirstChild("!!! MENU RINGS")
+    if not menuRings then return nil end
+    
+    local eventNameLower = eventName:lower()
+    for _, child in ipairs(menuRings:GetChildren()) do
+        if child.Name == "Props" then
+            for _, prop in ipairs(child:GetChildren()) do
+                if prop.Name:lower() == eventNameLower then
+                    if prop:IsA("Model") then
+                        local primaryPart = prop.PrimaryPart or prop:FindFirstChildWhichIsA("BasePart")
+                        if primaryPart then return primaryPart end
+                    elseif prop:IsA("BasePart") then
+                        return prop
+                    end
+                end
+                
+                for _, descendant in ipairs(prop:GetDescendants()) do
+                    if descendant:IsA("TextLabel") and descendant.Text:lower() == eventNameLower then
+                        local parent = descendant
+                        while parent and parent ~= child do
+                            if parent:IsA("BasePart") then return parent end
+                            parent = parent.Parent
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return nil
+end
+
+task.spawn(function()
+    while task.wait(5) do
+        local shouldBreak = false
+        
+        if EventTeleportSettings.enabled and EventTeleportSettings.selectedEvent and LocalPlayer.Character and LocalPlayer.Character.PrimaryPart then
+            local characterHRP = workspace.Characters:FindFirstChild(LocalPlayer.Name)
+            characterHRP = characterHRP and characterHRP:FindFirstChild("HumanoidRootPart")
+            
+            if characterHRP then
+                local foundEvent = nil
+                for _, eventName in ipairs(EventTeleportSettings.selectedEvent) do
+                    local eventPart = FindEventInWorkspace(eventName)
+                    if eventPart then
+                        shouldBreak = true
+                        foundEvent = eventPart
+                        break
+                    end
+                end
+                
+                if foundEvent and not EventTeleportSettings.isAtEvent then
+                    EventTeleportSettings.isAtEvent = true
+                    EventTeleportSettings.originalPosition = characterHRP.CFrame
+                    floatPlat(true)
+                    FloatPlayer:Set(true)
+                    characterHRP.Velocity = Vector3.zero
+                    characterHRP.CFrame = foundEvent.CFrame * CFrame.new(20, 30, 0)
+                    if lockPositionState.enabled then
+                        lockPositionState.position = characterHRP.CFrame
+                    end
+                elseif not foundEvent and EventTeleportSettings.isAtEvent then
+                    floatPlat(false)
+                    FloatPlayer:Set(false)
+                    if EventTeleportSettings.originalPosition then
+                        characterHRP.CFrame = EventTeleportSettings.originalPosition
+                        if lockPositionState.enabled then
+                            lockPositionState.position = characterHRP.CFrame
+                        end
+                    end
+                    EventTeleportSettings.isAtEvent = false
+                end
+            end
+        end
+        
+        if shouldBreak then break end
+    end
+end)
+
+local util = utl:AddSection("Utilities")
+
+local AutoFavoriteEnabled = false
+local FavoriteTier = "Legendary"
+local FavoriteTiers = {
+    ["Artifact Items"] = {Ids = {265, 266, 267, 271}},
+    ["Legendary"] = {TierName = "Legendary"},
+    ["Mythic"] = {TierName = "Mythic"},
+    ["Secret"] = {TierName = "SECRET"}
+}
+
+local function AutoFavoriteItems(tierSelection)
+    local inventoryData = Data:Get("Inventory")
+    if inventoryData and inventoryData.Items then
+        for _, item in pairs(inventoryData.Items) do
+            local itemId = item.Id
+            if itemId then
+                if tierSelection == "Artifact Items" then
+                    for _, artifactId in ipairs(FavoriteTiers["Artifact Items"].Ids) do
+                        if item.Id == artifactId and item.UUID and not item.Favorited then
+                            REFavoriteItem:FireServer(item.UUID)
+                        end
+                    end
+                elseif itemId.Data.Type == "Fishes" and itemId.Probability then
+                    local tier = TierUtility.GetTierFromRarity(nil, itemId.Probability.Chance)
+                    if tier and tier.Name == FavoriteTiers[tierSelection].TierName and item.UUID and not item.Favorited then
+                        REFavoriteItem:FireServer(item.UUID)
+                    end
+                end
+            end
+        end
+    end
+end
+
+util:AddDropdown({
+    Title = "Favorite Tier",
+    Content = "Select which item type or rarity you want to auto-favorite.",
+    Options = {"Artifact Items", "Legendary", "Mythic", "Secret"},
+    Default = "Legendary",
+    Multi = false,
+    Callback = function(selected)
+        FavoriteTier = selected
+        Library:MakeNotify({
+            Title = "@aikoware",
+            Description = "| Favorite Tier",
+            Content = "Now set to favorite: " .. FavoriteTier,
+            Delay = 2
+        })
+    end
+})
+
+util:AddToggle({
+    Title = "Auto Favorite",
+    Content = "Automatically favorites selected tier.",
+    Default = false,
+    Callback = function(enabled)
+        AutoFavoriteEnabled = enabled
+        if enabled then
+            task.spawn(function()
+                while AutoFavoriteEnabled do
+                    AutoFavoriteItems(FavoriteTier)
+                    task.wait(10)
+                end
+            end)
+        end
+    end
+})
+
+-- Oxygen Bypass
+local OxygenBypassEnabled = false
+local OxygenBypassThread = nil
+
+local function StartOxygenBypass()
+    if not OxygenBypassThread then
+        OxygenBypassEnabled = true
+        OxygenBypassThread = coroutine.create(function()
+            while OxygenBypassEnabled do
+                UpdateOxygen:FireServer(-9999)
+                wait(0.5)
+            end
+        end)
+        coroutine.resume(OxygenBypassThread)
+    end
+end
+
+local function StopOxygenBypass()
+    OxygenBypassEnabled = false
+    OxygenBypassThread = nil
+end
+
+util:AddToggle({
+    Title = "Oxygen Bypass",
+    Content = "Similar to god mode obviously.",
+    Default = false,
+    Callback = function(enabled)
+        if enabled then
+            StartOxygenBypass()
+        else
+            StopOxygenBypass()
+        end
+    end
+})
+
+-- Freeze Character
+local originalCFrame
+local freezeConnection
+
+Tabs.Utility:Toggle({
+    Title = "Freeze Character",
+    Content = "A help for instant fishing.",
+    Default = false,
+    Callback = function(enabled)
+            _G.FreezeCharacter = enabled
+        if enabled then
+            local character = Players.LocalPlayer.Character
+            local hrp = character and character:FindFirstChild("HumanoidRootPart")
+            if hrp then
+                originalCFrame = hrp.CFrame
+                freezeConnection = RunService.Heartbeat:Connect(function()
+                    if _G.FreezeCharacter and hrp then
+                        hrp.CFrame = originalCFrame
+                    end
+                end)
+            end
+        elseif freezeConnection then
+            freezeConnection:Disconnect()
+            freezeConnection = nil
+        end
+        end
+})
+
+local misc = msc:AddSection("Misc")
+
+local overhead = (Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()):WaitForChild("HumanoidRootPart"):WaitForChild("Overhead")
+local NameLabel = overhead.Content.Header
+local LevelLabel = overhead.LevelContainer.Label
+local OriginalName = NameLabel.Text
+local OriginalLevel = LevelLabel.Text
+local CustomName = OriginalName
+local CustomLevel = OriginalLevel
+local HideIdentifierEnabled = false
+
+misc:AddInput({
+    Title = "Hide Name",
+    Placeholder = "@aikoware",
+    Content = "",
+    Callback = function(value)
+        CustomName = value
+        if HideIdentifierEnabled then
+            NameLabel.Text = CustomName
+        end
+    end
+})
+
+misc:AddInput({
+    Title = "Hide Level",
+    Placeholder = "@aikoware",
+    Content = "",
+    Callback = function(value)
+        CustomLevel = value
+        if HideIdentifierEnabled then
+            LevelLabel.Text = CustomLevel
+        end
+    end
+})
+
+misc:AddToggle({
+    Title = "Start Hide Identifier",
+    Content = "Hides your name and level.",
+    Default = false,
+    Callback = function(enabled)
+        HideIdentifierEnabled = enabled
+        if enabled then
+            NameLabel.Text = CustomName
+            LevelLabel.Text = CustomLevel
+        else
+            NameLabel.Text = OriginalName
+            LevelLabel.Text = OriginalLevel
+            NameLabel.TextColor3 = Color3.new(1, 1, 1)
+            LevelLabel.TextColor3 = Color3.new(1, 1, 1)
+        end
+    end
+})
+
+-- Rainbow text effect
+coroutine.wrap(function()
+    local hue = 0
+    while true do
+        if HideIdentifierEnabled then
+            hue = (hue + 0.01) % 1
+            local rainbowColor = Color3.fromHSV(hue, 1, 1)
+            NameLabel.TextColor3 = rainbowColor
+            LevelLabel.TextColor3 = rainbowColor
+        else
+            NameLabel.TextColor3 = Color3.new(1, 1, 1)
+            LevelLabel.TextColor3 = Color3.new(1, 1, 1)
+        end
+        wait(0.05)
+    end
+end)()
+
+local other = msc:AddSection("Other")
+
+other:AddToggle({
+    Title = "Anti Afk",
+    Content = "Prevent Roblox from kicking you when idle for 20 mins.",
+    Default = false,
+    Callback = function(enabled)
+        _G.AntiAFK = enabled
+        local VirtualUser = game:GetService("VirtualUser")
+        task.spawn(function()
+            while _G.AntiAFK do
+                task.wait(60)
+                pcall(function()
+                    VirtualUser:CaptureController()
+                    VirtualUser:ClickButton2(Vector2.new())
+                end)
+            end
+        end)
+    end
+})
+
+other:AddToggle({
+    Title = "Auto Reconnect",
+    Content = "Automatically reconnects if you got disconnected.",
+    Default = false,
+    Callback = function(enabled)
+        _G.AutoReconnect = enabled
+        if enabled then
+            task.spawn(function()
+                while _G.AutoReconnect do
+                    task.wait(2)
+                    local promptGui = game:GetService("CoreGui"):FindFirstChild("RobloxPromptGui")
+                    local promptOverlay = promptGui and promptGui:FindFirstChild("promptOverlay")
+                    if promptOverlay then
+                        local reconnectButton = promptOverlay:FindFirstChild("ButtonPrimary")
+                        if reconnectButton and reconnectButton.Visible then
+                            firesignal(reconnectButton.MouseButton1Click)
+                        end
+                    end
+                end
+            end)
+        end
+    end
+})
