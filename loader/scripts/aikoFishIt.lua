@@ -134,10 +134,10 @@ local CancelFishingInputs = NetFolder:WaitForChild("RF/CancelFishingInputs")
 local ActivateEnchantingAltar = NetFolder:WaitForChild("RE/ActivateEnchantingAltar")
 local UpdateOxygen = NetFolder:WaitForChild("URE/UpdateOxygen")
 local FishingController = require(ReplicatedStorage.Controllers.FishingController)
-local Data = require(ReplicatedStorage:WaitForChild("Data"))
+--[[ local Data = require(ReplicatedStorage:WaitForChild("Data"))
 local TierUtility = require(ReplicatedStorage:WaitForChild("Utility"):WaitForChild("TierUtility"))
 local REFavoriteItem = NetFolder:WaitForChild("RE/FavoriteItem")
-
+]]
 -- Infinite Jump Setup
 UserInputService.JumpRequest:Connect(function()
                 local shouldJump = _G.InfiniteJump and (LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()):FindFirstChildOfClass("Humanoid")
