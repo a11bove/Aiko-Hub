@@ -545,6 +545,7 @@ local function createText(yOffset)
     textObj.Center = false
     textObj.Outline = true
     textObj.Visible = true
+	textObj.Font = Enum.Font.GothamBold
     return textObj
 end
 
@@ -567,7 +568,7 @@ RunService.RenderStepped:Connect(function()
         fpsLastUpdate = tick()
 
         if showFPS then
-            fpsText.Text = string.format("FPS: %d", fpsValue)
+            fpsText.Text = string.format("Fps: %d", fpsValue)
             fpsText.Color = fpsValue >= 50 and Color3.fromRGB(0, 255, 0)
                 or fpsValue >= 30 and Color3.fromRGB(255, 165, 0)
                 or Color3.fromRGB(255, 0, 0)
@@ -579,10 +580,10 @@ RunService.RenderStepped:Connect(function()
         if showPing then
             local pingStat = Stats.Network.ServerStatsItem["Data Ping"]
             local ping = pingStat and math.floor(pingStat:GetValue()) or 0
-            local color, label = Color3.fromRGB(0, 255, 0), "Wifi Ping: "
+            local color, label = Color3.fromRGB(0, 255, 0), "Ping: "
 
             if ping > 120 then
-                color, label = Color3.fromRGB(255, 0, 0), "Wifi Ping: "
+                color, label = Color3.fromRGB(255, 0, 0), "Ping: "
             elseif ping > 60 then
                 color = Color3.fromRGB(255, 165, 0)
             end
