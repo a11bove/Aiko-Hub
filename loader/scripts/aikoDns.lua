@@ -117,6 +117,7 @@ local Workspace = game:GetService("Workspace")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local player = Players.LocalPlayer
 local RunService = game:GetService("RunService")
+local LocalPlayer = player
 
 local autoKM_Running = false
 local dupe_Running = false
@@ -207,15 +208,23 @@ local BoostEnabled = false
 local BoostConnection = nil
 
 local function BoostLogic(dt)
-    local char = LocalPlayer.Character
-    if not char then return end
-    local humanoid = char:FindFirstChildOfClass("Humanoid")
-    if not humanoid then return end
-    local seat = humanoid.SeatPart
-    if not seat or not seat:IsA("VehicleSeat") then return end
-    local velocity = seat.AssemblyLinearVelocity
-    if velocity.Magnitude > 0.5 then
-        seat.AssemblyLinearVelocity = velocity + (velocity.Unit * BoostPower * dt)
+    local success, err = pcall(function()
+        if BoostPower <= 0 then return end
+        local char = LocalPlayer.Character
+        if not char then return end
+        local humanoid = char:FindFirstChildOfClass("Humanoid")
+        if not humanoid then return end
+        local seat = humanoid.SeatPart
+        if not seat or not seat:IsA("VehicleSeat") then return end
+        
+        local velocity = seat.AssemblyLinearVelocity
+        if velocity and velocity.Magnitude > 0.5 then
+            seat.AssemblyLinearVelocity = velocity + (velocity.Unit * BoostPower * dt)
+        end
+    end)
+    
+    if not success then
+        warn("Booster Error:", err)
     end
 end
 
