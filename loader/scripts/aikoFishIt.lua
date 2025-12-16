@@ -625,44 +625,80 @@ local ScytheReelDelayInput = fis:AddInput({
 
 local ench = fsh:AddSection("Enchant")
 
+local autoEnchant = false
+
 ench:AddToggle({
     Title = "Auto Enchant Rod",
     Content = "Automatically enchant your equipped rod",
     Default = false,
-    Callback = function()
-        local enchantPosition = Vector3.new(3231, -1303, 1402)
-        local character = workspace:WaitForChild("Characters"):FindFirstChild(LocalPlayer.Name)
-        local hrp = character and character:FindFirstChild("HumanoidRootPart")
-        
-        if hrp then
-            NotifyInfo("Preparing Enchant...", "Please manually place Enchant Stone into slot 5 before we begin...", 5)
-            task.wait(3)
-            
-            local slot5 = LocalPlayer.PlayerGui.Backpack.Display:GetChildren()[10]
-            local itemName = slot5 and slot5:FindFirstChild("Inner") and slot5.Inner:FindFirstChild("Tags") and slot5.Inner.Tags:FindFirstChild("ItemName")
-            
-            if itemName and itemName.Text:lower():find("enchant") then
-                NotifyInfo("Enchanting...", "Enchanting in progress, please wait...", 7)
-                local originalPosition = hrp.Position
-                task.wait(1)
+    Callback = function(Value)
+        autoEnchant = Value
+
+        task.spawn(function()
+            while autoEnchant do
+                local enchantPosition = Vector3.new(3231, -1303, 1402)
+
+                local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+                local hrp = character:FindFirstChild("HumanoidRootPart")
+
+                if not hrp then
+                    NotifyError("Auto Enchant Rod", "HumanoidRootPart not found.")
+                    return
+                end
+
+                NotifyInfo(
+                    "Preparing Enchant...",
+                    "Place Enchant Stone in hotbar slot 5",
+                    4
+                )
+
+                task.wait(3)
+
+                local backpackGui = LocalPlayer.PlayerGui:FindFirstChild("Backpack")
+                if not backpackGui then return end
+
+                local display = backpackGui:FindFirstChild("Display")
+                if not display then return end
+
+                local slots = display:GetChildren()
+                local slot5 = slots[5]
+
+                if not slot5 then
+                    NotifyError("Auto Enchant Rod", "Slot 5 not found.")
+                    return
+                end
+
+                local itemName =
+                    slot5:FindFirstChild("Inner")
+                    and slot5.Inner:FindFirstChild("Tags")
+                    and slot5.Inner.Tags:FindFirstChild("ItemName")
+
+                if not (itemName and itemName.Text:lower():find("enchant")) then
+                    NotifyError("Auto Enchant Rod", "Slot 5 does not contain an Enchant Stone.")
+                    return
+                end
+
+                NotifyInfo("Enchanting...", "Please wait...", 6)
+
+                local originalCFrame = hrp.CFrame
+
                 hrp.CFrame = CFrame.new(enchantPosition + Vector3.new(0, 5, 0))
-                task.wait(1.2)
-                
+                task.wait(1)
+
                 pcall(function()
                     EquipToolFromHotbar:FireServer(5)
-                    task.wait(0.5)
+                    task.wait(0.4)
                     ActivateEnchantingAltar:FireServer()
-                    task.wait(7)
                 end)
-                
-                task.wait(0.9)
-                hrp.CFrame = CFrame.new(originalPosition + Vector3.new(0, 3, 0))
-            else
-                NotifyError("Auto Enchant Rod", "Slot 5 does not contain an Enchant Stone.")
+
+                task.wait(7)
+
+                hrp.CFrame = originalCFrame
+
+                -- delay before next enchant attempt
+                task.wait(2)
             end
-        else
-            NotifyError("Auto Enchant Rod", "Failed to get character HRP.")
-        end
+        end)
     end
 })
 
