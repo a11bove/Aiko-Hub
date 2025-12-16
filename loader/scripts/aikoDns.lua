@@ -115,8 +115,8 @@ button.MouseButton1Click:Connect(
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
 local player = Players.LocalPlayer
+local RunService = game:GetService("RunService")
 
 local autoKM_Running = false
 local dupe_Running = false
