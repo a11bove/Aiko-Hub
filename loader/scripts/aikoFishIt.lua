@@ -134,6 +134,9 @@ local CancelFishingInputs = NetFolder:WaitForChild("RF/CancelFishingInputs")
 local ActivateEnchantingAltar = NetFolder:WaitForChild("RE/ActivateEnchantingAltar")
 local UpdateOxygen = NetFolder:WaitForChild("URE/UpdateOxygen")
 local FishingController = require(ReplicatedStorage.Controllers.FishingController)
+local Data = require(ReplicatedStorage:WaitForChild("Data"))
+local TierUtility = require(ReplicatedStorage:WaitForChild("Utility"):WaitForChild("TierUtility"))
+local REFavoriteItem = NetFolder:WaitForChild("RE/FavoriteItem")
 
 -- Infinite Jump Setup
 UserInputService.JumpRequest:Connect(function()
@@ -148,6 +151,11 @@ LocalPlayer.CharacterAdded:Connect(function(newCharacter)
                 newHumanoid.UseJumpPower = true
                 newHumanoid.JumpPower = _G.CustomJumpPower or 50
 end)
+
+local lockPositionState = {
+    enabled = false,
+    position = nil
+}
 
 local main = Window:CreateTab({
     Name = "Home",
@@ -1220,6 +1228,40 @@ arti:AddToggle({
 
 local loc = tp:AddSection("Location")
 
+local function floatPlat(enabled)
+    local character = LocalPlayer.Character
+    if not character then return end
+    
+    local hrp = character:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+    
+    if enabled then
+        -- Create invisible platform beneath player
+        if not EventTeleportSettings.platform then
+            local platform = Instance.new("Part")
+            platform.Size = Vector3.new(10, 1, 10)
+            platform.Transparency = 1
+            platform.Anchored = true
+            platform.CanCollide = true
+            platform.Parent = workspace
+            EventTeleportSettings.platform = platform
+        end
+        
+        local platform = EventTeleportSettings.platform
+        platform.CFrame = hrp.CFrame - Vector3.new(0, 3, 0)
+        hrp.Anchored = true
+    else
+        if EventTeleportSettings.platform then
+            EventTeleportSettings.platform:Destroy()
+            EventTeleportSettings.platform = nil
+        end
+        
+        if hrp then
+            hrp.Anchored = false
+        end
+    end
+end
+
 loc:AddDropdown({
     Title = "Select Location",
     Content = "Select a location to teleport.",
@@ -1228,12 +1270,17 @@ loc:AddDropdown({
         "Coral Refs", "Enchant Room", "Tropical Grove", "Weather Machine", "Spawn",
         "Coral Refs 1", "Coral Reefs 2", "Coral Reefs 3", "Volcano", "Sisyphus Statue",
         "Treasure Room", "Crater Island Top", "Crater Island Ground", "Lost Shore",
-        "Stingray Shores", "Tropical Grove", "Ice Sea", "Tropical Grove Cave 1",
+        "Stingray Shores", "Ice Sea", "Tropical Grove Cave 1",
         "Tropical Grove Cave 2", "Tropical Grove Highground", "Fisherman Island Underground",
         "Fisherman Island Mid", "Fisherman Island Left", "Fisherman Island Right",
         "Jungle", "Temple Guardian", "Underground Cellar", "Sacred Temple"},
     Default = {},
-    Callback = function(locationName)
+    Callback = function(selected)
+        -- Handle both single selection (string) and multi-selection (table)
+        local locationName = type(selected) == "table" and selected[1] or selected
+        
+        if not locationName or locationName == "" then return end
+        
         local TeleportLocations = {
             ["Esoteric Island"] = Vector3.new(1990, 5, 1398),
             ["Kohana"] = Vector3.new(-603, 3, 719),
@@ -1269,10 +1316,14 @@ loc:AddDropdown({
             ["Sacred Temple"] = Vector3.new(1478.45508, -21.8498955, -630.773315)
         }
         
-        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(TeleportLocations[locationName])
+        local targetPosition = TeleportLocations[locationName]
+        if targetPosition and LocalPlayer.Character then
+            local hrp = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if hrp then
+                hrp.CFrame = CFrame.new(targetPosition)
+            end
         end
-        end
+    end
 })
 
 local event = tp:AddSection("Event")
@@ -1506,7 +1557,7 @@ util:AddToggle({
 local originalCFrame
 local freezeConnection
 
-Tabs.Utility:Toggle({
+util:AddToggle({
     Title = "Freeze Character",
     Content = "A help for instant fishing.",
     Default = false,
