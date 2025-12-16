@@ -13,6 +13,7 @@ if existingHirimi then
 end
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/loader/src.lua"))()
+print("Library loaded successfully:", Library)
 
 Library:MakeNotify({
     Title = "@aikoware",
@@ -161,7 +162,7 @@ local main = Window:CreateTab({
     Name = "Home",
     Icon = "rbxassetid://10723407389"
 })
-
+print("Main tab created:", main)
 local fsh = Window:CreateTab({
         Name = "Fishing",
         Icon = "rbxassetid://10734966248"
@@ -1426,7 +1427,6 @@ task.spawn(function()
                     EventTeleportSettings.isAtEvent = true
                     EventTeleportSettings.originalPosition = characterHRP.CFrame
                     floatPlat(true)
-                    FloatPlayer:Set(true)
                     characterHRP.Velocity = Vector3.zero
                     characterHRP.CFrame = foundEvent.CFrame * CFrame.new(20, 30, 0)
                     if lockPositionState.enabled then
@@ -1434,7 +1434,6 @@ task.spawn(function()
                     end
                 elseif not foundEvent and EventTeleportSettings.isAtEvent then
                     floatPlat(false)
-                    FloatPlayer:Set(false)
                     if EventTeleportSettings.originalPosition then
                         characterHRP.CFrame = EventTeleportSettings.originalPosition
                         if lockPositionState.enabled then
