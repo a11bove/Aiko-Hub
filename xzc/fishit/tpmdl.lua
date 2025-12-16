@@ -1,3 +1,4 @@
+
 return {
     Locations = {
         ["Esoteric Island"] = Vector3.new(1990, 5, 1398),
@@ -44,5 +45,71 @@ return {
         "Shocked",
         "Black Hole",
         "Meteor Rain"
-    }
+    },
+    
+    floatPlat = function(enabled, LocalPlayer, EventTeleportSettings)
+        local character = LocalPlayer.Character
+        if not character then return end
+        
+        local hrp = character:FindFirstChild("HumanoidRootPart")
+        if not hrp then return end
+        
+        if enabled then
+            -- Create invisible platform beneath player
+            if not EventTeleportSettings.platform then
+                local platform = Instance.new("Part")
+                platform.Size = Vector3.new(10, 1, 10)
+                platform.Transparency = 1
+                platform.Anchored = true
+                platform.CanCollide = true
+                platform.Parent = workspace
+                EventTeleportSettings.platform = platform
+            end
+            
+            local platform = EventTeleportSettings.platform
+            platform.CFrame = hrp.CFrame - Vector3.new(0, 3, 0)
+            hrp.Anchored = true
+        else
+            if EventTeleportSettings.platform then
+                EventTeleportSettings.platform:Destroy()
+                EventTeleportSettings.platform = nil
+            end
+            
+            if hrp then
+                hrp.Anchored = false
+            end
+        end
+    end,
+    
+    FindEventInWorkspace = function(eventName)
+        local menuRings = workspace:FindFirstChild("!!! MENU RINGS")
+        if not menuRings then return nil end
+        
+        local eventNameLower = eventName:lower()
+        for _, child in ipairs(menuRings:GetChildren()) do
+            if child.Name == "Props" then
+                for _, prop in ipairs(child:GetChildren()) do
+                    if prop.Name:lower() == eventNameLower then
+                        if prop:IsA("Model") then
+                            local primaryPart = prop.PrimaryPart or prop:FindFirstChildWhichIsA("BasePart")
+                            if primaryPart then return primaryPart end
+                        elseif prop:IsA("BasePart") then
+                            return prop
+                        end
+                    end
+                    
+                    for _, descendant in ipairs(prop:GetDescendants()) do
+                        if descendant:IsA("TextLabel") and descendant.Text:lower() == eventNameLower then
+                            local parent = descendant
+                            while parent and parent ~= child do
+                                if parent:IsA("BasePart") then return parent end
+                                parent = parent.Parent
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        return nil
+    end
 }
