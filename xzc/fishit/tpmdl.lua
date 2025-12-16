@@ -1,6 +1,3 @@
--- Teleport Locations Module
--- This script should be hosted externally and loaded via loadstring
-
 return {
     Locations = {
         ["Esoteric Island"] = Vector3.new(1990, 5, 1398),
