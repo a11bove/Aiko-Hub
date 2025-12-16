@@ -1051,7 +1051,7 @@ aur:AddSlider({
     Title = "Aura Radius",
     Content = "",
     Min = 1,
-    Max = 100,
+    Max = 200,
     Default = 50,
     Callback = function(value)
         AuraModule.SetAuraRadius(value)
@@ -2157,15 +2157,7 @@ hh:AddSlider({
     end
 })
 
-local speed = 16
-
-local function setSpeed(val)
-    local humanoid = Players.LocalPlayer.Character and Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-    if humanoid then 
-        humanoid.WalkSpeed = val 
-    end
-end
-
+local humanoid = Players.LocalPlayer.Character and Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
 hh:AddSlider({
     Title = "Walkspeed",
     Content = "",
@@ -2173,9 +2165,8 @@ hh:AddSlider({
     Max = 150,
     Default = 16,
     Callback = function(val)
-        speed = val
-        setSpeed(val)  -- Actually apply the speed!
-    end
+        humanoid.WalkSpeed = val
+	end
 })
 
 hh:AddToggle({
@@ -2206,15 +2197,6 @@ hh:AddToggle({
             FlyModule.NOFLY()
             FlyModule.UnMobileFly()
         end
-    end
-})
-
-hh:AddToggle({
-    Title = "Enable Walkspeed",
-    Content = "",
-    Default = false,
-    Callback = function(state)
-        setSpeed(state and speed or 16)
     end
 })
 
@@ -2334,7 +2316,7 @@ mxc:AddToggle({
     end
 })
 
-mxc:AddToggle({
+--[[ mxc:AddToggle({
     Title = "Auto Build Anvil",
     Content = "Puts anvil front, back, and base together",
     Default = false,
@@ -2353,7 +2335,7 @@ mxc:AddToggle({
             end
         end)
     end
-})
+}) ]]
 
 local ant = Misc:AddSection("Anti's")
 
@@ -2453,7 +2435,7 @@ fun:AddToggle({
 
 fun:AddButton({
     Title = "Auto Days Farm",
-    Desc = "Just afk and let the script do everything.",
+    Content = "Just afk and let the script do everything.",
     Callback = function()
         FunModule.LoadAutoDaysFarm()
     end
