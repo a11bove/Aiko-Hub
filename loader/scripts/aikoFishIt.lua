@@ -235,8 +235,9 @@ if not Window.CreateTab then
     return
 end
 
--- Try creating tabs with error handling
-local tabSuccess, main = pcall(function()
+-- Try creating tabs with detailed error handling
+print("===== Attempting to create Home tab =====")
+local tabSuccess, result = pcall(function()
     return Window:CreateTab({
         Name = "Home",
         Icon = "rbxassetid://10723407389"
@@ -244,12 +245,19 @@ local tabSuccess, main = pcall(function()
 end)
 
 if not tabSuccess then
-    warn("Failed to create main tab:", main)
+    warn("Failed to create main tab!")
+    warn("Error message:", result)
     return
 end
 
-print("Main tab created:", main)
+local main = result
+print("Main tab created successfully:", main)
 print("Main tab type:", type(main))
+
+if not main then
+    warn("Main tab is nil even though pcall succeeded")
+    return
+end
 
 -- If main tab was created successfully, check its methods
 if main then
