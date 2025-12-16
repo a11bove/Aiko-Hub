@@ -728,7 +728,7 @@ sell:AddInput({
         else
             Library:MakeNotify({
                 Title = "@aikoware",
-						Description = "| Invalid Input"
+				Description = "| Invalid Input",
                 Content = "Please enter a number, not text.",
                 Delay = 2
             })
