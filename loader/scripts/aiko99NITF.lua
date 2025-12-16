@@ -1840,7 +1840,7 @@ local smp = Tp:AddSection("Map")
 
 smp:AddButton({
     Title = "Reveal Whole Map",
-    Content = "Visual but useful.",
+    Content = "",
     Callback = function()
         TeleportModule.RevealWholeMap()
     end
@@ -2174,8 +2174,8 @@ hh:AddSlider({
     Min = 16,
     Max = 150,
     Default = 16,
-    Callback = function(v)
-        speed = v
+    Callback = function(val)
+        speed = val
     end
 })
 
