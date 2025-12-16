@@ -12,25 +12,6 @@ if existingHirimi then
     existingHirimi:Destroy()
 end
 
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local rs = game:GetService("ReplicatedStorage")
-local Workspace = game:GetService("Workspace")
-local LocalPlayer = Players.LocalPlayer
-
-local RunService = game:GetService("RunService")
-
-local VirtualUser = game:GetService("VirtualUser")
-
-local Stats = game:GetService("Stats")
-local UserInputService = game:GetService("UserInputService")
-local Camera = workspace.CurrentCamera
-
-local workspace = Workspace
-
-local character = player.Character or player.CharacterAdded:Wait()
-local HumanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Mc4121ban/Fluriore-UI/main/source.lua"))()
 
 Library:MakeNotify({
@@ -133,6 +114,27 @@ button.MouseButton1Click:Connect(
         end
     end
 )
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
+local LocalPlayer = Players.LocalPlayer
+
+local RunService = game:GetService("RunService")
+
+local VirtualUser = game:GetService("VirtualUser")
+
+local Stats = game:GetService("Stats")
+local UserInputService = game:GetService("UserInputService")
+local Camera = workspace.CurrentCamera
+
+local workspace = Workspace
+
+local character = player.Character or player.CharacterAdded:Wait()
+local HumanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+local Character = character
+local rs = ReplicatedStorage
 
 -- modular yarn
 local FlyModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/flynitf.lua"))()
