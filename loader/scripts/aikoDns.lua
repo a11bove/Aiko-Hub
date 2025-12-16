@@ -118,6 +118,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local player = Players.LocalPlayer
 local RunService = game:GetService("RunService")
 local LocalPlayer = player
+local Character = player.Character or player.CharacterAdded:Wait()
 
 local autoKM_Running = false
 local dupe_Running = false
