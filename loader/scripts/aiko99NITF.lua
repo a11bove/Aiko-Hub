@@ -2163,9 +2163,12 @@ hh:AddSlider({
 })
 
 local speed = 16
+
 local function setSpeed(val)
     local humanoid = Players.LocalPlayer.Character and Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-    if humanoid then humanoid.WalkSpeed = val end
+    if humanoid then 
+        humanoid.WalkSpeed = val 
+    end
 end
 
 hh:AddSlider({
@@ -2176,6 +2179,7 @@ hh:AddSlider({
     Default = 16,
     Callback = function(val)
         speed = val
+        setSpeed(val)  -- Actually apply the speed!
     end
 })
 
