@@ -202,6 +202,46 @@ local function duplicateCoin(state)
     end
 end
 
+local BoostPower = 0
+local BoostEnabled = false
+local BoostConnection = nil
+
+local function BoostLogic(dt)
+    local char = LocalPlayer.Character
+    if not char then return end
+    local humanoid = char:FindFirstChildOfClass("Humanoid")
+    if not humanoid then return end
+    local seat = humanoid.SeatPart
+    if not seat or not seat:IsA("VehicleSeat") then return end
+    local velocity = seat.AssemblyLinearVelocity
+    if velocity.Magnitude > 0.5 then
+        seat.AssemblyLinearVelocity = velocity + (velocity.Unit * BoostPower * dt)
+    end
+end
+
+local function EnableBoost()
+    if BoostEnabled then return end
+    BoostEnabled = true
+    BoostConnection = RunService.Heartbeat:Connect(BoostLogic)
+end
+
+local function DisableBoost()
+    if not BoostEnabled then return end
+    BoostEnabled = false
+    if BoostConnection then
+        BoostConnection:Disconnect()
+        BoostConnection = nil
+    end
+end
+
+local function SetBoostPower(value)
+    BoostPower = value
+end
+
+local function ResetBoostPower()
+    BoostPower = 0
+end
+
 local main = Window:CreateTab({
     Name = "Main",
     Icon = "rbxassetid://10723407389"
@@ -229,6 +269,40 @@ expsec:AddToggle({
     Default = false,
     Callback = function(value)
         autoFarmKm(value)
+    end
+})
+
+local jep = main:AddSection("Jeepney")
+
+jep:AddToggle({
+    Title = "Booster",
+    Content = "",
+    Default = false,
+    Callback = function(value)
+        if value then
+            EnableBoost()
+        else
+            DisableBoost()
+        end
+    end
+})
+
+jep:AddSlider({
+    Title = "Booster Power",
+    Content = "Adjust booster strength",
+    Min = 0,
+    Max = 300,
+    Default = 0,
+    Callback = function(value)
+        SetBoostPower(value)
+    end
+})
+
+jep:AddButton({
+    Title = "Reset Booster",
+    Content = "Reset booster power to 0",
+    Callback = function()
+        ResetBoostPower()
     end
 })
 
