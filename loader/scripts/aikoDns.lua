@@ -282,7 +282,7 @@ expsec:AddToggle({
     end
 })
 
-local jep = main:AddSection("Jeepney")
+--[[ local jep = main:AddSection("Jeepney")
 
 jep:AddToggle({
     Title = "Booster",
@@ -314,7 +314,7 @@ jep:AddButton({
     Callback = function()
         ResetBoostPower()
     end
-})
+}) ]]
 
 local visec = main:AddSection("Visual")
 
