@@ -545,7 +545,6 @@ local function createText(yOffset)
     textObj.Center = false
     textObj.Outline = true
     textObj.Visible = true
-	textObj.Font = Enum.Font.GothamBold
     return textObj
 end
 
