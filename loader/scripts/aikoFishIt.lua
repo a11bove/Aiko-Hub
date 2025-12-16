@@ -96,6 +96,12 @@ end
 print("Window created successfully:", Window)
 print("Window type:", type(Window))
 
+print("===== Available Window methods: =====")
+for k, v in pairs(Window) do
+    print(k, type(v))
+end
+print("====================================")
+
 local gui = Instance.new("ScreenGui")
 gui.Name = "aikoware"
 gui.IgnoreGuiInset = true
@@ -223,12 +229,9 @@ local lockPositionState = {
     position = nil
 }
 
+-- Check if CreateTab exists
 if not Window.CreateTab then
     warn("CreateTab does not exist in Window")
-    warn("Available Window methods:")
-    for k, v in pairs(Window) do
-        print(k, type(v))
-    end
     return
 end
 
