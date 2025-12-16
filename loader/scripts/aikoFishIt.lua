@@ -1218,7 +1218,7 @@ arti:AddToggle({
     end
 })
 
-local loc = Tp:AddSection("Location")
+local loc = tp:AddSection("Location")
 
 loc:AddDropdown({
     Title = "Select Location",
@@ -1275,7 +1275,7 @@ loc:AddDropdown({
         end
 })
 
-local event = Tp:AddSection("Event")
+local event = tp:AddSection("Event")
 
 local EventTeleportSettings = {
     enabled = false,
