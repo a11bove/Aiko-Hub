@@ -12,38 +12,7 @@ if existingHirimi then
     existingHirimi:Destroy()
 end
 
-if not game:IsLoaded() then
-    game.Loaded:Wait()
-end
-
--- Clean up existing GUIs
-local existingGui = game.CoreGui:FindFirstChild("aikoware")
-if existingGui then
-    existingGui:Destroy()
-end
-
-local existingHirimi = game.CoreGui:FindFirstChild("HirimiGui")
-if existingHirimi then
-    existingHirimi:Destroy()
-end
-
--- Add error handling for library loading
-local success, Library = pcall(function()
-    return loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/loader/src.lua"))()
-end)
-
-if not success then
-    warn("Failed to load library:", Library)
-    return
-end
-
-if not Library then
-    warn("Library is nil after loading")
-    return
-end
-
-print("Library loaded successfully:", Library)
-print("Library type:", type(Library))
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/loader/src.lua"))()
 
 Library:MakeNotify({
     Title = "@aikoware",
@@ -53,28 +22,7 @@ Library:MakeNotify({
     Delay = 3
 })
 
--- Check if MakeNotify exists
-if Library.MakeNotify then
-    print("MakeNotify exists")
-    Library:MakeNotify({
-        Title = "@aikoware",
-        Description = "",
-        Content = "Fish It Script Loaded!",
-        Color = Color3.fromRGB(255,100,100),
-        Delay = 3
-    })
-else
-    warn("MakeNotify does not exist in Library")
-end
-
--- Check if MakeGui exists
-if not Library.MakeGui then
-    warn("MakeGui does not exist in Library")
-    return
-end
-
-local windowSuccess, Window = pcall(function()
-    return Library:MakeGui({
+local Window = Library:MakeGui({
         NameHub = "@aikoware ",
         Description = "| made by untog !",
         Color = Color3.fromRGB(81, 40, 128),
@@ -82,25 +30,6 @@ local windowSuccess, Window = pcall(function()
         ["Name Player"] = "Protected By @aikoware"
     })
 end)
-
-if not windowSuccess then
-    warn("Failed to create window:", Window)
-    return
-end
-
-if not Window then
-    warn("Window is nil after creation")
-    return
-end
-
-print("Window created successfully:", Window)
-print("Window type:", type(Window))
-
-print("===== Available Window methods: =====")
-for k, v in pairs(Window) do
-    print(k, type(v))
-end
-print("====================================")
 
 local gui = Instance.new("ScreenGui")
 gui.Name = "aikoware"
@@ -224,96 +153,46 @@ LocalPlayer.CharacterAdded:Connect(function(newCharacter)
                 newHumanoid.JumpPower = _G.CustomJumpPower or 50
 end)
 
-local lockPositionState = {
+--[[ local lockPositionState = {
     enabled = false,
     position = nil
-}
+}]]
 
--- Check if CreateTab exists
-if not Window.CreateTab then
-    warn("CreateTab does not exist in Window")
-    return
-end
-
--- Try creating tabs with detailed error handling
-print("===== Attempting to create Home tab =====")
-local tabSuccess, result = pcall(function()
-    return Window:CreateTab({
+local main = Window:CreateTab({
         Name = "Home",
         Icon = "rbxassetid://10723407389"
     })
 end)
 
-if not tabSuccess then
-    warn("Failed to create main tab!")
-    warn("Error message:", result)
-    return
-end
-
-local main = result
-print("Main tab created successfully:", main)
-print("Main tab type:", type(main))
-
-if not main then
-    warn("Main tab is nil even though pcall succeeded")
-    return
-end
-
--- If main tab was created successfully, check its methods
-if main then
-    print("Available main tab methods:")
-    for k, v in pairs(main) do
-        print(k, type(v))
-    end
-end
-
--- Continue with other tabs
 local fsh = Window:CreateTab({
     Name = "Fishing",
     Icon = "rbxassetid://10734966248"
 })
-print("Fishing tab created:", fsh)
 
 local shp = Window:CreateTab({
     Name = "Shop",
     Icon = "rbxassetid://10734921935"
 })
-print("Shop tab created:", shp)
 
 local qst = Window:CreateTab({
     Name = "Quest",
     Icon = "rbxassetid://10734965572"
 })
-print("Quest tab created:", qst)
 
 local utl = Window:CreateTab({
     Name = "Utility",
     Icon = "rbxassetid://10734964600"
 })
-print("Utility tab created:", utl)
 
 local tp = Window:CreateTab({
     Name = "Teleport",
     Icon = "rbxassetid://10734886004"
 })
-print("Teleport tab created:", tp)
 
 local msc = Window:CreateTab({
     Name = "Misc",
     Icon = "rbxassetid://10734964600"
 })
-print("Misc tab created:", msc)
-
--- Test adding a section
-if main and main.AddSection then
-    print("AddSection exists on main tab")
-    local testSection = main:AddSection("Test Section")
-    print("Test section created:", testSection)
-else
-    warn("AddSection does not exist on main tab")
-end
-
-print("Script initialization complete")
 
 local uset = main:AddSection("User Settings")
 
