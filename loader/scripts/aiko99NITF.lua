@@ -38,8 +38,8 @@ local Window = Library:MakeGui({
     NameHub = "@aikoware ",
     Description = "| made by untog !",
     Color = Color3.fromRGB(81, 40, 128),
-    ["Logo Player"] = "",
-	["Name Player"] = ""
+    ["Logo Player"] = "rbxassetid://140356301069419"",
+	["Name Player"] = "Protected By @aikoware"
 })
 
 local rs = game:GetService("ReplicatedStorage")
