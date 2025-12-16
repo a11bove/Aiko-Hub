@@ -368,6 +368,8 @@ function FlurioreLib:MakeGui(GuiConfig)
 	GuiConfig["Logo Player"] = GuiConfig["Logo Player"] or "https://www.roblox.com/headshot-thumbnail/image?userId="..game:GetService("Players").LocalPlayer.UserId .."&width=420&height=420&format=png"
 	GuiConfig["Name Player"] = GuiConfig["Name Player"] or tostring(game:GetService("Players").LocalPlayer.Name)
 	GuiConfig["Tab Width"] = GuiConfig["Tab Width"] or 120
+GuiConfig["Show Player Info"] = GuiConfig["Show Player Info"] or true 
+
 	local GuiFunc = {}
 
 	local HirimiGui = Instance.new("ScreenGui");
@@ -653,6 +655,11 @@ function FlurioreLib:MakeGui(GuiConfig)
 	ScrollTab.ChildAdded:Connect(UpdateSize1)
 	ScrollTab.ChildRemoved:Connect(UpdateSize1)
 
+	if GuiConfig["Show Player Info"] then
+    local Info = Instance.new("Frame");
+    local UICorner = Instance.new("UICorner");
+    local LogoPlayerFrame = Instance.new("Frame")
+
 	local Info = Instance.new("Frame");
 	local UICorner = Instance.new("UICorner");
 	local LogoPlayerFrame = Instance.new("Frame")
@@ -715,6 +722,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	NamePlayer.Size = UDim2.new(1, -45, 1, 0)
 	NamePlayer.Name = "NamePlayer"
 	NamePlayer.Parent = Info
+	end
 
 	function GuiFunc:DestroyGui()
 		if CoreGui:FindFirstChild("HirimiGui") then 
