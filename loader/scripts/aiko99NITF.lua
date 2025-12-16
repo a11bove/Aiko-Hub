@@ -12,24 +12,6 @@ if existingHirimi then
     existingHirimi:Destroy()
 end
 
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Mc4121ban/Fluriore-UI/main/source.lua"))()
-
-Library:MakeNotify({
-    Title = "@aikoware",
-    Description = "",
-    Content = "99 Nights in The Forest Script Loaded!",
-    Color = Color3.fromRGB(255,100,100),
-    Delay = 3
-})
-
-local Window = Library:MakeGui({
-    NameHub = "@aikoware ",
-    Description = "| made by untog !",
-    Color = Color3.fromRGB(81, 40, 128),
-    ["Logo Player"] = "https://www.roblox.com/headshot-thumbnail/image?userId=544503914&width=420&height=420&format=png",
-	["Name Player"] = "Protected By @aikoware"
-})
-
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local rs = game:GetService("ReplicatedStorage")
@@ -48,6 +30,24 @@ local workspace = Workspace
 
 local character = player.Character or player.CharacterAdded:Wait()
 local HumanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Mc4121ban/Fluriore-UI/main/source.lua"))()
+
+Library:MakeNotify({
+    Title = "@aikoware",
+    Description = "",
+    Content = "99 Nights in The Forest Script Loaded!",
+    Color = Color3.fromRGB(255,100,100),
+    Delay = 3
+})
+
+local Window = Library:MakeGui({
+    NameHub = "@aikoware ",
+    Description = "| made by untog !",
+    Color = Color3.fromRGB(81, 40, 128),
+    ["Logo Player"] = "https://www.roblox.com/headshot-thumbnail/image?userId=544503914&width=420&height=420&format=png",
+	["Name Player"] = "Protected By @aikoware"
+})
 
 -- toggle for gui
 local gui = Instance.new("ScreenGui")
