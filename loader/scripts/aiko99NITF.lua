@@ -2,18 +2,6 @@ if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
-local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
-while not Players.LocalPlayer do
-    task.wait()
-end
-
-local player = Players.LocalPlayer
-if not player.Character then
-    player.CharacterAdded:Wait()
-end
-
 local existingGui = game.CoreGui:FindFirstChild("aikoware")
 if existingGui then
     existingGui:Destroy()
@@ -42,6 +30,8 @@ local Window = Library:MakeGui({
 	["Name Player"] = "Protected By @aikoware"
 })
 
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local rs = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local LocalPlayer = Players.LocalPlayer
