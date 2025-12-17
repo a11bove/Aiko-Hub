@@ -2296,31 +2296,13 @@ local OriginalName = NameLabel.Text
 local OriginalLevel = LevelLabel.Text
 local CustomName = OriginalName
 local CustomLevel = OriginalLevel
-local HideIdentifierEnabled = false
+local HideIdentifierEnabled = true
 
-local nmein = Tabs.Misc:Input({
-    Title = "Hide Name",
-    Placeholder = "@aikoware",
-    Default = OriginalName,
-    Callback = function(value)
-        CustomName = value
-        if HideIdentifierEnabled then
-            NameLabel.Text = CustomName
-        end
-    end
-})
-
-local lvlin = Tabs.Misc:Input({
-    Title = "Hide Level",
-    Placeholder = "@aikoware",
-    Default = OriginalLevel,
-    Callback = function(value)
-        CustomLevel = value
-        if HideIdentifierEnabled then
-            LevelLabel.Text = CustomLevel
-        end
-    end
-})
+local overhead = (Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()):WaitForChild("HumanoidRootPart"):WaitForChild("Overhead")
+local NameLabel = overhead.Content.Header
+local LevelLabel = overhead.LevelContainer.Label
+local OriginalName = NameLabel.Text
+local OriginalLevel = LevelLabel.Text
 
 local hideiden = Tabs.Misc:Toggle({
     Title = "Hide Identity",
@@ -2328,13 +2310,11 @@ local hideiden = Tabs.Misc:Toggle({
     Callback = function(enabled)
         HideIdentifierEnabled = enabled
         if enabled then
-            NameLabel.Text = CustomName
-            LevelLabel.Text = CustomLevel
+            NameLabel.Text = "@aikoware"
+            LevelLabel.Text = "@aikoware"
         else
             NameLabel.Text = OriginalName
             LevelLabel.Text = OriginalLevel
-            NameLabel.TextColor3 = Color3.new(1, 1, 1)
-            LevelLabel.TextColor3 = Color3.new(1, 1, 1)
         end
     end
 })
@@ -2438,7 +2418,6 @@ local recon = Tabs.Misc:Toggle({
         end
     })
 
-    -- Toggle Transparency
     local transparentToggle = Tabs.Settings:Toggle({
         Title = "Transparency",
         Desc = "Makes the interface slightly transparent.",
