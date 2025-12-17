@@ -2127,25 +2127,29 @@ end)
 Tabs.Teleport:Section({Title = "Player", TextXAlignment = "Left", TextSize = 17})
 
 local selectedPlayer = nil
-local playerDropdown = nil -- reference dropdown
+local playerDropdown = nil
 
-local getPlayerNames = {}
+local function refreshPlayerDropdown()
+    if playerDropdown then
+        playerDropdown:Remove()
+    end
+
     local playerNames = {}
     for _, plr in pairs(Players:GetPlayers()) do
         if plr ~= LocalPlayer then
             table.insert(playerNames, plr.Name)
         end
     end
-    return playerNames
-end
 
-local function refreshPlayerDropdown()
-     local playerNames = getPlayerNames()
+    if #playerNames > 0 then
+        if not table.find(playerNames, selectedPlayer) then
+            selectedPlayer = playerNames[1]
+        end
+    else
+        selectedPlayer = nil
+    end
 
-     if playerDropdown then
-            playerDropdown:Refresh(playerNames)
-else
-    playerDropdown = Tabs.Teleport:Dropdown({
+    playerDropdown = TpTab:Dropdown({
         Title = "Select Player",
         Values = playerNames,
         Value = selectedPlayer,
@@ -2156,15 +2160,10 @@ else
     })
 end
 
-if selectedPlayer and not table.find(playerNames, selectedPlayer) then
-    selectedPlayer = playerNames[1]
-end
-end
-
 refreshPlayerDropdown()
 
-Tabs.Teleport:Button({
-    Title = "Teleport To Player",
+TpTab:Button({
+    Title = "Telepor To Player",
     Callback = function()
         if selectedPlayer then
             local targetPlayer = Players:FindFirstChild(selectedPlayer)
@@ -2181,9 +2180,10 @@ Tabs.Teleport:Button({
     end
 })
 
-task.spawn(function()
-    while task.wait(5) do
-        pcall(refreshPlayerDropdown)
+spawn(function()
+    while true do
+        wait(5)
+        refreshPlayerDropdown()
     end
 end)
 
