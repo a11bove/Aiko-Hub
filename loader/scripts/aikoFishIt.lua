@@ -1,4 +1,3 @@
-
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
@@ -307,11 +306,6 @@ Tabs.Home:Slider({
         if humanoid then
             humanoid.WalkSpeed = value
         end
-        WindUI:Notify({
-            Title = "Walkspeed",
-            Content = "WalkSpeed set to "..value,
-            Duration = 2,
-        })
     end
 })
 
