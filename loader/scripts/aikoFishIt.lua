@@ -2149,7 +2149,7 @@ local function refreshPlayerDropdown()
         selectedPlayer = nil
     end
 
-    playerDropdown = TpTab:Dropdown({
+    playerDropdown = Tabs.Teleport:Dropdown({
         Title = "Select Player",
         Values = playerNames,
         Value = selectedPlayer,
@@ -2162,7 +2162,7 @@ end
 
 refreshPlayerDropdown()
 
-TpTab:Button({
+Tabs.Teleport:Button({
     Title = "Telepor To Player",
     Callback = function()
         if selectedPlayer then
