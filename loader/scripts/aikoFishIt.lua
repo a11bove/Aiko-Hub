@@ -2129,28 +2129,22 @@ Tabs.Teleport:Section({Title = "Player", TextXAlignment = "Left", TextSize = 17}
 local selectedPlayer = nil
 local playerDropdown = nil -- reference dropdown
 
-local function refreshPlayerDropdown()
-    if playerDropdown and playerDropdown.Remove then
-        pcall(function()
-            playerDropdown:Remove()
-        end)
-    end
-
+local getPlayerNames = {}
     local playerNames = {}
     for _, plr in pairs(Players:GetPlayers()) do
         if plr ~= LocalPlayer then
             table.insert(playerNames, plr.Name)
         end
     end
+    return playerNames
+end
 
-    if #playerNames > 0 then
-        if not table.find(playerNames, selectedPlayer) then
-            selectedPlayer = playerNames[1]
-        end
-    else
-        selectedPlayer = nil
-    end
+local function refreshPlayerDropdown()
+     local playerNames = getPlayerNames()
 
+     if playerDropdown then
+            playerDropdown:Refresh(playerNames)
+else
     playerDropdown = Tabs.Teleport:Dropdown({
         Title = "Select Player",
         Values = playerNames,
@@ -2160,6 +2154,11 @@ local function refreshPlayerDropdown()
             WindUI:Notify({Title="Player Selected", Content=value, Duration=3})
         end
     })
+end
+
+if selectedPlayer and not table.find(playerNames, selectedPlayer) then
+    selectedPlayer = playerNames[1]
+end
 end
 
 refreshPlayerDropdown()
@@ -2183,7 +2182,7 @@ Tabs.Teleport:Button({
 })
 
 task.spawn(function()
-    while task.wait(1) do
+    while task.wait(5) do
         pcall(refreshPlayerDropdown)
     end
 end)
