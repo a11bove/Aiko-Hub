@@ -2341,7 +2341,7 @@ local hideiden = Tabs.Misc:Toggle({
     end
 })
 
--- Rainbow text effect
+--[[ Rainbow text effect
 coroutine.wrap(function()
     local hue = 0
     while true do
@@ -2356,7 +2356,7 @@ coroutine.wrap(function()
         end
         wait(0.05)
     end
-end)()
+end)()]]
 
 -- Other Features
 Tabs.Misc:Section({Title = "Other", TextXAlignment = "Left", TextSize = 17})
