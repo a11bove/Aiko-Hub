@@ -2183,7 +2183,7 @@ Tabs.Teleport:Button({
 })
 
 task.spawn(function()
-    while task.wait(5) do
+    while task.wait(1) do
         pcall(refreshPlayerDropdown)
     end
 end)
