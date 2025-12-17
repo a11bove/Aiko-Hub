@@ -1,3 +1,4 @@
+
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
@@ -2163,7 +2164,7 @@ end
 refreshPlayerDropdown()
 
 Tabs.Teleport:Button({
-    Title = "Telepor To Player",
+    Title = "Teleport To Player",
     Callback = function()
         if selectedPlayer then
             local targetPlayer = Players:FindFirstChild(selectedPlayer)
