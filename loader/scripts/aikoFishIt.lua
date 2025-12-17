@@ -2152,7 +2152,7 @@ local function refreshPlayerDropdown()
     playerDropdown = Tabs.Teleport:Dropdown({
         Title = "Select Player",
         Values = playerNames,
-        Value = selectedPlayer,
+        Value = {},
         Callback = function(value)
             selectedPlayer = value
             WindUI:Notify({Title="Player Selected", Content=value, Duration=3})
