@@ -65,5 +65,16 @@ return {
         "Shocked", 
         "Black Hole", 
         "Meteor Rain"
-    }
+    },
+    
+    GetPlayerNames = function(Players, LocalPlayer)
+        local playerNames = {}
+        for _, plr in pairs(Players:GetPlayers()) do
+            if plr ~= LocalPlayer then
+                table.insert(playerNames, plr.Name)
+            end
+        end
+        table.sort(playerNames)
+        return playerNames
+    end
 }
