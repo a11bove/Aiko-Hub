@@ -4,34 +4,18 @@ local LocalPlayer = game:GetService("Players").LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 local CoreGui = game:GetService("CoreGui")
 
-local Icons = {
-    ["lucide"] = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Footagesus/Icons/refs/heads/main/lucide/dist/Icons.lua"))(),
-    ["craft"] = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Footagesus/Icons/refs/heads/main/craft/dist/Icons.lua"))(),
-}
+local Icons = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Footagesus/Icons/main/Main-v2.lua"))()
 
-local function GetIcon(iconName, iconSet)
-    if not iconName or iconName == "" then
-        return ""
-    end
-    
-    if string.match(iconName, "rbxassetid://") then
-        return iconName
-    end
-    
-    iconSet = iconSet or "lucide"
-    
-    local lowerName = string.lower(iconName)
-    
-    if Icons[iconSet] and Icons[iconSet][lowerName] then
-        return Icons[iconSet][lowerName]
-    end
-    
-    if iconSet ~= "lucide" and Icons["lucide"] and Icons["lucide"][lowerName] then
-        return Icons["lucide"][lowerName]
-    end
-    
-    return iconName
-end
+local PrimaryColor = Color3.fromHex("#ffffff")
+local SecondaryColor = Color3.fromHex("#315dff")
+
+Icons.SetIconsType("geist")
+
+local houseIcon = Icons.Image({
+    Icon = "accessibility-unread", -- Default Geist icon
+    Colors = { PrimaryColor, SecondaryColor }
+    Size = UDim2.new(0, 32, 0, 32)
+})
 
 local function MakeDraggable(topbarobject, object)
 	local function CustomPos(topbarobject, object)
