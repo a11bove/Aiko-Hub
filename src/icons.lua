@@ -343,6 +343,7 @@ local LucideIcons = {
         ["film"] = "rbxassetid://10723374981",
         ["filter"] = "rbxassetid://10723375128",
         ["fingerprint"] = "rbxassetid://10723375250",
+        ["fish"] = "rbxassetid://101477385084100",
         ["flag"] = "rbxassetid://10723375890",
         ["flag-off"] = "rbxassetid://10723375443",
         ["flag-triangle-left"] = "rbxassetid://10723375608",
