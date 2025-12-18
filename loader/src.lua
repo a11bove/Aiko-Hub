@@ -4,35 +4,132 @@ local LocalPlayer = game:GetService("Players").LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 local CoreGui = game:GetService("CoreGui")
 
-local Icons = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Footagesus/Icons/main/Main-v2.lua"))()
+local LucideIcons = {
+    ["home"] = "rbxassetid://10723407389",
+    ["settings"] = "rbxassetid://10734950309",
+    ["user"] = "rbxassetid://10734896856",
+    ["users"] = "rbxassetid://10747373176",
+    ["search"] = "rbxassetid://10734898987",
+    ["x"] = "rbxassetid://10747384394",
+    ["check"] = "rbxassetid://10734896629",
+    ["chevron-right"] = "rbxassetid://10734896206",
+    ["chevron-left"] = "rbxassetid://10709790948",
+    ["chevron-down"] = "rbxassetid://10709790644",
+    ["chevron-up"] = "rbxassetid://10709791437",
+    ["menu"] = "rbxassetid://10734922111",
+    ["more-vertical"] = "rbxassetid://10734923214",
+    ["more-horizontal"] = "rbxassetid://10734922579",
+    ["info"] = "rbxassetid://10723424047",
+    ["alert-circle"] = "rbxassetid://10709751939",
+    ["alert-triangle"] = "rbxassetid://10709752939",
+    ["check-circle"] = "rbxassetid://10709764723",
+    ["x-circle"] = "rbxassetid://10747384394",
+    ["plus"] = "rbxassetid://10734922971",
+    ["minus"] = "rbxassetid://10734923549",
+    ["edit"] = "rbxassetid://10734883356",
+    ["trash"] = "rbxassetid://10734924532",
+    ["trash-2"] = "rbxassetid://10734924532",
+    ["copy"] = "rbxassetid://10734898037",
+    ["save"] = "rbxassetid://10734924532",
+    ["download"] = "rbxassetid://10734883356",
+    ["upload"] = "rbxassetid://10734925227",
+    ["file"] = "rbxassetid://10723415903",
+    ["folder"] = "rbxassetid://10723407389",
+    ["eye"] = "rbxassetid://10734883801",
+    ["eye-off"] = "rbxassetid://10734883167",
+    ["lock"] = "rbxassetid://10734921971",
+    ["unlock"] = "rbxassetid://10734925320",
+    ["star"] = "rbxassetid://10734924532",
+    ["heart"] = "rbxassetid://10734898689",
+    ["message-circle"] = "rbxassetid://10734922579",
+    ["bell"] = "rbxassetid://10734896629",
+    ["calendar"] = "rbxassetid://10723407389",
+    ["clock"] = "rbxassetid://10734896629",
+    ["map-pin"] = "rbxassetid://10734922111",
+    ["compass"] = "rbxassetid://10734898037",
+    ["target"] = "rbxassetid://10734924532",
+    ["zap"] = "rbxassetid://10747384394",
+    ["activity"] = "rbxassetid://10709751939",
+    ["trending-up"] = "rbxassetid://10734925227",
+    ["trending-down"] = "rbxassetid://10734883167",
+    ["bar-chart"] = "rbxassetid://10709764723",
+    ["pie-chart"] = "rbxassetid://10734923549",
+    ["package"] = "rbxassetid://10734922971",
+    ["box"] = "rbxassetid://10734896629",
+    ["archive"] = "rbxassetid://10709751939",
+    ["briefcase"] = "rbxassetid://10734896629",
+    ["gift"] = "rbxassetid://10734898689",
+    ["shopping-cart"] = "rbxassetid://10734924532",
+    ["credit-card"] = "rbxassetid://10734898037",
+    ["dollar-sign"] = "rbxassetid://10734883356",
+    ["link"] = "rbxassetid://10734921971",
+    ["external-link"] = "rbxassetid://10734883801",
+    ["share"] = "rbxassetid://10734924532",
+    ["share-2"] = "rbxassetid://10734924532",
+    ["send"] = "rbxassetid://10734924532",
+    ["mail"] = "rbxassetid://10734922111",
+    ["phone"] = "rbxassetid://10734923549",
+    ["video"] = "rbxassetid://10747384394",
+    ["camera"] = "rbxassetid://10734896629",
+    ["image"] = "rbxassetid://10723415903",
+    ["film"] = "rbxassetid://10734883801",
+    ["music"] = "rbxassetid://10734922579",
+    ["headphones"] = "rbxassetid://10734898689",
+    ["volume"] = "rbxassetid://10734925320",
+    ["volume-2"] = "rbxassetid://10734925320",
+    ["volume-x"] = "rbxassetid://10747384394",
+    ["mic"] = "rbxassetid://10734922579",
+    ["mic-off"] = "rbxassetid://10747384394",
+    ["play"] = "rbxassetid://10734923549",
+    ["pause"] = "rbxassetid://10734922971",
+    ["skip-back"] = "rbxassetid://10709790644",
+    ["skip-forward"] = "rbxassetid://10734896206",
+    ["refresh-cw"] = "rbxassetid://10734950309",
+    ["rotate-cw"] = "rbxassetid://10734950309",
+    ["loader"] = "rbxassetid://10734922111",
+    ["maximize"] = "rbxassetid://9886659406",
+    ["minimize"] = "rbxassetid://9886659276",
+    ["filter"] = "rbxassetid://10734883801",
+    ["sliders"] = "rbxassetid://10734924532",
+    ["toggle-left"] = "rbxassetid://10734925227",
+    ["toggle-right"] = "rbxassetid://10734925227",
+    ["code"] = "rbxassetid://10734898037",
+    ["terminal"] = "rbxassetid://10734924532",
+    ["database"] = "rbxassetid://10734883356",
+    ["server"] = "rbxassetid://10734924532",
+    ["cpu"] = "rbxassetid://10734898037",
+    ["hard-drive"] = "rbxassetid://10734898689",
+    ["wifi"] = "rbxassetid://10734925320",
+    ["wifi-off"] = "rbxassetid://10747384394",
+    ["bluetooth"] = "rbxassetid://10734896629",
+    ["battery"] = "rbxassetid://10709764723",
+    ["power"] = "rbxassetid://10734923549",
+    ["globe"] = "rbxassetid://10734898689",
+    ["navigation"] = "rbxassetid://10734922111",
+    ["anchor"] = "rbxassetid://10709751939",
+    ["award"] = "rbxassetid://10734896629",
+    ["bookmark"] = "rbxassetid://10734896629",
+    ["flag"] = "rbxassetid://10734883801",
+    ["tag"] = "rbxassetid://10734924532",
+    ["fish"] = "rbxassetid://10747750902",
+}
 
-local function GetIcon(iconName, iconSet)
+-- Function to get icon
+local function GetIcon(iconName)
     if not iconName or iconName == "" then
         return ""
     end
     
+    -- If it's already an asset ID, return it
     if string.match(iconName, "rbxassetid://") then
         return iconName
     end
     
-    iconSet = iconSet or "lucide"
-    
+    -- Convert to lowercase for case-insensitive matching
     local lowerName = string.lower(iconName)
     
-    if not Icons then
-        warn("Icons failed to load")
-        return iconName
-    end
-    
-    if Icons[iconSet] and Icons[iconSet][lowerName] then
-        return Icons[iconSet][lowerName]
-    end
-    
-    if iconSet ~= "lucide" and Icons["lucide"] and Icons["lucide"][lowerName] then
-        return Icons["lucide"][lowerName]
-    end
-    
-    return iconName
+    -- Return the Lucide icon or fallback to default
+    return LucideIcons[lowerName] or iconName
 end
 
 local function MakeDraggable(topbarobject, object)
@@ -980,7 +1077,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 		TabName.Name = "TabName"
 		TabName.Parent = Tab
 
-		FeatureImg.Image = GetIcon(TabConfig.Icon, "lucide")
+		FeatureImg.Image = GetIcon(TabConfig.Icon)
 		FeatureImg.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		FeatureImg.BackgroundTransparency = 0.9990000128746033
 		FeatureImg.BorderColor3 = Color3.fromRGB(0, 0, 0)
