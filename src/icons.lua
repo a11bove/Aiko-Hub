@@ -1,5 +1,4 @@
 local LucideIcons = {
-    lucide = {
         ["accessibility"] = "rbxassetid://10709751939",
         ["activity"] = "rbxassetid://10709752035",
         ["air-vent"] = "rbxassetid://10709752131",
@@ -818,7 +817,6 @@ local LucideIcons = {
         ["x-square"] = "rbxassetid://10747384217",
         ["zoom-in"] = "rbxassetid://10747384552",
         ["zoom-out"] = "rbxassetid://10747384679",
-    }
 }
 
 return LucideIcons
