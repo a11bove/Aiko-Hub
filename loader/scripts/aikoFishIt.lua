@@ -13,8 +13,8 @@ local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local Humanoid = Character:WaitForChild("Humanoid")
 local HttpService = game:GetService("HttpService")
 local Lighting = game:GetService("Lighting")
+local VirtualInputManager = game:GetService("VirtualInputManager")
 
--- Network Remotes
 local NetFolder = ReplicatedStorage:WaitForChild("Packages"):WaitForChild("_Index"):WaitForChild("sleitnick_net@0.2.0"):WaitForChild("net")
 
 local NetIndex = ReplicatedStorage.Packages._Index and ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"]
@@ -33,7 +33,6 @@ local UpdateOxygen = NetFolder:WaitForChild("URE/UpdateOxygen")
 local FishingController = require(ReplicatedStorage.Controllers.FishingController)
 local REFavoriteItem = NetFolder:WaitForChild("RE/FavoriteItem")
 
--- Infinite Jump Setup
 UserInputService.JumpRequest:Connect(function()
     local shouldJump = _G.InfiniteJump and (LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()):FindFirstChildOfClass("Humanoid")
     if shouldJump then
@@ -122,6 +121,7 @@ local Tabs = {
     Quest = Window:Tab({Title = "Quest", Icon = "zap"}),
     Utility = Window:Tab({Title = "Utility", Icon = "cog"}),
     Teleport = Window:Tab({Title = "Teleport", Icon = "map-pin"}),
+    Trade = Window:Tab({Title = "Trade", Icon = "repeat"}),
     Misc = Window:Tab({Title = "Misc", Icon = "snowflake"}),
     Settings = Window:Tab({Title = "Settings", Icon = "settings"})
 }
@@ -634,7 +634,7 @@ local function LegitFishLoop()
                 for _ = 1, 20 do
                     if not AutoLegitFishEnabled then break end
                     ClickAtPosition()
-                    task.wait(0.02)
+                    task.wait(0.1)
                 end
             end
             task.wait(0.1)
@@ -659,7 +659,7 @@ local function ToggleAutoLegitFish(enabled)
             task.cancel(LegitFishThread)
         end
         LegitFishThread = task.spawn(LegitFishLoop)
-        print("Auto Legit Fish: Started")
+        print("Auto Legit Fishing: Started")
     else
         StopLegitFish()
         if LegitFishThread then
@@ -670,14 +670,14 @@ local function ToggleAutoLegitFish(enabled)
 end
 
 Tabs.Fishing:Toggle({
-    Title = "Auto Legit Fish",
+    Title = "Legit Fishing (Auto Perfect)",
+    Desc = "Much better if you have ”Perfect“ enchant.",
     Default = false,
     Callback = ToggleAutoLegitFish
 })
 
 Tabs.Fishing:Section({Title = "Utility", TextXAlignment = "Left", TextSize = 17})
 
--- Freeze Character
 local originalCFrame
 local freezeConnection
 
@@ -705,8 +705,7 @@ Tabs.Fishing:Toggle({
     end
 })
 
--- FISHING TAB - Instant Fishing
-Tabs.Fishing:Section({Title = "Blatant V1", TextXAlignment = "Left", TextSize = 17})
+Tabs.Fishing:Section({Title = "Instant", TextXAlignment = "Left", TextSize = 17})
 
 local InstantFishEnabled = false
 local CancelDelay = 0.1
@@ -759,7 +758,7 @@ local function StopInstantFish()
 end
 
 Tabs.Fishing:Toggle({
-    Title = "Blatant V1",
+    Title = "Auto Instant Fishing",
     Desc = "Settings depends on your rod.",
     Callback = function(enabled)
         if enabled then
@@ -804,7 +803,6 @@ local CancelDelayInput = Tabs.Fishing:Input({
     end
 })
 
--- Super Instant Fishing
 local SuperInstantEnabled = false
 local SuperReelDelay = 2
 local SuperCompleteDelay = 1.25
@@ -890,7 +888,6 @@ local SuperCompleteDelayInput = Tabs.Fishing:Input({
     end
 })
 
--- Super Instant Fishing V2 (for Scythe)
 Tabs.Fishing:Section({Title = "Blatant For Scythe", TextXAlignment = "Left", TextSize = 17})
 
 local SuperInstantV2Enabled = false
@@ -976,7 +973,6 @@ local ScytheReelDelayInput = Tabs.Fishing:Input({
     end
 })
 
--- Auto Enchant Rod
 Tabs.Fishing:Section({Title = "Enchant", TextXAlignment = "Left", TextSize = 17})
 Tabs.Fishing:Toggle({
     Title = "Auto Enchant Rod",
@@ -1043,7 +1039,70 @@ local caughtnotif = Tabs.Fishing:Toggle({
     end
 })
 
--- SHOP TAB
+local radsr = Tabs.Fishing:Section({Title = "Fishing Radar", TextSize = 17, TextXAlignment = "Left"})
+
+local fishrad = Tabs.Fishing:Toggle({
+    Title = "Fishing Radar",
+    Desc = "Bypass Fishing Radar",
+    Default = false,
+    Callback = function(state)
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        local Lighting = game:GetService("Lighting")
+
+        local Replion = require(ReplicatedStorage.Packages.Replion)
+        local Net = require(ReplicatedStorage.Packages.Net)
+        local SPR = require(ReplicatedStorage.Packages.spr)
+        local Soundbook = require(ReplicatedStorage.Shared.Soundbook)
+        local ClientTime = require(ReplicatedStorage.Controllers.ClientTimeController)
+        local TextNotification = require(ReplicatedStorage.Controllers.TextNotificationController)
+
+        local UpdateFishingRadar = Net:RemoteFunction("UpdateFishingRadar")
+
+        local function SetRadar(enable)
+            local clientData = Replion.Client:GetReplion("Data")
+            if not clientData then return end
+
+            if clientData:Get("RegionsVisible") ~= enable then
+                if UpdateFishingRadar:InvokeServer(enable) then
+                    Soundbook.Sounds.RadarToggle:Play().PlaybackSpeed = 1 + math.random() * 0.3
+
+                    if enable then
+                        local ccEffect = Lighting:FindFirstChildWhichIsA("ColorCorrectionEffect")
+                        if ccEffect then
+                            SPR.stop(ccEffect)
+                            local lightingProfile = ClientTime:_getLightingProfile()
+                            local targetSettings = (lightingProfile and lightingProfile.ColorCorrection) or {}
+                            targetSettings.Brightness = targetSettings.Brightness or 0.04
+                            targetSettings.TintColor = targetSettings.TintColor or Color3.fromRGB(255, 255, 255)
+
+                            ccEffect.TintColor = Color3.fromRGB(42, 226, 118)
+                            ccEffect.Brightness = 0.4
+                            SPR.target(ccEffect, 1, 1, targetSettings)
+                        end
+
+                        SPR.stop(Lighting)
+                        Lighting.ExposureCompensation = 1
+                        SPR.target(Lighting, 1, 2, {ExposureCompensation = 0})
+                    end
+
+                    WindUI:Notify({
+                        Title = "Fishing Radar",
+                        Desc = "Radar: "..(enable and "Enabled" or "Disabled"),
+                        Icon = "radar",
+                        Duration =2
+                    })
+                end
+            end
+        end
+
+        if state then
+            SetRadar(true)
+        else
+            SetRadar(false)
+        end
+    end
+})
+
 Tabs.Shop:Section({Title = "Buy", TextXAlignment = "Left", TextSize = 17})
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -1100,10 +1159,13 @@ Tabs.Shop:Dropdown({
     end
 })
 
+Tabs.Shop:Space()
+
 Tabs.Shop:Button({
     Title = "Buy Rod",
+    Justify = "Center",
     Callback = function()
-        local key = rodKeyMap[selectedRod] -- ambil key asli
+        local key = rodKeyMap[selectedRod]
         if key and rods[key] then
             local success, err = pcall(function()
                 RFPurchaseFishingRod:InvokeServer(rods[key])
@@ -1149,7 +1211,8 @@ local baitKeyMap = {
 
 local selectedBait = baitNames[1]
 
--- ===== Dropdown =====
+Tabs.Shop:Space()
+
 Tabs.Shop:Dropdown({
     Title="Select Bait",
     Values=baitNames,
@@ -1164,10 +1227,13 @@ Tabs.Shop:Dropdown({
     end
 })
 
+Tabs.Shop:Space()
+
 Tabs.Shop:Button({
     Title="Buy Bait",
+    Justify = "Center",
     Callback=function()
-        local key = baitKeyMap[selectedBait] -- ambil key asli
+        local key = baitKeyMap[selectedBait]
         if key and baits[key] then
             local amount = baits[key]
             local success, err = pcall(function()
@@ -1215,13 +1281,15 @@ local weatherKeyMap = {
 
 local selectedWeathers = {weatherNames[1]}
 
+Tabs.Shop:Space()
+
 local weatheroptions = Tabs.Shop:Dropdown({
     Title="Select Weather(s)",
     Values=weatherNames,
-    Multi=true, -- multi-select
+    Multi=true,
     Value=selectedWeathers,
     Callback=function(values)
-        selectedWeathers = values -- update selection
+        selectedWeathers = values
         WindUI:Notify({
             Title="Weather Selected",
             Content="Selected "..#values.." weather(s)",
@@ -1254,7 +1322,7 @@ local function startAutoBuy()
                     task.wait(buyDelay)
                 end
             end
-            task.wait(0.1) -- loop kecil supaya bisa break saat toggle dimatikan
+            task.wait(0.1)
         end
     end)
 end
@@ -1330,6 +1398,8 @@ end
 
 local selectedBoat = boatNames[1]
 
+Tabs.Shop:Space()
+
 Tabs.Shop:Dropdown({
     Title = "Select Boat",
     Values = boatNames,
@@ -1344,8 +1414,11 @@ Tabs.Shop:Dropdown({
     end
 })
 
+Tabs.Shop:Space()
+
 Tabs.Shop:Button({
     Title = "Buy Boat",
+    Justify = "Center",
     Callback = function()
         local key = boatKeyMap[selectedBoat]
         if key and boats[key] then
@@ -1373,7 +1446,7 @@ Tabs.Shop:Section({Title = "Sell", TextXAlignment = "Left", TextSize = 17})
 
 local autosellfish = Tabs.Shop:Toggle({
     Title = "Auto Sell",
-    Desc = "Automatic sells fish.",
+    Desc = "Automatically sells fish.",
     Default = false,
     Callback = function(enabled)
         _G.AutoSell = enabled
@@ -1415,9 +1488,12 @@ local autosellin = Tabs.Shop:Input({
     end
 })
 
+Tabs.Shop:Space()
+
 Tabs.Shop:Button({
     Title = "Sell All Fish",
-    Desc = "Click to sell all your items instantly.",
+    Justify = "Center",
+    Desc = "Instanly sells non-favorite fish.",
     Callback = function()
         local ReplicatedStorage = game:GetService("ReplicatedStorage")
         local RFSellAllItems = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RF/SellAllItems"]
@@ -1434,7 +1510,6 @@ Tabs.Shop:Button({
     end
 })
 
--- QUEST TAB
 Tabs.Quest:Section({Title = "Deep Sea Quest", TextXAlignment = "Left", TextSize = 17})
 
 local QuestSettings = {player = Players.LocalPlayer}
@@ -1564,199 +1639,46 @@ task.spawn(function()
     end
 end)
 
--- Artifact Quest
 Tabs.Quest:Section({Title = "Artifact", TextXAlignment = "Left", TextSize = 17})
 
-local ArtifactLocations = {
-    ["Hourglass Diamond Artifact"] = {
-        Koordinat = Vector3.new(1478.0726, 5.7806, -847.1714),
-        ArahHadap = Vector3.new(-0.1844, 0, 0.9828)
-    },
-    ["Diamond Artifact"] = {
-        Koordinat = Vector3.new(1837.9366, 4.3452, -306.2985),
-        ArahHadap = Vector3.new(0.8314, 0, -0.5556)
-    },
-    ["Arrow Artifact"] = {
-        Koordinat = Vector3.new(877.6763, 3.0565, -333.3725),
-        ArahHadap = Vector3.new(-0.9714, 0, 0.2372)
-    },
-    ["Crescent Artifact"] = {
-        Koordinat = Vector3.new(1402.8289, 3.3359, 122.6733),
-        ArahHadap = Vector3.new(-0.2753, 0, 0.9613)
-    }
-}
+local ArtifactModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/fishit/artifactmdl.lua"))()
+local Artifact = ArtifactModule(LocalPlayer, PlayerGui, ReplicatedStorage, VirtualInputManager, FishingController, workspace)
 
-local ArtifactIds = {
-    ["Arrow Artifact"] = 265,
-    ["Crescent Artifact"] = 266,
-    ["Diamond Artifact"] = 267,
-    ["Hourglass Diamond Artifact"] = 271
-}
+local ArtifactOverlay, OverlayTitle, OverlayMessage, OverlayLink, OverlayIcon = Artifact.CreateOverlay()
 
-local AutoFarmArtifactEnabled = false
-local ArtifactFishing = false
-local ArtifactFishThread = nil
-local ArtifactOriginalPower = nil
-local ArtifactEquipRemote = nil
-
-local function ClickForArtifact()
-    local viewportSize = workspace.CurrentCamera.ViewportSize
-    local clickX = viewportSize.X * 0.95
-    local clickY = viewportSize.Y * 0.95
-    VirtualInputManager:SendMouseButtonEvent(clickX, clickY, 0, true, nil, 0)
-    VirtualInputManager:SendMouseButtonEvent(clickX, clickY, 0, false, nil, 0)
-end
-
-local function StopArtifactFishing()
-    ArtifactFishing = false
-    if ArtifactOriginalPower then
-        FishingController._getPower = ArtifactOriginalPower
-        ArtifactOriginalPower = nil
-    end
-end
-
-local function ArtifactFishingLoop()
-    pcall(function()
-        while AutoFarmArtifactEnabled do
-            if not LocalPlayer.Character then
-                LocalPlayer.CharacterAdded:Wait()
-            end
-            if not AutoFarmArtifactEnabled then break end
-
-            if ArtifactEquipRemote then
-                pcall(ArtifactEquipRemote.FireServer, ArtifactEquipRemote, 1)
-            end
-            task.wait(0.1)
-
-            if not ArtifactFishing then
-                ClickForArtifact()
-                ArtifactFishing = true
-            end
-
-            local fishingGui = PlayerGui:FindFirstChild("Fishing")
-            fishingGui = fishingGui and fishingGui:FindFirstChild("Main")
-
-            if fishingGui and fishingGui.Visible then
-                for _ = 1, 20 do
-                    if not AutoFarmArtifactEnabled then break end
-                    ClickForArtifact()
-                    task.wait(0.02)
-                end
-            end
-            task.wait(0.1)
-        end
-    end)
-    StopArtifactFishing()
-end
-
-local function ToggleArtifactFishing(enabled)
-    AutoFarmArtifactEnabled = enabled
-    if enabled then
-        if not ArtifactOriginalPower then
-            ArtifactOriginalPower = FishingController._getPower
-        end
-        function FishingController._getPower()
-            return 1
-        end
-        ArtifactFishing = false
-        if ArtifactFishThread then
-            task.cancel(ArtifactFishThread)
-        end
-        ArtifactFishThread = task.spawn(ArtifactFishingLoop)
-    else
-        StopArtifactFishing()
-        if ArtifactFishThread then
-            task.cancel(ArtifactFishThread)
-            ArtifactFishThread = nil
-        end
-    end
-end
-
-local function GetPlayerData()
-    local Replion = require(ReplicatedStorage:WaitForChild("Packages"):WaitForChild("Replion"))
-    local dataReplion = Replion.Client:WaitReplion("Data", LocalPlayer)
-    if not dataReplion then
-        return {}, {}
-    end
-
-    local templeLeverData = dataReplion:Get("TempleLevers") or {}
-    local inventoryItems = dataReplion:Get({"Inventory", "Items"}) or {}
-
-    local ownedArtifacts = {}
-    for _, item in ipairs(inventoryItems) do
-        for artifactName, artifactId in pairs(ArtifactIds) do
-            if item.Id == artifactId then
-                ownedArtifacts[artifactName] = true
-            end
-        end
-    end
-
-    return templeLeverData, ownedArtifacts
-end
-
-local function GetArtifactProgressText()
-    local leverData, _ = GetPlayerData()
-    local progressLines = {}
-
-    for artifactName, _ in pairs(ArtifactIds) do
-        table.insert(progressLines, (leverData[artifactName] and "Lever Placed: " or "Not Placed: ") .. artifactName)
-    end
-
-    local progressText = table.concat(progressLines, "\n")
-
-    local allPlaced = true
-    for artifactName, _ in pairs(ArtifactIds) do
-        if not leverData[artifactName] then
-            allPlaced = false
-            break
-        end
-    end
-
-    if allPlaced then
-        progressText = progressText .. "\n\nAll levers have been placed!"
-    end
-    return progressText
+local function UpdateOverlay(visible, title, message, link, iconId)
+    ArtifactOverlay.Enabled = visible
+    if title then OverlayTitle.Text = title end
+    if message then OverlayMessage.Text = message end
+    if link then OverlayLink.Text = link end
+    if iconId then OverlayIcon.Image = "rbxassetid://" .. tostring(iconId) end
 end
 
 local ArtifactProgressParagraph = Tabs.Quest:Paragraph({
     Title = "Temple Artifact Progress",
-    Desc = GetArtifactProgressText()
+    Desc = Artifact.GetArtifactProgressText()
 })
-
-local function GetPlayerHRP()
-    return (LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()):WaitForChild("HumanoidRootPart")
-end
-
-local function TeleportToArtifact(artifactName)
-    local hrp = GetPlayerHRP()
-    local location = ArtifactLocations[artifactName]
-    if hrp and location then
-        local position = location.Koordinat
-        local lookDirection = location.ArahHadap
-        hrp.CFrame = CFrame.new(position, position + lookDirection)
-    end
-end
 
 local AutoFarmArtifactsRunning = false
 
 local function AutoFarmArtifactsCycle()
     if not AutoFarmArtifactsRunning then return end
 
-    local leverData, ownedArtifacts = GetPlayerData()
+    local leverData, ownedArtifacts = Artifact.GetPlayerData()
     local remotesFolder = ReplicatedStorage:FindFirstChild("Remotes")
 
-    for artifactName, _ in pairs(ArtifactIds) do
+    for artifactName, _ in pairs(Artifact.Ids) do
         if not leverData[artifactName] then
             if not ownedArtifacts[artifactName] then
-                TeleportToArtifact(artifactName)
-                ToggleArtifactFishing(true)
+                Artifact.TeleportToArtifact(artifactName)
+                Artifact.ToggleArtifactFishing(true)
 
                 while true do
-                    task.wait(0.5)
+                    task.wait(Artifact.Config.FishingCheckDelay)
                     local fishingGui = PlayerGui:FindFirstChild("Fishing")
                     fishingGui = fishingGui and fishingGui:FindFirstChild("Main")
                     if not (fishingGui and fishingGui.Visible and AutoFarmArtifactsRunning) then
-                        ToggleArtifactFishing(false)
+                        Artifact.ToggleArtifactFishing(false)
                         break
                     end
                 end
@@ -1766,85 +1688,12 @@ local function AutoFarmArtifactsCycle()
             if placeLeverRemote then
                 placeLeverRemote:FireServer(artifactName)
             end
-            task.wait(1)
+            task.wait(Artifact.Config.PlaceLeverDelay)
         end
     end
 
-    ArtifactProgressParagraph:SetDesc(GetArtifactProgressText())
-    task.wait(5)
-end
-
-local ArtifactOverlay = Instance.new("ScreenGui")
-ArtifactOverlay.Name = "ArtifactOverlay"
-ArtifactOverlay.ResetOnSpawn = false
-ArtifactOverlay.IgnoreGuiInset = true
-ArtifactOverlay.Parent = PlayerGui
-ArtifactOverlay.Enabled = false
-
-local OverlayBackground = Instance.new("Frame")
-OverlayBackground.Size = UDim2.new(1, 0, 1, 0)
-OverlayBackground.BackgroundColor3 = Color3.new(0, 0, 0)
-OverlayBackground.BackgroundTransparency = 0.6
-OverlayBackground.Parent = ArtifactOverlay
-
-local OverlayContent = Instance.new("Frame")
-OverlayContent.AnchorPoint = Vector2.new(0.5, 0.5)
-OverlayContent.Position = UDim2.new(0.5, 0, 0.5, 0)
-OverlayContent.Size = UDim2.new(0, 400, 0, 320)
-OverlayContent.BackgroundTransparency = 1
-OverlayContent.Parent = ArtifactOverlay
-
-local OverlayIcon = Instance.new("ImageLabel")
-OverlayIcon.Size = UDim2.new(0, 120, 0, 120)
-OverlayIcon.Position = UDim2.new(0.5, 0, 0, 0)
-OverlayIcon.AnchorPoint = Vector2.new(0.5, 0)
-OverlayIcon.BackgroundTransparency = 1
-OverlayIcon.Image = "rbxassetid://140356301069419"
-OverlayIcon.Parent = OverlayContent
-
-local OverlayTitle = Instance.new("TextLabel")
-OverlayTitle.Size = UDim2.new(1, 0, 0, 35)
-OverlayTitle.Position = UDim2.new(0.5, 0, 0, 120)
-OverlayTitle.AnchorPoint = Vector2.new(0.5, 0)
-OverlayTitle.BackgroundTransparency = 1
-OverlayTitle.Text = "@aikoware"
-OverlayTitle.Font = Enum.Font.GothamBold
-OverlayTitle.TextSize = 30
-OverlayTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-OverlayTitle.TextStrokeTransparency = 0.3
-OverlayTitle.Parent = OverlayContent
-
-local OverlayMessage = Instance.new("TextLabel")
-OverlayMessage.Size = UDim2.new(0.9, 0, 0, 60)
-OverlayMessage.Position = UDim2.new(0.5, 0, 0, 160)
-OverlayMessage.AnchorPoint = Vector2.new(0.5, 0)
-OverlayMessage.BackgroundTransparency = 1
-OverlayMessage.Text = "Do not interrupt farming enabled!"
-OverlayMessage.Font = Enum.Font.Gotham
-OverlayMessage.TextSize = 18
-OverlayMessage.TextWrapped = true
-OverlayMessage.TextColor3 = Color3.fromRGB(255, 255, 255)
-OverlayMessage.TextStrokeTransparency = 0.5
-OverlayMessage.Parent = OverlayContent
-
-local OverlayLink = Instance.new("TextLabel")
-OverlayLink.Size = UDim2.new(1, 0, 0, 25)
-OverlayLink.Position = UDim2.new(0.5, 0, 0, 220)
-OverlayLink.AnchorPoint = Vector2.new(0.5, 0)
-OverlayLink.BackgroundTransparency = 1
-OverlayLink.Text = "dc ; https://discord.gg/JccfFGpDNV"
-OverlayLink.Font = Enum.Font.GothamSemibold
-OverlayLink.TextSize = 16
-OverlayLink.TextColor3 = Color3.fromRGB(220, 170, 255)
-OverlayLink.TextStrokeTransparency = 0.6
-OverlayLink.Parent = OverlayContent
-
-local function UpdateOverlay(visible, title, message, link, iconId)
-    ArtifactOverlay.Enabled = visible
-    if title then OverlayTitle.Text = title end
-    if message then OverlayMessage.Text = message end
-    if link then OverlayLink.Text = link end
-    if iconId then OverlayIcon.Image = "rbxassetid://" .. tostring(iconId) end
+    ArtifactProgressParagraph:SetDesc(Artifact.GetArtifactProgressText())
+    task.wait(Artifact.Config.CycleDelay)
 end
 
 Tabs.Quest:Toggle({
@@ -1857,90 +1706,36 @@ Tabs.Quest:Toggle({
             UpdateOverlay(true)
             task.spawn(AutoFarmArtifactsCycle)
         else
-            ToggleArtifactFishing(false)
+            Artifact.ToggleArtifactFishing(false)
             UpdateOverlay(false)
         end
     end
 })
 
--- TELEPORT TAB
+local TeleportData = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/fishit/tpmdl.lua"))()
+
 Tabs.Teleport:Section({Title = "Location", TextXAlignment = "Left", TextSize = 17})
+
+local locationNames = {}
+for name, _ in pairs(TeleportData.Locations) do
+    table.insert(locationNames, name)
+end
+table.sort(locationNames)
 
 Tabs.Teleport:Dropdown({
     Title = "Select Location",
-    Values = {
-        "Esoteric Island", "Kohana", "Kohana Volcano", "Kohana 1", "Kohana 2",
-        "Coral Refs", "Enchant Room", "Tropical Grove", "Weather Machine", "Spawn",
-        "Coral Refs 1", "Coral Reefs 2", "Coral Reefs 3", "Volcano", "Sisyphus Statue",
-        "Treasure Room", "Crater Island Top", "Crater Island Ground", "Lost Shore",
-        "Stingray Shores", "Tropical Grove", "Ice Sea", "Tropical Grove Cave 1",
-        "Tropical Grove Cave 2", "Tropical Grove Highground", "Fisherman Island Underground",
-        "Fisherman Island Mid", "Fisherman Island Left", "Fisherman Island Right",
-        "Jungle", "Temple Guardian", "Underground Cellar", "Sacred Temple"
-    },
+    Values = locationNames,
     Callback = function(locationName)
-        local TeleportLocations = {
-            ["Esoteric Island"] = Vector3.new(1990, 5, 1398),
-            ["Kohana"] = Vector3.new(-603, 3, 719),
-            ["Coral Refs"] = Vector3.new(-2855, 47, 1996),
-            ["Enchant Room"] = Vector3.new(3221, -1303, 1406),
-            ["Spawn"] = Vector3.new(33, 9, 2810),
-            ["Volcano"] = Vector3.new(-632, 55, 197),
-            ["Treasure Room"] = Vector3.new(-3602.01, -266.57, -1577.18),
-            ["Sisyphus Statue"] = Vector3.new(-3703.69, -135.57, -1017.17),
-            ["Crater Island Top"] = Vector3.new(1011.29, 22.68, 5076.27),
-            ["Crater Island Ground"] = Vector3.new(1079.57, 3.64, 5080.35),
-            ["Coral Reefs 1"] = Vector3.new(-3031.88, 2.52, 2276.36),
-            ["Coral Reefs 2"] = Vector3.new(-3270.86, 2.5, 2228.1),
-            ["Coral Reefs 3"] = Vector3.new(-3136.1, 2.61, 2126.11),
-            ["Lost Shore"] = Vector3.new(-3737.97, 5.43, -854.68),
-            ["Weather Machine"] = Vector3.new(-1524.88, 2.87, 1915.56),
-            ["Kohana Volcano"] = Vector3.new(-561.81, 21.24, 156.72),
-            ["Kohana 1"] = Vector3.new(-367.77, 6.75, 521.91),
-            ["Kohana 2"] = Vector3.new(-623.96, 19.25, 419.36),
-            ["Stingray Shores"] = Vector3.new(44.41, 28.83, 3048.93),
-            ["Tropical Grove"] = Vector3.new(-2018.91, 9.04, 3750.59),
-            ["Ice Sea"] = Vector3.new(2164, 7, 3269),
-            ["Tropical Grove Cave 1"] = Vector3.new(-2151, 3, 3671),
-            ["Tropical Grove Cave 2"] = Vector3.new(-2018, 5, 3756),
-            ["Tropical Grove Highground"] = Vector3.new(-2139, 53, 3624),
-            ["Fisherman Island Underground"] = Vector3.new(-62, 3, 2846),
-            ["Fisherman Island Mid"] = Vector3.new(33, 3, 2764),
-            ["Fisherman Island Left"] = Vector3.new(-26, 10, 2686),
-            ["Fisherman Island Right"] = Vector3.new(95, 10, 2684),
-            ["Jungle"] = Vector3.new(1491.21667, 6.35540199, -848.057617),
-            ["Temple Guardian"] = Vector3.new(1481.58691, 127.624985, -596.321777),
-            ["Underground Cellar"] = Vector3.new(2113.85693, -91.1985855, -699.206787),
-            ["Sacred Temple"] = Vector3.new(1478.45508, -21.8498955, -630.773315)
-        }
-
         if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(TeleportLocations[locationName])
+            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(TeleportData.Locations[locationName])
         end
     end
 })
 
 Tabs.Teleport:Section({Title = "NPC Location", TextXAlignment = "Left", TextSize = 17})
 
-local npcLocations = {
-    Alex = CFrame.new(48.0930824, 17.4960938, 2877.13379),
-    ["Alien Merchant"] = CFrame.new(-132.127686, 2.71751165, 2757.46191),
-    ["Aura Kid"] = CFrame.new(71.0932083, 18.5335236, 2830.35889),
-    ["Billy Bob"] = CFrame.new(79.8430176, 18.659088, 2876.63379),
-    ["Boat Expert"] = CFrame.new(33.3180008, 9.8, 2783.00903),
-    Jim = CFrame.new(84.895195, 9.824893, 2797.39233),
-    Joe = CFrame.new(144.043442, 20.4837284, 2862.38379),
-    Ron = CFrame.new(-51.7067909, 17.3335247, 2859.55884),
-    Scientist = CFrame.new(-8.03684139, 14.6696262, 2885.70532),
-    Scott = CFrame.new(-17.1273079, 9.53158569, 2703.35889),
-    Seth = CFrame.new(111.59314, 17.4086304, 2877.13379),
-    ["Silly Fisherman"] = CFrame.new(101.947266, 9.53157139, 2690.21948),
-    ["Temple Guardian"] = CFrame.new(1491.47729, 127.625061, -593.159485),
-    ["Tour Guide"] = CFrame.new(1238.88989, 7.82286787, -238.185654)
-}
-
 local npcNames = {}
-for name, _ in pairs(npcLocations) do
+for name, _ in pairs(TeleportData.NPCs) do
     table.insert(npcNames, name)
 end
 table.sort(npcNames)
@@ -1951,26 +1746,20 @@ Tabs.Teleport:Dropdown({
     AllowNone = true,
     Multi = false,
     Callback = function(selectedNPC)
-            local targetCFrame = npcLocations[selectedNPC]
-                if targetCFrame then
-                    local character = LocalPlayer.Character
-                    if character and character:FindFirstChild("HumanoidRootPart") then
-                        character:PivotTo(targetCFrame)
-                    end
-                end
+        local targetCFrame = TeleportData.NPCs[selectedNPC]
+        if targetCFrame then
+            local character = LocalPlayer.Character
+            if character and character:FindFirstChild("HumanoidRootPart") then
+                character:PivotTo(targetCFrame)
             end
+        end
+    end
 })
 
 Tabs.Teleport:Section({Title = "Machines Location", TextXAlignment = "Left", TextSize = 17})
 
-local machineLocations = {
-    ["Luck Machine"] = CFrame.new(13.3431435, 22.5339203, 2846.63379),
-    ["Spin Wheel"] = CFrame.new(-151.139404, 22.0784302, 2824.63379),
-    ["Weather Machine"] = CFrame.new(-1488.85706, 22.25, 1875.94202)
-}
-
 local machineNames = {}
-for name, _ in pairs(machineLocations) do
+for name, _ in pairs(TeleportData.Machines) do
     table.insert(machineNames, name)
 end
 table.sort(machineNames)
@@ -1981,17 +1770,16 @@ Tabs.Teleport:Dropdown({
     AllowNone = true,
     Multi = false,
     Callback = function(selectedMachine)
-            local targetCFrame = machineLocations[selectedMachine]
-                if targetCFrame then
-                    local character = LocalPlayer.Character
-                    if character and character:FindFirstChild("HumanoidRootPart") then
-                        character:PivotTo(targetCFrame)
-                    end
-                end
+        local targetCFrame = TeleportData.Machines[selectedMachine]
+        if targetCFrame then
+            local character = LocalPlayer.Character
+            if character and character:FindFirstChild("HumanoidRootPart") then
+                character:PivotTo(targetCFrame)
             end
+        end
+    end
 })
 
--- Auto Teleport to Events
 Tabs.Teleport:Section({Title = "Event", TextXAlignment = "Left", TextSize = 17})
 
 local EventTeleportSettings = {
@@ -2004,10 +1792,7 @@ local EventTeleportSettings = {
 
 Tabs.Teleport:Dropdown({
     Title = "Select Event",
-    Values = {
-        "Megalodon Hunt", "Admin Event", "Ghost Worm", "Worm Hunt", "Shark Hunt",
-        "Ghost Shark Hunt", "Shocked", "Black Hole", "Meteor Rain"
-    },
+    Values = TeleportData.Events,
     AllowNone = true,
     Multi = true,
     Callback = function(selected)
@@ -2020,7 +1805,7 @@ local FloatPlayer
 Tabs.Teleport:Toggle({
     Title = "Auto Teleport Selected Event",
     Desc = "Automatically teleports you to the chosen spawned event.",
-    Value = false,
+    Default = false,
     Callback = function(enabled)
         EventTeleportSettings.enabled = enabled
         if not enabled and EventTeleportSettings.isAtEvent and EventTeleportSettings.originalPosition then
@@ -2122,43 +1907,22 @@ end)
 Tabs.Teleport:Section({Title = "Player", TextXAlignment = "Left", TextSize = 17})
 
 local selectedPlayer = nil
-local playerDropdown = nil
 
-local function refreshPlayerDropdown()
-    if playerDropdown then
-        playerDropdown:Remove()
+local playerDropdown = Tabs.Teleport:Dropdown({
+    Title = "Select Player",
+    Values = TeleportData.GetPlayerNames(Players, LocalPlayer),
+    AllowNone = true,
+    Multi = false,
+    Callback = function(value)
+        selectedPlayer = value
+        WindUI:Notify({Title="Player Selected", Content=value, Duration=3})
     end
-
-    local playerNames = {}
-    for _, plr in pairs(Players:GetPlayers()) do
-        if plr ~= LocalPlayer then
-            table.insert(playerNames, plr.Name)
-        end
-    end
-
-    if #playerNames > 0 then
-        if not table.find(playerNames, selectedPlayer) then
-            selectedPlayer = playerNames[1]
-        end
-    else
-        selectedPlayer = nil
-    end
-
-    playerDropdown = Tabs.Teleport:Dropdown({
-        Title = "Select Player",
-        Values = playerNames,
-        Value = selectedPlayer,
-        Callback = function(value)
-            selectedPlayer = value
-            WindUI:Notify({Title="Player Selected", Content=value, Duration=3})
-        end
-    })
-end
-
-refreshPlayerDropdown()
+})
 
 Tabs.Teleport:Button({
     Title = "Teleport To Player",
+    Icon = "user",
+    Justify = "Center",
     Callback = function()
         if selectedPlayer then
             local targetPlayer = Players:FindFirstChild(selectedPlayer)
@@ -2170,25 +1934,92 @@ Tabs.Teleport:Button({
             if hrp and targetHRP then
                 hrp.CFrame = targetHRP.CFrame + Vector3.new(0,5,0)
                 WindUI:Notify({Title="Teleported", Content="Teleported to "..selectedPlayer, Duration=3})
+            else
+                WindUI:Notify({Title="Error", Content="Player not found or not loaded", Duration=3})
             end
+        else
+            WindUI:Notify({Title="Error", Content="No player selected", Duration=3})
         end
     end
 })
 
-spawn(function()
-    while true do
-        wait(5)
-        refreshPlayerDropdown()
-    end
-end)
+Tabs.Teleport:Space()
 
--- UTILITY TAB
+Tabs.Teleport:Button({
+    Title = "Refresh Player List",
+    Icon = "refresh-cw",
+    Justify = "Center",
+    Callback = function()
+        playerDropdown:Refresh(TeleportData.GetPlayerNames(Players, LocalPlayer))
+        WindUI:Notify({Title="Refreshed", Content="Player list updated", Duration=3})
+    end
+})
+
+local autotrade = Tabs.Trade:Section({Title = "Auto Trade", TextXAlignment = "Left", TextSize = 17})
+
+local TradeModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/fishit/autotrademdl.lua"))()
+local Trade = TradeModule(Players, LocalPlayer, ReplicatedStorage, WindUI)
+
+local selectedTradePlayer = nil
+
+local tradePlayerDropdown = Tabs.Trade:Dropdown({
+    Title = "Select Player",
+    Values = Trade.GetPlayerNames(),
+    AllowNone = true,
+    Multi = false,
+    Callback = function(value)
+        selectedTradePlayer = value
+        WindUI:Notify({
+            Title = "Player Selected", 
+            Content = value, 
+            Duration = 3
+        })
+    end
+})
+
+Tabs.Trade:Button({
+    Title = "Give Item",
+    Icon = "gift",
+    Justify = "Center",
+    Callback = function()
+        Trade.SendTradeRequest(selectedTradePlayer)
+    end
+})
+
+Tabs.Trade:Toggle({
+    Title = "Auto Accept Trade",
+    Desc = "Automatically accepts incoming trade requests",
+    Default = false,
+    Callback = function(state)
+        Trade.SetAutoAccept(state)
+    end
+})
+
+Tabs.Trade:Space()
+
+Tabs.Trade:Button({
+    Title = "Refresh Player List",
+    Icon = "refresh-cw",
+    Justify = "Center",
+    Callback = function()
+        tradePlayerDropdown:Refresh(Trade.GetPlayerNames())
+        WindUI:Notify({
+            Title = "Refreshed", 
+            Content = "Player list updated", 
+            Duration = 3
+        })
+    end
+})
+
 Tabs.Utility:Section({Title = "Utility", TextXAlignment = "Left", TextSize = 17})
+
+local REFavoriteItem = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RE/FavoriteItem"]
 
 local AutoFavoriteEnabled = false
 local FavoriteTier = "Legendary"
 local FavoriteTiers = {
     ["Artifact Items"] = {Ids = {265, 266, 267, 271}},
+    ["Epic"] = {TierName = "Epic"},
     ["Legendary"] = {TierName = "Legendary"},
     ["Mythic"] = {TierName = "Mythic"},
     ["Secret"] = {TierName = "SECRET"}
@@ -2220,9 +2051,9 @@ end
 local favtier = Tabs.Utility:Dropdown({
     Title = "Favorite Tier",
     Desc = "Select which item type or rarity you want to auto-favorite.",
-    Values = {"Artifact Items", "Legendary", "Mythic", "Secret"},
-    Default = "Legendary",
-    Multi = false,
+    Values = {"Artifact Items", "Epic", "Legendary", "Mythic", "Secret"},
+    Default = {},
+    Multi = true,
     Callback = function(selected)
         FavoriteTier = selected
         WindUI:Notify({
@@ -2274,7 +2105,7 @@ end
 
 local oxyby = Tabs.Utility:Toggle({
     Title = "Oxygen Bypass",
-    Desc = "Unlimited Oxygen.",
+    Desc = "Not dying underwater.",
     Default = false,
     Callback = function(enabled)
         if enabled then
@@ -2285,7 +2116,6 @@ local oxyby = Tabs.Utility:Toggle({
     end
 })
 
--- MISC TAB
 Tabs.Misc:Section({Title = "Identity", TextXAlignment = "Left", TextSize = 17})
 
 local overhead = (Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()):WaitForChild("HumanoidRootPart"):WaitForChild("Overhead")
@@ -2328,15 +2158,11 @@ coroutine.wrap(function()
             local rainbowColor = Color3.fromHSV(hue, 1, 1)
             NameLabel.TextColor3 = rainbowColor
             LevelLabel.TextColor3 = rainbowColor
-        else
-            NameLabel.TextColor3 = Color3.new(1, 1, 1)
-            LevelLabel.TextColor3 = Color3.new(1, 1, 1)
         end
         wait(0.05)
     end
 end)()]]
 
--- Other Features
 Tabs.Misc:Section({Title = "Other", TextXAlignment = "Left", TextSize = 17})
 
 local antiafk = Tabs.Misc:Toggle({
@@ -2390,7 +2216,7 @@ local recon = Tabs.Misc:Toggle({
 
     local savedConfig
     if Window.ConfigManager then
-        savedConfig = Window.ConfigManager:CreateConfig("Walvy Community"):Load()
+        savedConfig = Window.ConfigManager:CreateConfig("@aokiware!"):Load()
     end
 
     local defaultTheme = (savedConfig and savedConfig.Theme) or WindUI:GetCurrentTheme()
@@ -2446,7 +2272,7 @@ local recon = Tabs.Misc:Toggle({
 
 Tabs.Settings:Keybind({
         Title = "Toggle UI",
-        Desc = "Press a key to open/close the UI",
+        Desc = "Press a key to toggle the UI",
         Value = "G",
         Callback = function(keyName)
             Window:SetToggleKey(Enum.KeyCode[keyName])
@@ -2548,7 +2374,7 @@ Tabs.Settings:Button({
 WindUI:Notify({
     Title = "@aikoware | Fish It",
     Content = "Script Loaded!",
-    Duration = 3, -- 3 seconds
+    Duration = 3,
 })
 
 Window:SelectTab(1)
