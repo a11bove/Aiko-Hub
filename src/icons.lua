@@ -1,4 +1,4 @@
-local Icons = {
+local LucideIcons = {
     lucide = {
         ["accessibility"] = "rbxassetid://10709751939",
         ["activity"] = "rbxassetid://10709752035",
@@ -821,4 +821,4 @@ local Icons = {
     }
 }
 
-return Icons
+return LucideIcons
