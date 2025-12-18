@@ -980,7 +980,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 		TabName.Name = "TabName"
 		TabName.Parent = Tab
 
-		FeatureImg.Image = TabConfig.Icon
+		FeatureImg.Image = GetIcon(TabConfig.Icon, "lucide")
 		FeatureImg.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		FeatureImg.BackgroundTransparency = 0.9990000128746033
 		FeatureImg.BorderColor3 = Color3.fromRGB(0, 0, 0)
