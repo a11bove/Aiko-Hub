@@ -4,21 +4,22 @@ local LocalPlayer = game:GetService("Players").LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 local CoreGui = game:GetService("CoreGui")
 
--- Function to get icon
+local LucideIcons = {}
+pcall(function()
+    LucideIcons = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/icons.lua"))()
+end)
+
 local function GetIcon(iconName)
     if not iconName or iconName == "" then
-        return ""
+        return "rbxassetid://16932740082" -- default icon
     end
     
-    -- If it's already an asset ID, return it
     if string.match(iconName, "rbxassetid://") then
         return iconName
     end
     
-    -- Convert to lowercase for case-insensitive matching
     local lowerName = string.lower(iconName)
     
-    -- Return the Lucide icon or fallback to default
     return LucideIcons[lowerName] or iconName
 end
 
