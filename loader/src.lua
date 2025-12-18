@@ -3,6 +3,36 @@ local TweenService = game:GetService("TweenService")
 local LocalPlayer = game:GetService("Players").LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 local CoreGui = game:GetService("CoreGui")
+
+local Icons = {
+    ["lucide"] = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Footagesus/Icons/refs/heads/main/lucide/dist/Icons.lua"))(),
+    ["craft"] = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Footagesus/Icons/refs/heads/main/craft/dist/Icons.lua"))(),
+}
+
+local function GetIcon(iconName, iconSet)
+    if not iconName or iconName == "" then
+        return ""
+    end
+    
+    if string.match(iconName, "rbxassetid://") then
+        return iconName
+    end
+    
+    iconSet = iconSet or "lucide"
+    
+    local lowerName = string.lower(iconName)
+    
+    if Icons[iconSet] and Icons[iconSet][lowerName] then
+        return Icons[iconSet][lowerName]
+    end
+    
+    if iconSet ~= "lucide" and Icons["lucide"] and Icons["lucide"][lowerName] then
+        return Icons["lucide"][lowerName]
+    end
+    
+    return iconName
+end
+
 local function MakeDraggable(topbarobject, object)
 	local function CustomPos(topbarobject, object)
 		local Dragging = nil
