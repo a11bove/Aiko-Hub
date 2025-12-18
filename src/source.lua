@@ -4,7 +4,7 @@ local LocalPlayer = game:GetService("Players").LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 local CoreGui = game:GetService("CoreGui")
 
---[[ Function to get icon
+-- Function to get icon
 local function GetIcon(iconName)
     if not iconName or iconName == "" then
         return ""
@@ -20,7 +20,7 @@ local function GetIcon(iconName)
     
     -- Return the Lucide icon or fallback to default
     return LucideIcons[lowerName] or iconName
-end ]]
+end
 
 local function MakeDraggable(topbarobject, object)
 	local function CustomPos(topbarobject, object)
@@ -967,8 +967,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 		TabName.Name = "TabName"
 		TabName.Parent = Tab
 
-		-- FeatureImg.Image = GetIcon(TabConfig.Icon)
-    FeatureImg.Image = TabConfig.Icon
+		FeatureImg.Image = GetIcon(TabConfig.Icon)
 		FeatureImg.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		FeatureImg.BackgroundTransparency = 0.9990000128746033
 		FeatureImg.BorderColor3 = Color3.fromRGB(0, 0, 0)
