@@ -1,10 +1,9 @@
-
 return {
     Locations = {
         ["Esoteric Island"] = Vector3.new(1990, 5, 1398),
         ["Kohana"] = Vector3.new(-603, 3, 719),
         ["Coral Refs"] = Vector3.new(-2855, 47, 1996),
-        ["Enchant Room"] = Vector3.new(3221, -1303, 1406),
+        ["Esoteric Depths"] = Vector3.new(3221, -1303, 1406),
         ["Spawn"] = Vector3.new(33, 9, 2810),
         ["Volcano"] = Vector3.new(-632, 55, 197),
         ["Treasure Room"] = Vector3.new(-3602.01, -266.57, -1577.18),
@@ -26,90 +25,45 @@ return {
         ["Tropical Grove Cave 2"] = Vector3.new(-2018, 5, 3756),
         ["Tropical Grove Highground"] = Vector3.new(-2139, 53, 3624),
         ["Fisherman Island Underground"] = Vector3.new(-62, 3, 2846),
-        ["Fisherman Island Mid"] = Vector3.new(33, 3, 2764),
-        ["Fisherman Island Left"] = Vector3.new(-26, 10, 2686),
-        ["Fisherman Island Right"] = Vector3.new(95, 10, 2684),
-        ["Jungle"] = Vector3.new(1491.21667, 6.35540199, -848.057617),
+        ["Fisherman Island"] = Vector3.new(95, 10, 2684),
+        ["Ancient Jungle"] = Vector3.new(1491.21667, 6.35540199, -848.057617),
         ["Temple Guardian"] = Vector3.new(1481.58691, 127.624985, -596.321777),
         ["Underground Cellar"] = Vector3.new(2113.85693, -91.1985855, -699.206787),
         ["Sacred Temple"] = Vector3.new(1478.45508, -21.8498955, -630.773315)
     },
     
-    Events = {
-        "Megalodon Hunt",
-        "Admin Event",
-        "Ghost Worm",
-        "Worm Hunt",
-        "Shark Hunt",
-        "Ghost Shark Hunt",
-        "Shocked",
-        "Black Hole",
-        "Meteor Rain"
+    NPCs = {
+        ["Alex"] = CFrame.new(48.0930824, 17.4960938, 2877.13379),
+        ["Alien Merchant"] = CFrame.new(-132.127686, 2.71751165, 2757.46191),
+        ["Aura Kid"] = CFrame.new(71.0932083, 18.5335236, 2830.35889),
+        ["Billy Bob"] = CFrame.new(79.8430176, 18.659088, 2876.63379),
+        ["Boat Expert"] = CFrame.new(33.3180008, 9.8, 2783.00903),
+        ["Jim"] = CFrame.new(84.895195, 9.824893, 2797.39233),
+        ["Joe"] = CFrame.new(144.043442, 20.4837284, 2862.38379),
+        ["Ron"] = CFrame.new(-51.7067909, 17.3335247, 2859.55884),
+        ["Scientist"] = CFrame.new(-8.03684139, 14.6696262, 2885.70532),
+        ["Scott"] = CFrame.new(-17.1273079, 9.53158569, 2703.35889),
+        ["Seth"] = CFrame.new(111.59314, 17.4086304, 2877.13379),
+        ["Silly Fisherman"] = CFrame.new(101.947266, 9.53157139, 2690.21948),
+        ["Temple Guardian"] = CFrame.new(1491.47729, 127.625061, -593.159485),
+        ["Tour Guide"] = CFrame.new(1238.88989, 7.82286787, -238.185654)
     },
     
-    floatPlat = function(enabled, LocalPlayer, EventTeleportSettings)
-        local character = LocalPlayer.Character
-        if not character then return end
-        
-        local hrp = character:FindFirstChild("HumanoidRootPart")
-        if not hrp then return end
-        
-        if enabled then
-            -- Create invisible platform beneath player
-            if not EventTeleportSettings.platform then
-                local platform = Instance.new("Part")
-                platform.Size = Vector3.new(10, 1, 10)
-                platform.Transparency = 1
-                platform.Anchored = true
-                platform.CanCollide = true
-                platform.Parent = workspace
-                EventTeleportSettings.platform = platform
-            end
-            
-            local platform = EventTeleportSettings.platform
-            platform.CFrame = hrp.CFrame - Vector3.new(0, 3, 0)
-            hrp.Anchored = true
-        else
-            if EventTeleportSettings.platform then
-                EventTeleportSettings.platform:Destroy()
-                EventTeleportSettings.platform = nil
-            end
-            
-            if hrp then
-                hrp.Anchored = false
-            end
-        end
-    end,
+    Machines = {
+        ["Luck Machine"] = CFrame.new(13.3431435, 22.5339203, 2846.63379),
+        ["Spin Wheel"] = CFrame.new(-151.139404, 22.0784302, 2824.63379),
+        ["Weather Machine"] = CFrame.new(-1488.85706, 22.25, 1875.94202)
+    },
     
-    FindEventInWorkspace = function(eventName)
-        local menuRings = workspace:FindFirstChild("!!! MENU RINGS")
-        if not menuRings then return nil end
-        
-        local eventNameLower = eventName:lower()
-        for _, child in ipairs(menuRings:GetChildren()) do
-            if child.Name == "Props" then
-                for _, prop in ipairs(child:GetChildren()) do
-                    if prop.Name:lower() == eventNameLower then
-                        if prop:IsA("Model") then
-                            local primaryPart = prop.PrimaryPart or prop:FindFirstChildWhichIsA("BasePart")
-                            if primaryPart then return primaryPart end
-                        elseif prop:IsA("BasePart") then
-                            return prop
-                        end
-                    end
-                    
-                    for _, descendant in ipairs(prop:GetDescendants()) do
-                        if descendant:IsA("TextLabel") and descendant.Text:lower() == eventNameLower then
-                            local parent = descendant
-                            while parent and parent ~= child do
-                                if parent:IsA("BasePart") then return parent end
-                                parent = parent.Parent
-                            end
-                        end
-                    end
-                end
-            end
-        end
-        return nil
-    end
+    Events = {
+        "Megalodon Hunt", 
+        "Admin Event", 
+        "Ghost Worm", 
+        "Worm Hunt", 
+        "Shark Hunt",
+        "Ghost Shark Hunt", 
+        "Shocked", 
+        "Black Hole", 
+        "Meteor Rain"
+    }
 }
