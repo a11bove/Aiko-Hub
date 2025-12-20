@@ -1,5 +1,6 @@
 local ShopModule = {}
 
+-- Rod Data
 ShopModule.Rods = {
     ["Luck Rod"] = 79,
     ["Carbon Rod"] = 76,
@@ -45,6 +46,7 @@ ShopModule.RodKeyMap = {
     ["Angler Rod (8M Coins)"] = "Angler Rod"
 }
 
+-- Bait Data
 ShopModule.Baits = {
     ["TopWater Bait"] = 10,
     ["Lucky Bait"] = 2,
@@ -75,6 +77,7 @@ ShopModule.BaitKeyMap = {
     ["Aether Bait (3.7M Coins)"] = "Aether Bait"
 }
 
+-- Weather Data
 ShopModule.Weathers = {
     ["Wind"] = 10000,
     ["Snow"] = 15000,
@@ -102,6 +105,7 @@ ShopModule.WeatherKeyMap = {
     ["Shark Hunt (300k Coins)"] = "Shark Hunt"
 }
 
+-- Boat Data
 ShopModule.BoatOrder = {
     "Small Boat",
     "Kayak",
@@ -128,6 +132,7 @@ ShopModule.Boats = {
     ["Cruiser Boat"] = {Id = 13, Price = 0}
 }
 
+-- Generate Boat Names with Prices
 function ShopModule.GetBoatNames()
     local boatNames = {}
     for _, name in ipairs(ShopModule.BoatOrder) do
@@ -145,6 +150,7 @@ function ShopModule.GetBoatNames()
     return boatNames
 end
 
+-- Generate Boat Key Map
 function ShopModule.GetBoatKeyMap()
     local boatKeyMap = {}
     local boatNames = ShopModule.GetBoatNames()
@@ -155,6 +161,7 @@ function ShopModule.GetBoatKeyMap()
     return boatKeyMap
 end
 
+-- Purchase Functions
 function ShopModule.PurchaseRod(rodName, RFPurchaseFishingRod, Library)
     local key = ShopModule.RodKeyMap[rodName]
     if key and ShopModule.Rods[key] then
@@ -229,10 +236,12 @@ function ShopModule.PurchaseBoat(boatName, RFPurchaseBoat, Library)
     end
 end
 
+-- Auto Buy Weather System Variables
 ShopModule.AutoBuyEnabled = false
 ShopModule.BuyDelay = 0.5
 ShopModule.SelectedWeathers = {}
 
+-- Auto Buy Weather Function
 function ShopModule.StartAutoBuy(ReplicatedStorage, Library)
     task.spawn(function()
         while ShopModule.AutoBuyEnabled do
@@ -261,112 +270,6 @@ function ShopModule.StartAutoBuy(ReplicatedStorage, Library)
             task.wait(0.1)
         end
     end)
-end
-
-function ShopModule.Initialize(Shop, ReplicatedStorage, Library)
-    local buy = Shop:AddSection("Buy")
-    
-    local RFPurchaseFishingRod = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RF/PurchaseFishingRod"]
-    local RFPurchaseBait = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RF/PurchaseBait"]
-    local RFPurchaseBoat = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RF/PurchaseBoat"]
-    
-    local selectedRod = ShopModule.RodNames[1]
-    local selectedBait = ShopModule.BaitNames[1]
-    local selectedBoat = ShopModule.GetBoatNames()[1]
-    ShopModule.SelectedWeathers = {ShopModule.WeatherNames[1]}
-    
-    buy:AddDropdown({
-        Title = "Select Rod",
-        Content = "",
-        Options = ShopModule.RodNames,
-        Multi = false,
-        Default = selectedRod,
-        Callback = function(value)
-            selectedRod = value
-        end
-    })
-    
-    buy:AddButton({
-        Title = "Buy Rod",
-        Content = "",
-        Callback = function()
-            ShopModule.PurchaseRod(selectedRod, RFPurchaseFishingRod, Library)
-        end
-    })
-    
-    buy:AddDropdown({
-        Title = "Select Bait",
-        Content = "",
-        Options = ShopModule.BaitNames,
-        Default = selectedBait,
-        Multi = false,
-        Callback = function(value)
-            selectedBait = value
-        end
-    })
-    
-    buy:AddButton({
-        Title = "Buy Bait",
-        Content = "",
-        Callback = function()
-            ShopModule.PurchaseBait(selectedBait, RFPurchaseBait, Library)
-        end
-    })
-    
-    buy:AddDropdown({
-        Title = "Select Weather(s)",
-        Content = "",
-        Options = ShopModule.WeatherNames,
-        Multi = true,
-        Default = ShopModule.SelectedWeathers,
-        Callback = function(values)
-            ShopModule.SelectedWeathers = values
-        end
-    })
-    
-    buy:AddToggle({
-        Title = "Auto Buy Weather",
-        Content = "Automatically purchase selected weather(s).",
-        Default = false,
-        Callback = function(state)
-            ShopModule.AutoBuyEnabled = state
-            if state then
-                Library:MakeNotify({
-                    Title = "@aikoware",
-                    Description = "| Auto Buy",
-                    Content = "Enabled",
-                    Delay = 2
-                })
-                ShopModule.StartAutoBuy(ReplicatedStorage, Library)
-            else
-                Library:MakeNotify({
-                    Title = "@aikoware",
-                    Description = "| Auto Buy",
-                    Content = "Disabled",
-                    Delay = 2
-                })
-            end
-        end
-    })
-    
-    buy:AddDropdown({
-        Title = "Select Boat",
-        Content = "",
-        Options = ShopModule.GetBoatNames(),
-        Default = selectedBoat,
-        Multi = false,
-        Callback = function(value)
-            selectedBoat = value
-        end
-    })
-    
-    buy:AddButton({
-        Title = "Buy Boat",
-        Content = "",
-        Callback = function()
-            ShopModule.PurchaseBoat(selectedBoat, RFPurchaseBoat, Library)
-        end
-    })
 end
 
 return ShopModule
