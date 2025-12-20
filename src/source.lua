@@ -286,7 +286,7 @@ function FlurioreLib:MakeNotify(NotifyConfig)
 
 		TextLabel1.Font = Enum.Font.GothamBold
 		TextLabel1.Text = NotifyConfig.Description
-		TextLabel1.TextColor3 = NotifyConfig.Color
+		TextLabel1.TextColor3 = Color3.fromRGB(180, 140, 230)
 		TextLabel1.TextSize = 14
 		TextLabel1.TextXAlignment = Enum.TextXAlignment.Left
 		TextLabel1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
