@@ -63,15 +63,15 @@ local function MakeDraggable(topbarobject, object)
 		end)
 	end
 	local function CustomSize(object)
-		local Dragging = false
-		local DragInput = nil
-		local DragStart = nil
-		local StartSize = nil
-		local maxSizeX = 500  -- Changed
-		local maxSizeY = 400  -- Changed
-		
-		local changesizeobject = Instance.new("Frame");
-
+	     local Dragging = false
+	     local DragInput = nil
+         local DragStart = nil
+	     local StartSize = nil
+	     local maxSizeX = 420  -- CHANGE THIS: was 500, this is your MINIMUM width
+	     local maxSizeY = 225  -- CHANGE THIS: was 400, this is your MINIMUM height
+	
+	     local changesizeobject = Instance.new("Frame");
+	
 		changesizeobject.AnchorPoint = Vector2.new(1, 1)
 		changesizeobject.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		changesizeobject.BackgroundTransparency = 0.9990000128746033
@@ -83,12 +83,12 @@ local function MakeDraggable(topbarobject, object)
 		changesizeobject.Parent = object
 
 		local function UpdateSize(input)
-			local Delta = input.Position - DragStart
-			local newWidth = StartSize.X.Offset + Delta.X
-			local newHeight = StartSize.Y.Offset + Delta.Y
-			newWidth = math.max(newWidth, maxSizeX)
-			newHeight = math.max(newHeight, maxSizeY)
-			object.Size = UDim2.new(0, newWidth, 0, newHeight)  -- Changed from TweenService
+		     local Delta = input.Position - DragStart
+	 	     local newWidth = StartSize.X.Offset + Delta.X
+		     local newHeight = StartSize.Y.Offset + Delta.Y
+		     newWidth = math.max(newWidth, maxSizeX)  -- This ENFORCES minimum width
+		     newHeight = math.max(newHeight, maxSizeY)  -- This ENFORCES minimum height
+		     object.Size = UDim2.new(0, newWidth, 0, newHeight)
 		end
 
 		changesizeobject.InputBegan:Connect(function(input)
@@ -740,19 +740,19 @@ function FlurioreLib:MakeGui(GuiConfig)
     local OldPos = DropShadowHolder.Position
     local OldSize = DropShadowHolder.Size
     MaxRestore.MouseButton1Down:Connect(function()
-	    CircleClick(MaxRestore, Mouse.X, Mouse.Y)
-	    if ImageLabel.Image == "rbxassetid://9886659406" then
-		    ImageLabel.Image = "rbxassetid://9886659001"
-		    OldPos = DropShadowHolder.Position
-		    OldSize = DropShadowHolder.Size
-		    TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Position = UDim2.new(0, 0, 0, 0)}):Play()
-		    TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Size = UDim2.new(1, 0, 1, 0)}):Play()
-		else
-		    ImageLabel.Image = "rbxassetid://9886659406"
-		    TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Position = OldPos}):Play()
-		    TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Size = OldSize}):Play()
-		end
-    end)
+	CircleClick(MaxRestore, Mouse.X, Mouse.Y)
+	if ImageLabel.Image == "rbxassetid://9886659406" then
+		ImageLabel.Image = "rbxassetid://9886659001"
+		OldPos = DropShadowHolder.Position
+		OldSize = DropShadowHolder.Size
+		TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Position = UDim2.new(0, 0, 0, 0)}):Play()
+		TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Size = UDim2.new(1, 0, 1, 0)}):Play()
+	else
+		ImageLabel.Image = "rbxassetid://9886659406"
+		TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Position = OldPos}):Play()
+		TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Size = OldSize}):Play()
+	end
+end)
 	Min.MouseButton1Down:Connect(function()
 		CircleClick(Min, Mouse.X, Mouse.Y)
 		DropShadowHolder.Visible = false
