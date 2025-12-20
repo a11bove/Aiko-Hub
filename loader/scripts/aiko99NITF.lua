@@ -22,14 +22,13 @@ Library:MakeNotify({
 })
 
 local Window = Library:MakeGui({
-    NameHub = "@aikoware ",
-    Description = "| made by untog !",
+    NameHub = "@aikoware | made by untog!",
+    Description = "",
     Color = Color3.fromRGB(81, 40, 128),
-    ["Logo Player"] = "https://www.roblox.com/headshot-thumbnail/image?userId=544503914&width=420&height=420&format=png",
-	["Name Player"] = "Protected By @aikoware"
+    --["Logo Player"] = "https://www.roblox.com/headshot-thumbnail/image?userId=544503914&width=420&height=420&format=png",
+	--["Name Player"] = "Protected By @aikoware"
 })
 
--- toggle for gui
 local gui = Instance.new("ScreenGui")
 gui.Name = "aikoware"
 gui.IgnoreGuiInset = true
@@ -37,7 +36,7 @@ gui.ResetOnSpawn = false
 gui.Parent = game.CoreGui
 
 local button = Instance.new("ImageButton")
-button.Size = UDim2.new(0, 50, 0, 50)
+button.Size = UDim2.new(0, 47, 0, 47)
 button.Position = UDim2.new(0, 60, 0, 60)
 button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 button.BackgroundTransparency = 0.5
