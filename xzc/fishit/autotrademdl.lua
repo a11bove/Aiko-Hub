@@ -1,4 +1,4 @@
-return function(Players, LocalPlayer, ReplicatedStorage, WindUI)
+return function(Players, LocalPlayer, ReplicatedStorage, Library)
     
     local Module = {}
     
@@ -28,20 +28,22 @@ return function(Players, LocalPlayer, ReplicatedStorage, WindUI)
     
     function Module.SendTradeRequest(targetPlayerName)
         if not targetPlayerName then
-            WindUI:Notify({
-                Title = "Error", 
+            Library:MakeNotify({
+                Title = "@aikoware",
+                Description = "| Error", 
                 Content = "No player selected", 
-                Duration = 3
+                Delay = 3
             })
             return false
         end
         
         local targetPlayer = Players:FindFirstChild(targetPlayerName)
         if not targetPlayer then
-            WindUI:Notify({
-                Title = "Error", 
+            Library:MakeNotify({
+                Title = "@aikoware",
+                Description = "| Error", 
                 Content = "Player not found", 
-                Duration = 3
+                Delay = 3
             })
             return false
         end
@@ -51,17 +53,19 @@ return function(Players, LocalPlayer, ReplicatedStorage, WindUI)
         end)
         
         if success then
-            WindUI:Notify({
-                Title = "Success", 
+            Library:MakeNotify({
+                Title = "@aikoware",
+                Description = "| Success", 
                 Content = "Trade request sent to " .. targetPlayerName, 
-                Duration = 3
+                Delay = 3
             })
             return true
         else
-            WindUI:Notify({
-                Title = "Error", 
+            Library:MakeNotify({
+                Title = "@aikoware",
+                Description = "| Error", 
                 Content = "Auto Trade Error: " .. tostring(err), 
-                Duration = 3
+                Delay = 3
             })
             return false
         end
@@ -69,10 +73,11 @@ return function(Players, LocalPlayer, ReplicatedStorage, WindUI)
     
     function Module.SetAutoAccept(enabled)
         Module.State.AutoAcceptEnabled = enabled
-        WindUI:Notify({
-            Title = "Auto Accept", 
+        Library:MakeNotify({
+            Title = "@aikoware",
+            Description = "| Auto Accept", 
             Content = enabled and "ON" or "OFF", 
-            Duration = 3
+            Delay = 3
         })
     end
     
