@@ -24,8 +24,6 @@ Library:MakeNotify({
 local Window = Library:MakeGui({
     NameHub = "@aikoware | made by untog!",
     Description = "",
-    --["Logo Player"] = "https://www.roblox.com/headshot-thumbnail/image?userId=544503914&width=420&height=420&format=png",
-	--["Name Player"] = "Protected By @aikoware"
 })
 
 local gui = Instance.new("ScreenGui")
