@@ -207,6 +207,8 @@ function FlurioreLib:MakeNotify(NotifyConfig)
 		local Top = Instance.new("Frame");
 		local TextLabel = Instance.new("TextLabel");
 		local UIStroke = Instance.new("UIStroke");
+		local TextLabel1 = Instance.new("TextLabel");
+		local UIStroke1 = Instance.new("UIStroke");
 		local UICorner1 = Instance.new("UICorner");
 		local Close = Instance.new("TextButton");
 		local ImageLabel = Instance.new("ImageLabel");
@@ -264,7 +266,7 @@ function FlurioreLib:MakeNotify(NotifyConfig)
 
 		TextLabel.Font = Enum.Font.GothamBold
 		TextLabel.Text = NotifyConfig.Title
-		TextLabel.TextColor3 = Color3.fromRGB(200, 150, 255)
+		TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 		TextLabel.TextSize = 14
 		TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 		TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -281,6 +283,23 @@ function FlurioreLib:MakeNotify(NotifyConfig)
 
 		UICorner1.Parent = Top
 		UICorner1.CornerRadius = UDim.new(0, 5)
+
+		TextLabel1.Font = Enum.Font.GothamBold
+		TextLabel1.Text = NotifyConfig.Description
+		TextLabel1.TextColor3 = NotifyConfig.Color
+		TextLabel1.TextSize = 14
+		TextLabel1.TextXAlignment = Enum.TextXAlignment.Left
+		TextLabel1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		TextLabel1.BackgroundTransparency = 0.9990000128746033
+		TextLabel1.BorderColor3 = Color3.fromRGB(0, 0, 0)
+		TextLabel1.BorderSizePixel = 0
+		TextLabel1.Size = UDim2.new(1, 0, 1, 0)
+		TextLabel1.Position = UDim2.new(0, TextLabel.TextBounds.X + 15, 0, 0)
+		TextLabel1.Parent = Top
+
+		UIStroke1.Color = NotifyConfig.Color
+		UIStroke1.Thickness = 0.4000000059604645
+		UIStroke1.Parent = TextLabel1
 
 		Close.Font = Enum.Font.SourceSans
 		Close.Text = ""
@@ -372,8 +391,6 @@ function FlurioreLib:MakeGui(GuiConfig)
 	local Top = Instance.new("Frame");
 	local TextLabel = Instance.new("TextLabel");
 	local UICorner1 = Instance.new("UICorner");
-	local TextLabel1 = Instance.new("TextLabel");
-	local UIStroke1 = Instance.new("UIStroke");
 	local Close = Instance.new("TextButton");
 	local ImageLabel1 = Instance.new("ImageLabel");
 	local Min = Instance.new("TextButton");
@@ -449,23 +466,6 @@ function FlurioreLib:MakeGui(GuiConfig)
 	TextLabel.Parent = Top
 
 	UICorner1.Parent = Top
-
-	TextLabel1.Font = Enum.Font.GothamBold
-	TextLabel1.Text = GuiConfig.Description
-	TextLabel1.TextColor3 = GuiConfig.Color
-	TextLabel1.TextSize = 14
-	TextLabel1.TextXAlignment = Enum.TextXAlignment.Left
-	TextLabel1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	TextLabel1.BackgroundTransparency = 0.9990000128746033
-	TextLabel1.BorderColor3 = Color3.fromRGB(0, 0, 0)
-	TextLabel1.BorderSizePixel = 0
-	TextLabel1.Size = UDim2.new(1, -(TextLabel.TextBounds.X + 104), 1, 0)
-	TextLabel1.Position = UDim2.new(0, TextLabel.TextBounds.X + 15, 0, 0)
-	TextLabel1.Parent = Top
-
-	UIStroke1.Color = GuiConfig.Color
-	UIStroke1.Thickness = 0.4000000059604645
-	UIStroke1.Parent = TextLabel1
 
 	Close.Font = Enum.Font.SourceSans
 	Close.Text = ""
