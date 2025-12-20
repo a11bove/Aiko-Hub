@@ -380,8 +380,6 @@ function FlurioreLib:MakeGui(GuiConfig)
 	GuiConfig.NameHub = GuiConfig.NameHub or "Hirimi Hub"
 	GuiConfig.Description = GuiConfig.Description or "Comeback | developing by Hirimi, Teru"
 	GuiConfig.Color = GuiConfig.Color or Color3.fromRGB(138, 43, 226)
-	--GuiConfig["Logo Player"] = GuiConfig["Logo Player"] or "https://www.roblox.com/headshot-thumbnail/image?userId="..game:GetService("Players").LocalPlayer.UserId .."&width=420&height=420&format=png"
-	--GuiConfig["Name Player"] = GuiConfig["Name Player"] or tostring(game:GetService("Players").LocalPlayer.Name)
 	GuiConfig["Tab Width"] = GuiConfig["Tab Width"] or 120
 	local GuiFunc = {}
 
@@ -390,14 +388,11 @@ function FlurioreLib:MakeGui(GuiConfig)
 	local DropShadow = Instance.new("ImageLabel");
 	local Main = Instance.new("Frame");
 	local UICorner = Instance.new("UICorner");
-	local UIStroke = Instance.new("UIStroke");
 	local Top = Instance.new("Frame");
 	local TextLabel = Instance.new("TextLabel");
 	local UICorner1 = Instance.new("UICorner");
 	local TextLabel1 = Instance.new("TextLabel");
 	local UIStroke1 = Instance.new("UIStroke");
-	--local MaxRestore = Instance.new("TextButton");
-	--local ImageLabel = Instance.new("ImageLabel");
 	local Close = Instance.new("TextButton");
 	local ImageLabel1 = Instance.new("ImageLabel");
 	local Min = Instance.new("TextButton");
@@ -451,10 +446,6 @@ function FlurioreLib:MakeGui(GuiConfig)
 
 	UICorner.Parent = Main
 
-	UIStroke.Color = Color3.fromRGB(70, 50, 90)
-	UIStroke.Thickness = 1.600000023841858
-	UIStroke.Parent = Main
-
 	Top.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	Top.BackgroundTransparency = 0.9990000128746033
 	Top.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -494,30 +485,6 @@ function FlurioreLib:MakeGui(GuiConfig)
 	UIStroke1.Color = GuiConfig.Color
 	UIStroke1.Thickness = 0.4000000059604645
 	UIStroke1.Parent = TextLabel1
-
-	--[[MaxRestore.Font = Enum.Font.SourceSans
-	MaxRestore.Text = ""
-	MaxRestore.TextColor3 = Color3.fromRGB(0, 0, 0)
-	MaxRestore.TextSize = 14
-	MaxRestore.AnchorPoint = Vector2.new(1, 0.5)
-	MaxRestore.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	MaxRestore.BackgroundTransparency = 0.9990000128746033
-	MaxRestore.BorderColor3 = Color3.fromRGB(0, 0, 0)
-	MaxRestore.BorderSizePixel = 0
-	MaxRestore.Position = UDim2.new(1, -42, 0.5, 0)
-	MaxRestore.Size = UDim2.new(0, 25, 0, 25)
-	MaxRestore.Name = "MaxRestore"
-	MaxRestore.Parent = Top
-
-	ImageLabel.Image = "rbxassetid://9886659406"
-	ImageLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-	ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	ImageLabel.BackgroundTransparency = 0.9990000128746033
-	ImageLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-	ImageLabel.BorderSizePixel = 0
-	ImageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
-	ImageLabel.Size = UDim2.new(1, -8, 1, -8)
-	ImageLabel.Parent = MaxRestore]]
 
 	Close.Font = Enum.Font.SourceSans
 	Close.Text = ""
@@ -668,91 +635,6 @@ function FlurioreLib:MakeGui(GuiConfig)
 	ScrollTab.ChildAdded:Connect(UpdateSize1)
 	ScrollTab.ChildRemoved:Connect(UpdateSize1)
 
-	--[[ local Info = Instance.new("Frame");
-	local UICorner = Instance.new("UICorner");
-	local LogoPlayerFrame = Instance.new("Frame")
-	local UICorner1 = Instance.new("UICorner");
-	local LogoPlayer = Instance.new("ImageLabel");
-	local UICorner2 = Instance.new("UICorner");
-	local NamePlayer = Instance.new("TextLabel");
-		
-	Info.AnchorPoint = Vector2.new(1, 1)
-	Info.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	Info.BackgroundTransparency = 0.95
-	Info.BorderColor3 = Color3.fromRGB(0, 0, 0)
-	Info.BorderSizePixel = 0
-	Info.Position = UDim2.new(1, 0, 1, 0)
-	Info.Size = UDim2.new(1, 0, 0, 40)
-	Info.Name = "Info"
-	Info.Parent = LayersTab
-
-	UICorner.CornerRadius = UDim.new(0, 5)
-	UICorner.Parent = Info
-
-	LogoPlayerFrame.AnchorPoint = Vector2.new(0, 0.5)
-	LogoPlayerFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	LogoPlayerFrame.BackgroundTransparency = 0.95
-	LogoPlayerFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-	LogoPlayerFrame.BorderSizePixel = 0
-	LogoPlayerFrame.Position = UDim2.new(0, 5, 0.5, 0)
-	LogoPlayerFrame.Size = UDim2.new(0, 30, 0, 30)
-	LogoPlayerFrame.Name = "LogoPlayerFrame"
-	LogoPlayerFrame.Parent = Info
-
-	UICorner1.CornerRadius = UDim.new(0, 1000)
-	UICorner1.Parent = LogoPlayerFrame
-
-	LogoPlayer.Image = GuiConfig["Logo Player"]
-	LogoPlayer.AnchorPoint = Vector2.new(0.5, 0.5)
-	LogoPlayer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	LogoPlayer.BackgroundTransparency = 0.999
-	LogoPlayer.BorderColor3 = Color3.fromRGB(0, 0, 0)
-	LogoPlayer.BorderSizePixel = 0
-	LogoPlayer.Position = UDim2.new(0.5, 0, 0.5, 0)
-	LogoPlayer.Size = UDim2.new(1, -5, 1, -5)
-	LogoPlayer.Name = "LogoPlayer"
-	LogoPlayer.Parent = LogoPlayerFrame
-
-	UICorner2.CornerRadius = UDim.new(0, 1000)
-	UICorner2.Parent = LogoPlayer
-
-	NamePlayer.Font = Enum.Font.GothamBold
-	NamePlayer.Text = GuiConfig["Name Player"]
-	NamePlayer.TextColor3 = Color3.fromRGB(230.00000149011612, 230.00000149011612, 230.00000149011612)
-	NamePlayer.TextSize = 12
-	NamePlayer.TextWrapped = true
-	NamePlayer.TextXAlignment = Enum.TextXAlignment.Left
-	NamePlayer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-	NamePlayer.BackgroundTransparency = 0.9990000128746033
-	NamePlayer.BorderColor3 = Color3.fromRGB(0, 0, 0)
-	NamePlayer.BorderSizePixel = 0
-	NamePlayer.Position = UDim2.new(0, 40, 0, 0)
-	NamePlayer.Size = UDim2.new(1, -45, 1, 0)
-	NamePlayer.Name = "NamePlayer"
-	NamePlayer.Parent = Info]]
-
-	
-	function GuiFunc:DestroyGui()
-	    if CoreGui:FindFirstChild("HirimiGui") then 
-		    HirimiGui:Destroy()
-		end
-	end
-    --[[local OldPos = DropShadowHolder.Position
-    local OldSize = DropShadowHolder.Size
-    MaxRestore.MouseButton1Down:Connect(function()
-	CircleClick(MaxRestore, Mouse.X, Mouse.Y)
-	if ImageLabel.Image == "rbxassetid://9886659406" then
-		ImageLabel.Image = "rbxassetid://9886659001"
-		OldPos = DropShadowHolder.Position
-		OldSize = DropShadowHolder.Size
-		TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Position = UDim2.new(0, 0, 0, 0)}):Play()
-		TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Size = UDim2.new(1, 0, 1, 0)}):Play()
-	else
-		ImageLabel.Image = "rbxassetid://9886659406"
-		TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Position = OldPos}):Play()
-		TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Size = OldSize}):Play()
-	end
-end)]]
 	Min.MouseButton1Down:Connect(function()
 		CircleClick(Min, Mouse.X, Mouse.Y)
 		DropShadowHolder.Visible = false
