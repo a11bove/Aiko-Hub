@@ -2043,7 +2043,8 @@ end
                 {BackgroundTransparency = 0.935}
             ):Play()
 						end
-    end
+					end
+				end
     
     local DropdownValueTable = table.concat(DropdownFunc.Value, ", ")
     if DropdownValueTable == "" then
