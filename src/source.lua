@@ -1994,9 +1994,23 @@ end
 					end
 				end
 				function DropdownFunc:Set(Value)
-					DropdownFunc.Value = Value or DropdownFunc.Value
-					for _, Drop in ScrollSelect:GetChildren() do
-						if Drop.Name ~= "UIListLayout" and not table.find(DropdownFunc.Value, Drop.OptionText.Text) then
+    if type(Value) == "string" then
+        DropdownFunc.Value = {Value}
+    elseif type(Value) ~= "table" then
+        DropdownFunc.Value = {}
+    else
+        DropdownFunc.Value = Value or DropdownFunc.Value
+    end
+    
+    for _, Drop in ScrollSelect:GetChildren() do
+        local dropValue = DropdownFunc.Value
+        if type(dropValue) == "string" then
+            dropValue = {dropValue}
+        elseif type(dropValue) ~= "table" then
+            dropValue = {}
+        end
+        
+        if Drop.Name ~= "UIListLayout" and not table.find(dropValue, Drop.OptionText.Text) then
 							TweenService:Create(
 								Drop.ChooseFrame,
 								TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
