@@ -2055,7 +2055,6 @@ end
     end
     DropdownConfig.Callback(DropdownFunc.Value)
 end  -- THIS END CLOSES THE FUNCTION
-			end
 				function DropdownFunc:AddOption(OptionName)
 					OptionName = OptionName or "Option"
 					local Option = Instance.new("Frame");
