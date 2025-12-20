@@ -2011,47 +2011,48 @@ end
         end
         
         if Drop.Name ~= "UIListLayout" and not table.find(dropValue, Drop.OptionText.Text) then
-							TweenService:Create(
-								Drop.ChooseFrame,
-								TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
-								{Size = UDim2.new(0, 0, 0, 0)}
-							):Play()
-							TweenService:Create(
-								Drop.ChooseFrame.UIStroke,
-								TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
-								{Transparency = 0.999}
-							):Play()
-							TweenService:Create(
-								Drop,
-								TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
-								{BackgroundTransparency = 0.999}
-							):Play()
-						elseif Drop.Name ~= "UIListLayout" and table.find(DropdownFunc.Value, Drop.OptionText.Text) then
-							TweenService:Create(
-								Drop.ChooseFrame.UIStroke,
-								TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
-								{Transparency = 0}
-							):Play()
-							TweenService:Create(
-								Drop.ChooseFrame,
-								TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
-								{Size = UDim2.new(0, 1, 0, 12)}
-							):Play()
-							TweenService:Create(
-								Drop,
-								TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
-								{BackgroundTransparency = 0.935}
-							):Play()
+            TweenService:Create(
+                Drop.ChooseFrame,
+                TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
+                {Size = UDim2.new(0, 0, 0, 0)}
+            ):Play()
+            TweenService:Create(
+                Drop.ChooseFrame.UIStroke,
+                TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
+                {Transparency = 0.999}
+            ):Play()
+            TweenService:Create(
+                Drop,
+                TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
+                {BackgroundTransparency = 0.999}
+            ):Play()
+        elseif Drop.Name ~= "UIListLayout" and table.find(dropValue, Drop.OptionText.Text) then
+            TweenService:Create(
+                Drop.ChooseFrame.UIStroke,
+                TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
+                {Transparency = 0}
+            ):Play()
+            TweenService:Create(
+                Drop.ChooseFrame,
+                TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
+                {Size = UDim2.new(0, 1, 0, 12)}
+            ):Play()
+            TweenService:Create(
+                Drop,
+                TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
+                {BackgroundTransparency = 0.935}
+            ):Play()
 						end
-					end
-					local DropdownValueTable = table.concat(DropdownFunc.Value, ", ")
-					if DropdownValueTable == "" then
-						OptionSelecting.Text = "Select Options"
-					else
-						OptionSelecting.Text = tostring(DropdownValueTable)
-					end
-					DropdownConfig.Callback(DropdownFunc.Value)
-				end
+    end
+    
+    local DropdownValueTable = table.concat(DropdownFunc.Value, ", ")
+    if DropdownValueTable == "" then
+        OptionSelecting.Text = "Select Options"
+    else
+        OptionSelecting.Text = tostring(DropdownValueTable)
+    end
+    DropdownConfig.Callback(DropdownFunc.Value)
+end
 				function DropdownFunc:AddOption(OptionName)
 					OptionName = OptionName or "Option"
 					local Option = Instance.new("Frame");
