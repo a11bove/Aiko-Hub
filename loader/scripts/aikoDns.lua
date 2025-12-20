@@ -15,8 +15,8 @@ end
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/source.lua"))()
 
 Library:MakeNotify({
-    Title = "@aikoware",
-    Description = "| Script Loaded",
+    Title = "@aikoware | made by untog!",
+    Description = "",
     Content = "Game: Diesel 'N Steel",
     Delay = 3
 })
