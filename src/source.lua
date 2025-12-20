@@ -648,7 +648,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	ScrollTab.BackgroundTransparency = 0.9990000128746033
 	ScrollTab.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	ScrollTab.BorderSizePixel = 0
-	ScrollTab.Size = UDim2.new(1, 0, 1, -50)
+	ScrollTab.Size = UDim2.new(1, 0, 1, 0)
 	ScrollTab.Name = "ScrollTab"
 	ScrollTab.Parent = LayersTab
 
@@ -668,7 +668,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	ScrollTab.ChildAdded:Connect(UpdateSize1)
 	ScrollTab.ChildRemoved:Connect(UpdateSize1)
 
-	local Info = Instance.new("Frame");
+	--[[ local Info = Instance.new("Frame");
 	local UICorner = Instance.new("UICorner");
 	local LogoPlayerFrame = Instance.new("Frame")
 	local UICorner1 = Instance.new("UICorner");
@@ -729,7 +729,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	NamePlayer.Position = UDim2.new(0, 40, 0, 0)
 	NamePlayer.Size = UDim2.new(1, -45, 1, 0)
 	NamePlayer.Name = "NamePlayer"
-	NamePlayer.Parent = Info
+	NamePlayer.Parent = Info]]
 
 	
 	function GuiFunc:DestroyGui()
