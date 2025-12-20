@@ -101,6 +101,16 @@ game:GetService("UserInputService").InputChanged:Connect(
     end
 )
 
+local function syncButtonVisibility()
+    local HirimiGui = game.CoreGui:FindFirstChild("HirimiGui")
+    if HirimiGui then
+        local DropShadowHolder = HirimiGui:FindFirstChild("DropShadowHolder")
+        if DropShadowHolder then
+            button.Visible = not DropShadowHolder.Visible
+        end
+    end
+end
+
 button.MouseButton1Click:Connect(
     function()
         local HirimiGui = game.CoreGui:FindFirstChild("HirimiGui")
@@ -108,10 +118,25 @@ button.MouseButton1Click:Connect(
             local DropShadowHolder = HirimiGui:FindFirstChild("DropShadowHolder")
             if DropShadowHolder then
                 DropShadowHolder.Visible = not DropShadowHolder.Visible
+                syncButtonVisibility()
             end
         end
     end
 )
+
+task.spawn(function()
+    while task.wait(0.1) do
+        local HirimiGui = game.CoreGui:FindFirstChild("HirimiGui")
+        if HirimiGui then
+            local DropShadowHolder = HirimiGui:FindFirstChild("DropShadowHolder")
+            if DropShadowHolder then
+                if not DropShadowHolder.Visible and not button.Visible then
+                    button.Visible = true
+                end
+            end
+        end
+    end
+end)
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
