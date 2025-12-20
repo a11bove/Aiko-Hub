@@ -396,8 +396,8 @@ function FlurioreLib:MakeGui(GuiConfig)
 	local UICorner1 = Instance.new("UICorner");
 	local TextLabel1 = Instance.new("TextLabel");
 	local UIStroke1 = Instance.new("UIStroke");
-	local MaxRestore = Instance.new("TextButton");
-	local ImageLabel = Instance.new("ImageLabel");
+	--local MaxRestore = Instance.new("TextButton");
+	--local ImageLabel = Instance.new("ImageLabel");
 	local Close = Instance.new("TextButton");
 	local ImageLabel1 = Instance.new("ImageLabel");
 	local Min = Instance.new("TextButton");
@@ -495,7 +495,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	UIStroke1.Thickness = 0.4000000059604645
 	UIStroke1.Parent = TextLabel1
 
-	MaxRestore.Font = Enum.Font.SourceSans
+	--[[MaxRestore.Font = Enum.Font.SourceSans
 	MaxRestore.Text = ""
 	MaxRestore.TextColor3 = Color3.fromRGB(0, 0, 0)
 	MaxRestore.TextSize = 14
@@ -517,7 +517,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	ImageLabel.BorderSizePixel = 0
 	ImageLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
 	ImageLabel.Size = UDim2.new(1, -8, 1, -8)
-	ImageLabel.Parent = MaxRestore
+	ImageLabel.Parent = MaxRestore]]
 
 	Close.Font = Enum.Font.SourceSans
 	Close.Text = ""
@@ -737,7 +737,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 		    HirimiGui:Destroy()
 		end
 	end
-    local OldPos = DropShadowHolder.Position
+    --[[local OldPos = DropShadowHolder.Position
     local OldSize = DropShadowHolder.Size
     MaxRestore.MouseButton1Down:Connect(function()
 	CircleClick(MaxRestore, Mouse.X, Mouse.Y)
@@ -752,7 +752,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 		TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Position = OldPos}):Play()
 		TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Size = OldSize}):Play()
 	end
-end)
+end)]]
 	Min.MouseButton1Down:Connect(function()
 		CircleClick(Min, Mouse.X, Mouse.Y)
 		DropShadowHolder.Visible = false
