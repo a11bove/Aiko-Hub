@@ -67,8 +67,8 @@ local function MakeDraggable(topbarobject, object)
 	     local DragInput = nil
          local DragStart = nil
 	     local StartSize = nil
-	     local maxSizeX = 420  -- CHANGE THIS: was 500, this is your MINIMUM width
-	     local maxSizeY = 270  -- CHANGE THIS: was 400, this is your MINIMUM height
+	     local maxSizeX = 480  -- CHANGE THIS: was 500, this is your MINIMUM width
+	     local maxSizeY = 300  -- CHANGE THIS: was 400, this is your MINIMUM height
 	
 	     local changesizeobject = Instance.new("Frame");
 	
@@ -404,10 +404,10 @@ function FlurioreLib:MakeGui(GuiConfig)
 	HirimiGui.Name = "HirimiGui"
 	HirimiGui.Parent = CoreGui
 
-	DropShadowHolder.BackgroundTransparency = 1
+	DropShadowHolder.BackgroundTransparency = 0.7
 	DropShadowHolder.BorderSizePixel = 0
 	DropShadowHolder.Position = UDim2.new(0.5, -250, 0.5, -150)
-	DropShadowHolder.Size = UDim2.new(0, 420, 0, 270)
+	DropShadowHolder.Size = UDim2.new(0, 480, 0, 300)
 	DropShadowHolder.ZIndex = 0
 	DropShadowHolder.Name = "DropShadowHolder"
 	DropShadowHolder.Parent = HirimiGui
@@ -649,8 +649,8 @@ function FlurioreLib:MakeGui(GuiConfig)
 		end
 	end)
 	local calculatedWidth = 115 + TextLabel.TextBounds.X + 1 + TextLabel1.TextBounds.X
-    local finalWidth = math.max(calculatedWidth, 420)  -- Minimum 500 width
-    local finalHeight = 270  -- Fixed height
+    local finalWidth = math.max(calculatedWidth, 480)  -- Minimum 500 width
+    local finalHeight = 300  -- Fixed height
     DropShadowHolder.Size = UDim2.new(0, finalWidth, 0, finalHeight)
     DropShadowHolder.Position = UDim2.new(0.5, -finalWidth/2, 0.5, -finalHeight/2)
 	MakeDraggable(Top, DropShadowHolder)
