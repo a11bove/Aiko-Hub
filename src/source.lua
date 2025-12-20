@@ -731,27 +731,28 @@ function FlurioreLib:MakeGui(GuiConfig)
 	NamePlayer.Name = "NamePlayer"
 	NamePlayer.Parent = Info
 
+	
 	function GuiFunc:DestroyGui()
-		if CoreGui:FindFirstChild("HirimiGui") then 
-			HirimiGui:Destroy()
+	    if CoreGui:FindFirstChild("HirimiGui") then 
+		    HirimiGui:Destroy()
 		end
 	end
-	local OldPos = DropShadowHolder.Position
-	local OldSize = DropShadowHolder.Size
-	MaxRestore.MouseButton1Down:Connect(function()
-		CircleClick(MaxRestore, Mouse.X, Mouse.Y)
-		if ImageLabel.Image == "rbxassetid://9886659406" then
-			ImageLabel.Image = "rbxassetid://9886659001"
-			OldPos = DropShadowHolder.Position
-			OldSize = DropShadowHolder.Size
-			TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Position = UDim2.new(0, 0, 0, 0)}):Play()
-			TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Size = UDim2.new(1, 0, 1, 0)}):Play()
+    local OldPos = DropShadowHolder.Position
+    local OldSize = DropShadowHolder.Size
+    MaxRestore.MouseButton1Down:Connect(function()
+	    CircleClick(MaxRestore, Mouse.X, Mouse.Y)
+	    if ImageLabel.Image == "rbxassetid://9886659406" then
+		    ImageLabel.Image = "rbxassetid://9886659001"
+		    OldPos = DropShadowHolder.Position
+		    OldSize = DropShadowHolder.Size
+		    TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Position = UDim2.new(0, 0, 0, 0)}):Play()
+		    TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Size = UDim2.new(1, 0, 1, 0)}):Play()
 		else
-			ImageLabel.Image = "rbxassetid://9886659406"
-			TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Position = OldPos}):Play()
-			TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Size = OldSize}):Play()
+		    ImageLabel.Image = "rbxassetid://9886659406"
+		    TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Position = OldPos}):Play()
+		    TweenService:Create(DropShadowHolder, TweenInfo.new(0.3), {Size = OldSize}):Play()
 		end
-	end)
+    end)
 	Min.MouseButton1Down:Connect(function()
 		CircleClick(Min, Mouse.X, Mouse.Y)
 		DropShadowHolder.Visible = false
