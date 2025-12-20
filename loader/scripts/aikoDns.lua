@@ -16,9 +16,8 @@ local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bo
 
 Library:MakeNotify({
     Title = "@aikoware",
-    Description = "",
-    Content = "Diesel 'N Steel Script Loaded!",
-    Color = Color3.fromRGB(255,100,100),
+    Description = "| Script Loaded",
+    Content = "Game: Diesel 'N Steel",
     Delay = 3
 })
 
@@ -37,7 +36,7 @@ gui.ResetOnSpawn = false
 gui.Parent = game.CoreGui
 
 local button = Instance.new("ImageButton")
-button.Size = UDim2.new(0, 53, 0, 53)
+button.Size = UDim2.new(0, 50, 0, 50)
 button.Position = UDim2.new(0, 60, 0, 60)
 button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 button.BackgroundTransparency = 0.5
