@@ -277,10 +277,6 @@ function FlurioreLib:MakeNotify(NotifyConfig)
 		TextLabel.Parent = Top
 		TextLabel.Position = UDim2.new(0, 10, 0, 0)
 
-		UIStroke.Color = Color3.fromRGB(255, 255, 255)
-		UIStroke.Thickness = 0.30000001192092896
-		UIStroke.Parent = TextLabel
-
 		UICorner1.Parent = Top
 		UICorner1.CornerRadius = UDim.new(0, 5)
 
@@ -296,10 +292,6 @@ function FlurioreLib:MakeNotify(NotifyConfig)
 		TextLabel1.Size = UDim2.new(1, 0, 1, 0)
 		TextLabel1.Position = UDim2.new(0, TextLabel.TextBounds.X + 15, 0, 0)
 		TextLabel1.Parent = Top
-
-		UIStroke1.Color = NotifyConfig.Color
-		UIStroke1.Thickness = 0.4000000059604645
-		UIStroke1.Parent = TextLabel1
 
 		Close.Font = Enum.Font.SourceSans
 		Close.Text = ""
