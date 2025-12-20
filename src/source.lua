@@ -774,8 +774,8 @@ function FlurioreLib:MakeGui(GuiConfig)
 		end
 	end)
 	local calculatedWidth = 115 + TextLabel.TextBounds.X + 1 + TextLabel1.TextBounds.X
-    local finalWidth = math.max(calculatedWidth, 400)  -- Minimum 500 width
-    local finalHeight = 300  -- Fixed height
+    local finalWidth = math.max(calculatedWidth, 420)  -- Minimum 500 width
+    local finalHeight = 225  -- Fixed height
     DropShadowHolder.Size = UDim2.new(0, finalWidth, 0, finalHeight)
     DropShadowHolder.Position = UDim2.new(0.5, -finalWidth/2, 0.5, -finalHeight/2)
 	MakeDraggable(Top, DropShadowHolder)
