@@ -1160,6 +1160,15 @@ function FlurioreLib:MakeGui(GuiConfig)
 				ParagraphContent.TextWrapped = true
 				Paragraph.Size = UDim2.new(1, 0, 0, ParagraphContent.AbsoluteSize.Y + 33)
 
+
+                if ParagraphConfig.Content == "" or ParagraphConfig.Content == nil then
+                   ParagraphTitle.TextYAlignment = Enum.TextYAlignment.Center
+                   ParagraphTitle.Position = UDim2.new(0, 10, 0, 0)
+                   ParagraphTitle.Size = UDim2.new(1, -16, 1, 0)
+                   ParagraphContent.Visible = false
+                   Paragraph.Size = UDim2.new(1, 0, 0, 33)
+				end
+
 				ParagraphContent:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
 					ParagraphContent.TextWrapped = false
 					ParagraphContent.Size = UDim2.new(1, -16, 0, 12 + (12 * (ParagraphContent.TextBounds.X // ParagraphContent.AbsoluteSize.X)))
@@ -1245,6 +1254,14 @@ function FlurioreLib:MakeGui(GuiConfig)
 				ButtonContent.Size = UDim2.new(1, -100, 0, 12 + (12 * (ButtonContent.TextBounds.X // ButtonContent.AbsoluteSize.X)))
 				ButtonContent.TextWrapped = true
 				Button.Size = UDim2.new(1, 0, 0, ButtonContent.AbsoluteSize.Y + 33)
+
+                if ButtonConfig.Content == "" or ButtonConfig.Content == nil then
+                   ButtonTitle.TextYAlignment = Enum.TextYAlignment.Center
+                   ButtonTitle.Position = UDim2.new(0, 10, 0, 0)
+                   ButtonTitle.Size = UDim2.new(1, -100, 1, 0)
+                   ButtonContent.Visible = false
+                   Button.Size = UDim2.new(1, 0, 0, 33)
+				end
 
 				ButtonContent:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
 					ButtonContent.TextWrapped = false
@@ -1363,6 +1380,14 @@ function FlurioreLib:MakeGui(GuiConfig)
 				ToggleContent.Size = UDim2.new(1, -100, 0, 12 + (12 * (ToggleContent.TextBounds.X // ToggleContent.AbsoluteSize.X)))
 				ToggleContent.TextWrapped = true
 				Toggle.Size = UDim2.new(1, 0, 0, ToggleContent.AbsoluteSize.Y + 33)
+
+if ToggleConfig.Content == "" or ToggleConfig.Content == nil then
+    ToggleTitle.TextYAlignment = Enum.TextYAlignment.Center
+    ToggleTitle.Position = UDim2.new(0, 10, 0, 0)
+    ToggleTitle.Size = UDim2.new(1, -100, 1, 0)
+    ToggleContent.Visible = false
+    Toggle.Size = UDim2.new(1, 0, 0, 33)
+end
 
 				ToggleContent:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
 					ToggleContent.TextWrapped = false
@@ -1541,6 +1566,14 @@ function FlurioreLib:MakeGui(GuiConfig)
 				SliderContent.Size = UDim2.new(1, -180, 0, 12 + (12 * (SliderContent.TextBounds.X // SliderContent.AbsoluteSize.X)))
 				SliderContent.TextWrapped = true
 				Slider.Size = UDim2.new(1, 0, 0, SliderContent.AbsoluteSize.Y + 33)
+
+if SliderConfig.Content == "" or SliderConfig.Content == nil then
+    SliderTitle.TextYAlignment = Enum.TextYAlignment.Center
+    SliderTitle.Position = UDim2.new(0, 10, 0, 0)
+    SliderTitle.Size = UDim2.new(1, -180, 1, 0)
+    SliderContent.Visible = false
+    Slider.Size = UDim2.new(1, 0, 0, 33)
+end
 
 				SliderContent:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
 					SliderContent.TextWrapped = false
@@ -1730,6 +1763,14 @@ function FlurioreLib:MakeGui(GuiConfig)
 				InputContent.TextWrapped = true
 				Input.Size = UDim2.new(1, 0, 0, InputContent.AbsoluteSize.Y + 33)
 
+if InputConfig.Content == "" or InputConfig.Content == nil then
+    InputTitle.TextYAlignment = Enum.TextYAlignment.Center
+    InputTitle.Position = UDim2.new(0, 10, 0, 0)
+    InputTitle.Size = UDim2.new(1, -180, 1, 0)
+    InputContent.Visible = false
+    Input.Size = UDim2.new(1, 0, 0, 33)
+end
+
 				InputContent:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
 					InputContent.TextWrapped = false
 					InputContent.Size = UDim2.new(1, -180, 0, 12 + (12 * (InputContent.TextBounds.X // InputContent.AbsoluteSize.X)))
@@ -1860,6 +1901,14 @@ function FlurioreLib:MakeGui(GuiConfig)
 				DropdownContent.Size = UDim2.new(1, -180, 0, 12 + (12 * (DropdownContent.TextBounds.X // DropdownContent.AbsoluteSize.X)))
 				DropdownContent.TextWrapped = true
 				Dropdown.Size = UDim2.new(1, 0, 0, DropdownContent.AbsoluteSize.Y + 33)
+
+if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
+    DropdownTitle.TextYAlignment = Enum.TextYAlignment.Center
+    DropdownTitle.Position = UDim2.new(0, 10, 0, 0)
+    DropdownTitle.Size = UDim2.new(1, -180, 1, 0)
+    DropdownContent.Visible = false
+    Dropdown.Size = UDim2.new(1, 0, 0, 33)
+end
 
 				DropdownContent:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
 					DropdownContent.TextWrapped = false
