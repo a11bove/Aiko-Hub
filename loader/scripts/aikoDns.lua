@@ -36,7 +36,7 @@ gui.ResetOnSpawn = false
 gui.Parent = game.CoreGui
 
 local button = Instance.new("ImageButton")
-button.Size = UDim2.new(0, 50, 0, 50)
+button.Size = UDim2.new(0, 47, 0, 47)
 button.Position = UDim2.new(0, 60, 0, 60)
 button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 button.BackgroundTransparency = 0.5
