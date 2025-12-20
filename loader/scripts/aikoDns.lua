@@ -22,8 +22,7 @@ Library:MakeNotify({
 })
 
 local Window = Library:MakeGui({
-    NameHub = "@aikoware | made by untog",
-    Description = ""
+    NameHub = "@aikoware | made by untog!"
 })
 
 local gui = Instance.new("ScreenGui")
