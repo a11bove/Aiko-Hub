@@ -877,7 +877,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 
 			UICorner4.Parent = ChooseFrame
 		end
-		TabButton.MouseButton1Down:Connect(function()
+		TabButton.MouseButton1Click:Connect(function()
 			CircleClick(TabButton, Mouse.X, Mouse.Y)
 			local FrameChoose
 			for a, s in ScrollTab:GetChildren() do
@@ -1083,7 +1083,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 					UpdateSizeScroll()
 				end
 			end
-			SectionButton.MouseButton1Down:Connect(function()
+			SectionButton.MouseButton1Click:Connect(function()
 				CircleClick(SectionButton, Mouse.X, Mouse.Y)
 				if OpenSection then
 					TweenService:Create(FeatureFrame, TweenInfo.new(0.5), {Rotation = 0}):Play()
