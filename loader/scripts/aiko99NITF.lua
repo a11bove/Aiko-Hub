@@ -865,7 +865,7 @@ local Tp = Window:CreateTab({
 })
 
 local Vision = Window:CreateTab({
-    Name = "Environment",
+    Name = "Graphics",
     Icon = "rbxassetid://10723425539"
 })
 
@@ -879,11 +879,11 @@ local Misc = Window:CreateTab({
     Icon = "rbxassetid://10734954538"
 })
 
-local infO = Home:AddSection("Anti AFK")
+local infO = Home:AddSection("Anti Afk")
 
 infO:AddToggle({
-    Title = "Enable Anti AFK",
-    Content = "",
+    Title = "Enable Anti Afk",
+    Content = "Anti kick when idle for 20 mins.",
     Default = false,
     Callback = function(state)
             if state then
@@ -934,7 +934,7 @@ ShowPlayers = vissettings:AddToggle({
     end
 })
 
-local Grapics = Home:AddSection("Graphics")
+local Grapics = Home:AddSection("Performance")
 
 Grapics:AddButton({
     Title = "Boost Fps",
@@ -1177,50 +1177,6 @@ aucf:AddToggle({
     end
 })
 
-local ascr = Camp:AddSection("Auto Scrap")
-
-ascr:AddDropdown({
-    Title = "Select Item",
-    Content = "Select an item for auto scrap.",
-    Multi = true,
-    Options = scrapjunkItems,
-    Default = {},
-    Callback = function(option)
-        selectedScrapItem = option
-    end
-})
-
-ascr:AddToggle({
-    Title = "Enable Auto Scrap",
-    Content = "",
-    Default = false,
-    Callback = function(checked)
-        autoScrapItemsEnabled = checked
-        if checked then
-            task.spawn(function()
-                while autoScrapItemsEnabled do
-                    if selectedScrapItem then
-                        local items = {}
-
-                        for _, item in ipairs(workspace:WaitForChild("Items"):GetChildren()) do
-                            if item.Name == selectedScrapItem then
-                                table.insert(items, item)
-                            end
-                        end
-
-                        local count = math.min(10, #items)
-                        for i = 1, count do
-                            moveItemToPos(items[i], autoScrapPos)
-                        end
-                    end
-
-                    task.wait(1)
-                end
-            end)
-        end
-    end
-})
-
 local acok = Camp:AddSection("Auto Cook")
 
 acok:AddDropdown({
@@ -1300,49 +1256,12 @@ acft:AddToggle({
     end
 })
 
-local bnch = Camp:AddSection("Auto Upgrade Crafting Bench")
-
-bnch:AddDropdown({
-    Title = "Select Bench",
-    Content = "Select a bench to upgrade.",
-    Multi = true,
-    Options = craftingBenchItems,
-    Default = {},
-    Callback = function(options)
-            selectedBenchItems = options or {}
-            end
-})
-
-bnch:AddToggle({
-    Title = "Enable Auto Upgrade Bench",
-    Content = "",
-    Default = false,
-    Callback = function(checked)
-        autoUpgradeBenchEnabled = checked
-        if checked then
-            task.spawn(function()
-                while autoUpgradeBenchEnabled do
-                    if #selectedBenchItems > 0 then
-                        for _, bench in ipairs(selectedBenchItems) do
-                            local args = { bench }
-                            game:GetService("ReplicatedStorage")
-                                :WaitForChild("RemoteEvents")
-                                :WaitForChild("CraftItem")
-                                :InvokeServer(unpack(args))
-                        end
-                    end
-                    task.wait(0.5)
-                end
-            end)
-        end
-    end
-})
-
 local bpr =br:AddSection("Blueprint")
 
 bpr:AddDropdown({
     Title = "Select Blueprint",
-    Content = "Select blueprints to bring",
+    Content = "Select blueprints to bring.
+		",
     Multi = true,
     Options = selectedBlueprintItems,
     Default = {},
@@ -2223,7 +2142,6 @@ hh:AddToggle({
 local infJumpConnection
 hh:AddToggle({
     Title = "Inf Jump",
-    Content = "Inf jump :)",
     Default = false,
     Callback = function(state)
         if state then
@@ -2436,15 +2354,6 @@ fun:AddButton({
 })
 
 local env = Vision:AddSection("Environment")
-
-env:AddToggle({
-    Title = "Disable Fog",
-    Content = "",
-    Default = false,
-    Callback = function(state)
-        VisionModule.ToggleDisableFog(state)
-    end
-})
 
 env:AddToggle({
     Title = "Disable Night Campfire Effect",
