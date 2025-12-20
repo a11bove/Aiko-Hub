@@ -15,17 +15,15 @@ end
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/source.lua"))()
 
 Library:MakeNotify({
-    Title = "@aikoware | made by untog!",
-    Description = "",
+    Title = "@aikoware",
+    Description = "| Script Loaded",
     Content = "Game: Diesel 'N Steel",
     Delay = 3
 })
 
 local Window = Library:MakeGui({
-    NameHub = "@aikoware ",
-    Description = "| made by untog !",
-    --["Logo Player"] = "https://www.roblox.com/headshot-thumbnail/image?userId=544503914&width=420&height=420&format=png",
-	--["Name Player"] = "Protected By @aikoware"
+    NameHub = "@aikoware | made by untog",
+    Description = "",
 })
 
 local gui = Instance.new("ScreenGui")
