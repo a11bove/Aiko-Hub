@@ -262,7 +262,7 @@ function FlurioreLib:MakeNotify(NotifyConfig)
 		Top.Name = "Top"
 		Top.Parent = NotifyFrameReal
 
-		TextLabel.Font = Enum.Font.SourceSans
+		TextLabel.Font = Enum.Font.GothamBold
 		TextLabel.Text = NotifyConfig.Title
 		TextLabel.TextColor3 = Color3.fromRGB(200, 150, 255)
 		TextLabel.TextSize = 14
