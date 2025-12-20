@@ -16,9 +16,8 @@ local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bo
 
 Library:MakeNotify({
     Title = "@aikoware",
-    Description = "",
-    Content = "99 Nights in The Forest Script Loaded!",
-    Color = Color3.fromRGB(255,100,100),
+    Description = "Script Loaded",
+    Content = "Game: 99 Nights in The Forest",
     Delay = 3
 })
 
