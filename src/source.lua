@@ -378,6 +378,7 @@ end
 function FlurioreLib:MakeGui(GuiConfig)
 	local GuiConfig = GuiConfig or {}
 	GuiConfig.NameHub = GuiConfig.NameHub or "Hirimi Hub"
+	GuiConfig.Description = GuiConfig.Description or ""
 	GuiConfig.Color = GuiConfig.Color or Color3.fromRGB(138, 43, 226)
 	GuiConfig["Tab Width"] = GuiConfig["Tab Width"] or 120
 	local GuiFunc = {}
@@ -389,6 +390,8 @@ function FlurioreLib:MakeGui(GuiConfig)
 	local UICorner = Instance.new("UICorner");
 	local Top = Instance.new("Frame");
 	local TextLabel = Instance.new("TextLabel");
+	local TextLabel1 = Instance.new("TextLabel");
+	local UIStroke1 = Instance.new("UIStroke");
 	local UICorner1 = Instance.new("UICorner");
 	local Close = Instance.new("TextButton");
 	local ImageLabel1 = Instance.new("ImageLabel");
@@ -453,7 +456,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 
 	TextLabel.Font = Enum.Font.GothamBold
 	TextLabel.Text = GuiConfig.NameHub
-	TextLabel.TextColor3 = Color3.fromRGB(200, 150, 255)
+	TextLabel.TextColor3 = Color3.fromRGB(180, 140, 230)
 	TextLabel.TextSize = 14
 	TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 	TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -465,6 +468,23 @@ function FlurioreLib:MakeGui(GuiConfig)
 	TextLabel.Parent = Top
 
 	UICorner1.Parent = Top
+
+	TextLabel1.Font = Enum.Font.GothamBold
+	TextLabel1.Text = GuiConfig.Description
+	TextLabel.TextColor3 = GuiConfig.Color
+	TextLabel1.TextSize = 14
+	TextLabel1.TextXAlignment = Enum.TextXAlignment.Left
+	TextLabel1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	TextLabel1.BackgroundTransparency = 0.9990000128746033
+	TextLabel1.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	TextLabel1.BorderSizePixel = 0
+	TextLabel1.Size = UDim2.new(1, -(TextLabel.TextBounds.X + 104), 1, 0)
+	TextLabel1.Position = UDim2.new(0, TextLabel.TextBounds.X + 15, 0, 0)
+	TextLabel1.Parent = Top
+
+	UIStroke1.Color = GuiConfig.Color
+	UIStroke1.Thickness = 0.4000000059604645
+	UIStroke1.Parent = TextLabel1
 
 	Close.Font = Enum.Font.SourceSans
 	Close.Text = ""
