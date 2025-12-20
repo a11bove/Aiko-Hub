@@ -552,7 +552,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	Min.BackgroundTransparency = 0.9990000128746033
 	Min.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Min.BorderSizePixel = 0
-	Min.Position = UDim2.new(1, -78, 0.5, 0)
+	Min.Position = UDim2.new(1, -42, 0.5, 0)
 	Min.Size = UDim2.new(0, 25, 0, 25)
 	Min.Name = "Min"
 	Min.Parent = Top
