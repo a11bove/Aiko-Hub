@@ -1994,6 +1994,7 @@ end
 					end
 				end
 				function DropdownFunc:Set(Value)
+    -- Ensure Value is always a table
     if type(Value) == "string" then
         DropdownFunc.Value = {Value}
     elseif type(Value) ~= "table" then
@@ -2004,6 +2005,7 @@ end
     
     for _, Drop in ScrollSelect:GetChildren() do
         local dropValue = DropdownFunc.Value
+        -- Ensure dropValue is a table
         if type(dropValue) == "string" then
             dropValue = {dropValue}
         elseif type(dropValue) ~= "table" then
@@ -2042,9 +2044,8 @@ end
                 TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
                 {BackgroundTransparency = 0.935}
             ):Play()
-						end
-					end
-				end
+        end  -- Closes the if/elseif block for Drop.Name check
+    end  -- Closes the for loop
     
     local DropdownValueTable = table.concat(DropdownFunc.Value, ", ")
     if DropdownValueTable == "" then
@@ -2053,7 +2054,7 @@ end
         OptionSelecting.Text = tostring(DropdownValueTable)
     end
     DropdownConfig.Callback(DropdownFunc.Value)
-end
+end  -- Closes the function
 				function DropdownFunc:AddOption(OptionName)
 					OptionName = OptionName or "Option"
 					local Option = Instance.new("Frame");
