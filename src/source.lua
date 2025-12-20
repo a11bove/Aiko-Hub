@@ -378,7 +378,6 @@ end
 function FlurioreLib:MakeGui(GuiConfig)
 	local GuiConfig = GuiConfig or {}
 	GuiConfig.NameHub = GuiConfig.NameHub or "Hirimi Hub"
-	GuiConfig.Description = GuiConfig.Description or "Comeback | developing by Hirimi, Teru"
 	GuiConfig.Color = GuiConfig.Color or Color3.fromRGB(138, 43, 226)
 	GuiConfig["Tab Width"] = GuiConfig["Tab Width"] or 120
 	local GuiFunc = {}
