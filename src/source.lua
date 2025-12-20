@@ -1993,7 +1993,7 @@ end
 						end
 					end
 				end
-				function DropdownFunc:Set(Value)
+					function DropdownFunc:Set(Value)
     -- Ensure Value is always a table
     if type(Value) == "string" then
         DropdownFunc.Value = {Value}
@@ -2044,8 +2044,8 @@ end
                 TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
                 {BackgroundTransparency = 0.935}
             ):Play()
-        end  -- Closes the if/elseif block for Drop.Name check
-    end  -- Closes the for loop
+        end  -- THIS END WAS MISSING
+    end  -- THIS END CLOSES THE FOR LOOP
     
     local DropdownValueTable = table.concat(DropdownFunc.Value, ", ")
     if DropdownValueTable == "" then
@@ -2054,7 +2054,8 @@ end
         OptionSelecting.Text = tostring(DropdownValueTable)
     end
     DropdownConfig.Callback(DropdownFunc.Value)
-end  -- Closes the function
+end  -- THIS END CLOSES THE FUNCTION
+			end
 				function DropdownFunc:AddOption(OptionName)
 					OptionName = OptionName or "Option"
 					local Option = Instance.new("Frame");
