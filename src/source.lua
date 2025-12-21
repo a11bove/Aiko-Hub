@@ -1049,95 +1049,71 @@ function FlurioreLib:MakeGui(GuiConfig)
 			UIListLayout2.Padding = UDim.new(0, 3)
 			UIListLayout2.SortOrder = Enum.SortOrder.LayoutOrder
 			UIListLayout2.Parent = SectionAdd
-			local OpenSection = true
-			local function UpdateSizeScroll()
-				local OffsetY = 0
-				for _, child in ScrolLayers:GetChildren() do
-					if child.Name ~= "UIListLayout" then
-						OffsetY = OffsetY + 3 + child.Size.Y.Offset
-					end
-				end
-				ScrolLayers.CanvasSize = UDim2.new(0, 0, 0, OffsetY)
-			end
-			local function UpdateSizeSection()
-				if OpenSection then
-					local SectionSizeYWitdh = 38
-					for i, v in SectionAdd:GetChildren() do
-						if v.Name ~= "UIListLayout" and v.Name ~= "UICorner" then
-							SectionSizeYWitdh = SectionSizeYWitdh + v.Size.Y.Offset + 3
-						end
-					end
-					TweenService:Create(FeatureFrame, TweenInfo.new(0.5), {Rotation = 90}):Play()
-					TweenService:Create(Section, TweenInfo.new(0.5), {Size = UDim2.new(1, 1, 0, SectionSizeYWitdh)}):Play()
-					TweenService:Create(SectionAdd, TweenInfo.new(0.5), {Size = UDim2.new(1, 0, 0, SectionSizeYWitdh - 38)}):Play()
-					TweenService:Create(SectionDecideFrame, TweenInfo.new(0.5), {Size = UDim2.new(1, 0, 0, 2)}):Play()
-					task.wait(0.5)
-					UpdateSizeScroll()
-				end
-			end
-			SectionButton.MouseButton1Click:Connect(function()
-				CircleClick(SectionButton, Mouse.X, Mouse.Y)
-				if OpenSection then
-					TweenService:Create(FeatureFrame, TweenInfo.new(0.5), {Rotation = 0}):Play()
-					TweenService:Create(Section, TweenInfo.new(0.5), {Size = UDim2.new(1, 1, 0, 30)}):Play()
-					TweenService:Create(SectionDecideFrame, TweenInfo.new(0.5), {Size = UDim2.new(0, 0, 0, 2)}):Play()
-					OpenSection = false
-					task.wait(0.5)
-					UpdateSizeScroll()
-				else
-					OpenSection = true
-					UpdateSizeSection()
-				end
-			end)
-			SectionAdd.ChildAdded:Connect(UpdateSizeSection)
-			SectionAdd.ChildRemoved:Connect(UpdateSizeSection)
-			UpdateSizeScroll()
 
-			SectionButton.MouseButton1Click:Connect(function()
-				CircleClick(SectionButton, Mouse.X, Mouse.Y)
-				if OpenSection then
-					TweenService:Create(FeatureFrame, TweenInfo.new(0.5), {Rotation = 0}):Play()
-					TweenService:Create(Section, TweenInfo.new(0.5), {Size = UDim2.new(1, 1, 0, 30)}):Play()
-					TweenService:Create(SectionDecideFrame, TweenInfo.new(0.5), {Size = UDim2.new(0, 0, 0, 2)}):Play()
-					OpenSection = false
-					task.wait(0.5)
-					UpdateSizeScroll()
-				else
-					OpenSection = true
-					UpdateSizeSection()
-				end
-			end)
-			SectionAdd.ChildAdded:Connect(UpdateSizeSection)
-			SectionAdd.ChildRemoved:Connect(UpdateSizeSection)
-			UpdateSizeScroll()
-			
-			local SectionFunc = {}
-			
-			function SectionFunc:Open()
-				if not OpenSection then
-					OpenSection = true
-					UpdateSizeSection()
-				end
+local OpenSection = false
+local function UpdateSizeScroll()
+	local OffsetY = 0
+	for _, child in ScrolLayers:GetChildren() do
+		if child.Name ~= "UIListLayout" then
+			OffsetY = OffsetY + 3 + child.Size.Y.Offset
+		end
+	end
+	ScrolLayers.CanvasSize = UDim2.new(0, 0, 0, OffsetY)
+end
+
+local function UpdateSizeSection()
+	if OpenSection then
+		local SectionSizeYWitdh = 38
+		for i, v in SectionAdd:GetChildren() do
+			if v.Name ~= "UIListLayout" and v.Name ~= "UICorner" then
+				SectionSizeYWitdh = SectionSizeYWitdh + v.Size.Y.Offset + 3
 			end
-			
-			function SectionFunc:Close()
-				if OpenSection then
-					OpenSection = false
-					TweenService:Create(FeatureFrame, TweenInfo.new(0.5), {Rotation = 0}):Play()
-					TweenService:Create(Section, TweenInfo.new(0.5), {Size = UDim2.new(1, 1, 0, 30)}):Play()
-					TweenService:Create(SectionDecideFrame, TweenInfo.new(0.5), {Size = UDim2.new(0, 0, 0, 2)}):Play()
-					task.wait(0.5)
-					UpdateSizeScroll()
-				end
-			end
-			
-			function SectionFunc:Toggle()
-				if OpenSection then
-					SectionFunc:Close()
-				else
-					SectionFunc:Open()
-				end
-			end
+		end
+		TweenService:Create(FeatureImg, TweenInfo.new(0.5), {Rotation = -90}):Play()
+		TweenService:Create(Section, TweenInfo.new(0.5), {Size = UDim2.new(1, 1, 0, SectionSizeYWitdh)}):Play()
+		TweenService:Create(SectionAdd, TweenInfo.new(0.5), {Size = UDim2.new(1, 0, 0, SectionSizeYWitdh - 38)}):Play()
+		TweenService:Create(SectionDecideFrame, TweenInfo.new(0.5), {Size = UDim2.new(1, 0, 0, 2)}):Play()
+		task.wait(0.5)
+		UpdateSizeScroll()
+	else
+		TweenService:Create(FeatureImg, TweenInfo.new(0.5), {Rotation = 0}):Play()
+		TweenService:Create(Section, TweenInfo.new(0.5), {Size = UDim2.new(1, 1, 0, 30)}):Play()
+		TweenService:Create(SectionAdd, TweenInfo.new(0.5), {Size = UDim2.new(1, 0, 0, 0)}):Play()
+		TweenService:Create(SectionDecideFrame, TweenInfo.new(0.5), {Size = UDim2.new(0, 0, 0, 2)}):Play()
+		task.wait(0.5)
+		UpdateSizeScroll()
+	end
+end
+
+SectionButton.MouseButton1Click:Connect(function()
+	CircleClick(SectionButton, Mouse.X, Mouse.Y)
+	OpenSection = not OpenSection
+	UpdateSizeSection()
+end)
+
+SectionAdd.ChildAdded:Connect(UpdateSizeSection)
+SectionAdd.ChildRemoved:Connect(UpdateSizeSection)
+
+Section.Size = UDim2.new(1, 1, 0, 30)
+SectionAdd.Size = UDim2.new(1, 0, 0, 0)
+FeatureImg.Rotation = 0
+SectionDecideFrame.Size = UDim2.new(0, 0, 0, 2)
+UpdateSizeScroll()
+
+local SectionFunc = {}
+
+function SectionFunc:Open()
+	if not OpenSection then
+		OpenSection = true
+		FeatureFrame.Visible = false
+		UpdateSizeSection()
+	end
+end
+
+function SectionFunc:Toggle()
+	OpenSection = not OpenSection
+	UpdateSizeSection()
+end
 			
 			local Items = {}
 			local CountItem = 0
