@@ -418,7 +418,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	DropShadow.ScaleType = Enum.ScaleType.Slice
 	DropShadow.SliceCenter = Rect.new(49, 49, 450, 450)
 	DropShadow.AnchorPoint = Vector2.new(0.5, 0.5)
-	DropShadow.BackgroundTransparency = 0.8
+	DropShadow.BackgroundTransparency = 1
 	DropShadow.BorderSizePixel = 0
 	DropShadow.Position = UDim2.new(0.5, 0, 0.5, 0)
 	DropShadow.Size = UDim2.new(1, 47, 1, 47)
@@ -428,7 +428,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 
 	Main.AnchorPoint = Vector2.new(0.5, 0.5)
 	Main.BackgroundColor3 = Color3.fromRGB(25, 15, 40)
-	Main.BackgroundTransparency = 0.1
+	Main.BackgroundTransparency = 0.8
 	Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Main.BorderSizePixel = 0
 	Main.Position = UDim2.new(0.5, 0, 0.5, 0)
