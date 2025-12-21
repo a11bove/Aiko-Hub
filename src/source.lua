@@ -716,7 +716,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	local DropPageLayout = Instance.new("UIPageLayout");
 
 	DropdownSelect.AnchorPoint = Vector2.new(1, 0.5)
-	DropdownSelect.BackgroundColor3 = Color3.fromRGB(30.00000011175871, 30.00000011175871, 30.00000011175871)
+	DropdownSelect.BackgroundColor3 = Color3.fromRGB(25, 10, 40)
 	DropdownSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	DropdownSelect.BorderSizePixel = 0
 	DropdownSelect.LayoutOrder = 1
@@ -725,6 +725,11 @@ function FlurioreLib:MakeGui(GuiConfig)
 	DropdownSelect.Name = "DropdownSelect"
 	DropdownSelect.ClipsDescendants = true
 	DropdownSelect.Parent = MoreBlur
+
+	UIStroke14.Color = Color3.fromRGB(30, 18, 50)
+	UIStroke14.Thickness = 1.5
+	UIStroke14.Transparency = 0.8
+	UIStroke14.Parent = DropdownSelect
 
 	ConnectButton.MouseButton1Down:Connect(function()
 		if MoreBlur.Visible then
@@ -1933,7 +1938,7 @@ end
 				end)
 
 				SelectOptionsFrame.AnchorPoint = Vector2.new(1, 0.5)
-				SelectOptionsFrame.BackgroundColor3 = Color3.fromRGB(30, 18, 50)
+				SelectOptionsFrame.BackgroundColor3 = Color3.fromRGB(35, 18, 50)
 				SelectOptionsFrame.BackgroundTransparency = 0.3
 				SelectOptionsFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				SelectOptionsFrame.BorderSizePixel = 0
