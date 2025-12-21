@@ -1559,90 +1559,43 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
--- Function to get overhead elements
 local function getOverheadElements()
     local character = LocalPlayer.Character
-    if not character then return nil, nil, nil end
+    if not character then return nil, nil end
     
     local hrp = character:FindFirstChild("HumanoidRootPart")
-    if not hrp then return nil, nil, nil end
+    if not hrp then return nil, nil end
     
     local overhead = hrp:FindFirstChild("Overhead")
-    if not overhead then return nil, nil, nil end
+    if not overhead then return nil, nil end
     
     local nameLabel = overhead:FindFirstChild("Content") and overhead.Content:FindFirstChild("Header")
     local levelLabel = overhead:FindFirstChild("LevelContainer") and overhead.LevelContainer:FindFirstChild("Label")
     
-    return overhead, nameLabel, levelLabel
+    return nameLabel, levelLabel
 end
 
--- Get initial overhead elements
-local overhead, NameLabel, LevelLabel = getOverheadElements()
+local NameLabel, LevelLabel = getOverheadElements()
 
--- Store original values
 local OriginalName = NameLabel and NameLabel.Text or "Player"
 local OriginalLevel = LevelLabel and LevelLabel.Text or "1"
 
--- Custom values
-local CustomName = OriginalName
-local CustomLevel = OriginalLevel
-
--- State
 local HideIdentityEnabled = false
 
--- Create "Anti Solace" text label
-local AntiSolaceLabel = nil
-
-local function createAntiSolaceLabel()
-    if overhead and not AntiSolaceLabel then
-        -- Check if it already exists
-        AntiSolaceLabel = overhead:FindFirstChild("AntiSolaceLabel")
-        
-        if not AntiSolaceLabel then
-            -- Clone the header to maintain same styling
-            local content = overhead:FindFirstChild("Content")
-            if content and NameLabel then
-                AntiSolaceLabel = NameLabel:Clone()
-                AntiSolaceLabel.Name = "AntiSolaceLabel"
-                AntiSolaceLabel.Text = "Anti Solace"
-                AntiSolaceLabel.Parent = content
-                
-                -- Position it directly above the name label (centered)
-                AntiSolaceLabel.Position = UDim2.new(0.5, 0, 0, -25)
-                AntiSolaceLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-                AntiSolaceLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
-                AntiSolaceLabel.Visible = false
-            end
-        end
-    end
-end
-
--- Function to update identity display
 local function updateIdentityDisplay()
-    local _, nameLabel, levelLabel = getOverheadElements()
+    local nameLabel, levelLabel = getOverheadElements()
     
     if nameLabel and levelLabel then
         if HideIdentityEnabled then
-            nameLabel.Text = CustomName
-            levelLabel.Text = CustomLevel
-            
-            -- Show Anti Solace label
-            if AntiSolaceLabel then
-                AntiSolaceLabel.Visible = true
-            end
+            nameLabel.Text = "Anti Solace"
+            levelLabel.Text = "@aikoware"
         else
             nameLabel.Text = OriginalName
             levelLabel.Text = OriginalLevel
-            
-            -- Hide Anti Solace label
-            if AntiSolaceLabel then
-                AntiSolaceLabel.Visible = false
-            end
         end
     end
 end
 
--- Monitor for overhead changes (fixes the level up issue)
 local overheadConnection
 local function startOverheadMonitoring()
     if overheadConnection then
@@ -1656,58 +1609,24 @@ local function startOverheadMonitoring()
     end)
 end
 
--- Handle character respawn
 LocalPlayer.CharacterAdded:Connect(function(character)
-    task.wait(1) -- Wait for character to fully load
+    task.wait(1)
     
-    -- Re-get overhead elements
-    overhead, NameLabel, LevelLabel = getOverheadElements()
+    NameLabel, LevelLabel = getOverheadElements()
     
-    -- Recreate Anti Solace label
-    AntiSolaceLabel = nil
-    createAntiSolaceLabel()
+    if NameLabel and LevelLabel then
+        OriginalName = NameLabel.Text
+        OriginalLevel = LevelLabel.Text
+    end
     
-    -- Update display if enabled
     if HideIdentityEnabled then
         updateIdentityDisplay()
     end
 end)
 
--- Create initial Anti Solace label
-createAntiSolaceLabel()
-
--- Input for custom name
-idn:AddInput({
-    Title = "Custom Name",
-    Placeholder = "Enter Text",
-    Content = "",
-    Default = CustomName,
-    Callback = function(value)
-        CustomName = value
-        if HideIdentityEnabled then
-            updateIdentityDisplay()
-        end
-    end
-})
-
--- Input for custom level
-idn:AddInput({
-    Title = "Custom Level",
-    Content = "",
-    Placeholder = "Enter Text",
-    Default = CustomLevel,
-    Callback = function(value)
-        CustomLevel = value
-        if HideIdentityEnabled then
-            updateIdentityDisplay()
-        end
-    end
-})
-
--- Toggle to enable/disable identity hiding
 idn:AddToggle({
     Title = "Enable Hide Identity",
-    Content = "Continuously hides your identity",
+    Content = "",
     Default = false,
     Callback = function(enabled)
         HideIdentityEnabled = enabled
@@ -1740,15 +1659,22 @@ idn:AddToggle({
     end
 })
 
--- Rainbow text effect for Anti Solace label
+local OriginalNameColor = NameLabel and NameLabel.TextColor3 or Color3.new(1, 1, 1)
+
 coroutine.wrap(function()
     local hue = 0
     while true do
-        if HideIdentityEnabled and AntiSolaceLabel then
-            hue = (hue + 0.01) % 1
-            local rainbowColor = Color3.fromHSV(hue, 1, 1)
-            if AntiSolaceLabel and AntiSolaceLabel.Parent then
-                AntiSolaceLabel.TextColor3 = rainbowColor
+        if HideIdentityEnabled then
+            local nameLabel, levelLabel = getOverheadElements()
+            if nameLabel then
+                hue = (hue + 0.01) % 1
+                local rainbowColor = Color3.fromHSV(hue, 1, 1)
+                nameLabel.TextColor3 = rainbowColor
+            end
+        else
+            local nameLabel, levelLabel = getOverheadElements()
+            if nameLabel then
+                nameLabel.TextColor3 = OriginalNameColor
             end
         end
         wait(0.05)
