@@ -667,8 +667,8 @@ function FlurioreLib:MakeGui(GuiConfig)
 	MoreBlur.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	MoreBlur.BorderSizePixel = 0
 	MoreBlur.ClipsDescendants = true
-	MoreBlur.Position = UDim2.new(1, 8, 1, 8)
-	MoreBlur.Size = UDim2.new(1, 154, 1, 54)
+	MoreBlur.Position = UDim2.new(1, 0, 1, 0)
+	MoreBlur.Size = UDim2.new(1, 0, 1, 0)
 	MoreBlur.Visible = false
 	MoreBlur.Name = "MoreBlur"
 	MoreBlur.Parent = Layers
@@ -737,11 +737,6 @@ function FlurioreLib:MakeGui(GuiConfig)
 	UICorner36.CornerRadius = UDim.new(0, 3)
 	UICorner36.Parent = DropdownSelect
 
-	UIStroke14.Color = Color3.fromRGB(255, 255, 255)
-	UIStroke14.Thickness = 2.5
-	UIStroke14.Transparency = 0.8
-	UIStroke14.Parent = DropdownSelect
-
 	DropdownSelectReal.AnchorPoint = Vector2.new(0.5, 0.5)
 	DropdownSelectReal.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	DropdownSelectReal.BackgroundTransparency = 0.9990000128746033
@@ -799,11 +794,11 @@ function FlurioreLib:MakeGui(GuiConfig)
 		local UIStroke2 = Instance.new("UIStroke");
 		local UICorner4 = Instance.new("UICorner");
 
-		Tab.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Tab.BackgroundColor3 = Color3.fromRGB(40, 20, 60)
 		if CountTab == 0 then
-			Tab.BackgroundTransparency = 0.85
+			Tab.BackgroundTransparency = 0.5
 		else
-			Tab.BackgroundTransparency = 0.97
+			Tab.BackgroundTransparency = 0.8
 		end
 		Tab.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		Tab.BorderSizePixel = 0
@@ -1938,8 +1933,8 @@ end
 				end)
 
 				SelectOptionsFrame.AnchorPoint = Vector2.new(1, 0.5)
-				SelectOptionsFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				SelectOptionsFrame.BackgroundTransparency = 0.949999988079071
+				SelectOptionsFrame.BackgroundColor3 = Color3.fromRGB(30, 18, 50)
+				SelectOptionsFrame.BackgroundTransparency = 0.3
 				SelectOptionsFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				SelectOptionsFrame.BorderSizePixel = 0
 				SelectOptionsFrame.Position = UDim2.new(1, -7, 0.5, 0)
@@ -1955,8 +1950,8 @@ end
 					if not MoreBlur.Visible then
 						MoreBlur.Visible = true 
 						DropPageLayout:JumpToIndex(SelectOptionsFrame.LayoutOrder)
-						TweenService:Create(MoreBlur, TweenInfo.new(0.3), {BackgroundTransparency = 0.7}):Play()
-						TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, -11, 0.5, 0)}):Play()
+						TweenService:Create(MoreBlur, TweenInfo.new(0.3), {BackgroundTransparency = 0.5}):Play()
+						TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, -8, 0.5, 0)}):Play()
 					end
 				end)
 
@@ -2090,8 +2085,8 @@ end
 					local UIStroke15 = Instance.new("UIStroke");
 					local UICorner38 = Instance.new("UICorner");
 					
-					Option.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-					Option.BackgroundTransparency = 0.999
+					Option.BackgroundColor3 = Color3.fromRGB(30, 15, 45)
+					Option.BackgroundTransparency = 0.25
 					Option.BorderColor3 = Color3.fromRGB(0, 0, 0)
 					Option.BorderSizePixel = 0
 					Option.LayoutOrder = DropCount
