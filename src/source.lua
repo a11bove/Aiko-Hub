@@ -668,7 +668,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	
 	MoreBlur.AnchorPoint = Vector2.new(1, 1)
 	MoreBlur.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	MoreBlur.BackgroundTransparency = 0.999
+	MoreBlur.BackgroundTransparency = 1
 	MoreBlur.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	MoreBlur.BorderSizePixel = 0
 	MoreBlur.ClipsDescendants = true
@@ -1987,8 +1987,7 @@ if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
 	                if not MoreBlur.Visible then
 		            MoreBlur.Visible = true 
 		            DropPageLayout:JumpToIndex(SelectOptionsFrame.LayoutOrder)
-		        -- Remove the blur tween, keep it fully transparent
-		            MoreBlur.BackgroundTransparency = 1  -- Always transparent (no blur)
+		            MoreBlur.BackgroundTransparency = 1
 		            TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, -8, 0.5, 0)}):Play()
 				end
 			end)
@@ -2059,7 +2058,7 @@ if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
             TweenService:Create(
                 Drop,
                 TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
-                {BackgroundTransparency = 0.999}
+                {BackgroundTransparency = 0.5}
             ):Play()
         elseif Drop.Name ~= "UIListLayout" and table.find(dropValue, Drop.OptionText.Text) then
             TweenService:Create(
@@ -2075,7 +2074,7 @@ if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
             TweenService:Create(
                 Drop,
                 TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
-                {BackgroundTransparency = 0.935}
+                {BackgroundTransparency = 0.7}
             ):Play()
         end
     end
@@ -2098,8 +2097,8 @@ end
 					local UIStroke15 = Instance.new("UIStroke");
 					local UICorner38 = Instance.new("UICorner");
 					
-					Option.BackgroundColor3 = Color3.fromRGB(30, 15, 45)
-					Option.BackgroundTransparency = 1
+					Option.BackgroundColor3 = Color3.fromRGB(0,0,0)
+					Option.BackgroundTransparency = 0.5
 					Option.BorderColor3 = Color3.fromRGB(0, 0, 0)
 					Option.BorderSizePixel = 0
 					Option.LayoutOrder = DropCount
