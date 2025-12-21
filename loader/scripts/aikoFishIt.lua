@@ -25,7 +25,8 @@ Library:MakeNotify({
 })
 
 local Window = Library:MakeGui({
-    NameHub = "@aikoware | made by untog!"
+    NameHub = "@aikoware | made by untog!",
+    Color = Color3.fromRGB(0,0,0)
 })
 
 local gui = Instance.new("ScreenGui")
