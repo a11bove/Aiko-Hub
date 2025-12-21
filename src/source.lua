@@ -428,7 +428,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 
 	Main.AnchorPoint = Vector2.new(0.5, 0.5)
 	Main.BackgroundColor3 = Color3.fromRGB(20, 8, 35)  -- Dark purple
-    Main.BackgroundTransparency = 0.4
+    Main.BackgroundTransparency = 0.3
 	Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Main.BorderSizePixel = 0
 	Main.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -794,11 +794,11 @@ function FlurioreLib:MakeGui(GuiConfig)
 		local UIStroke2 = Instance.new("UIStroke");
 		local UICorner4 = Instance.new("UICorner");
 
-		Tab.BackgroundColor3 = Color3.fromRGB(40, 20, 60)
+		Tab.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		if CountTab == 0 then
-			Tab.BackgroundTransparency = 0.5
+			Tab.BackgroundTransparency = 0.85
 		else
-			Tab.BackgroundTransparency = 0.8
+			Tab.BackgroundTransparency = 0.97
 		end
 		Tab.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		Tab.BorderSizePixel = 0
@@ -941,8 +941,8 @@ function FlurioreLib:MakeGui(GuiConfig)
 			local SectionTitle = Instance.new("TextLabel");
 
 			SectionReal.AnchorPoint = Vector2.new(0.5, 0)
-			SectionReal.BackgroundColor3 = Color3.fromRGB(30, 15, 45)  -- Dark purple
-            SectionReal.BackgroundTransparency = 0.25
+			SectionReal.BackgroundColor3 = Color3.fromRGB(255, 255, 255)  -- Dark purple
+            SectionReal.BackgroundTransparency = 0.935
 			SectionReal.BorderColor3 = Color3.fromRGB(0, 0, 0)
 			SectionReal.BorderSizePixel = 0
 			SectionReal.LayoutOrder = 1
@@ -1128,8 +1128,8 @@ end
 				local ParagraphTitle = Instance.new("TextLabel");
 				local ParagraphContent = Instance.new("TextLabel");
 
-				Paragraph.BackgroundColor3 = Color3.fromRGB(30, 15, 45)
-				Paragraph.BackgroundTransparency = 0.25
+				Paragraph.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Paragraph.BackgroundTransparency = 0.935
 				Paragraph.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				Paragraph.BorderSizePixel = 0
 				Paragraph.LayoutOrder = CountItem
@@ -1222,8 +1222,8 @@ end
 				local FeatureFrame1 = Instance.new("Frame");
 				local FeatureImg3 = Instance.new("ImageLabel");
 
-				Button.BackgroundColor3 = Color3.fromRGB(30, 15, 45)  -- Dark purple
-                Button.BackgroundTransparency = 0.25
+				Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)  -- Dark purple
+                Button.BackgroundTransparency = 0.935
 				Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				Button.BorderSizePixel = 0
 				Button.LayoutOrder = CountItem
@@ -1348,8 +1348,8 @@ end
 				local ToggleCircle = Instance.new("Frame");
 				local UICorner23 = Instance.new("UICorner");
 
-				Toggle.BackgroundColor3 = Color3.fromRGB(30, 15, 45)
-				Toggle.BackgroundTransparency = 0.25
+				Toggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Toggle.BackgroundTransparency = 0.935
 				Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				Toggle.BorderSizePixel = 0
 				Toggle.LayoutOrder = CountItem
@@ -1534,8 +1534,8 @@ end
 				local UIStroke6 = Instance.new("UIStroke");
 				local UIStroke7 = Instance.new("UIStroke");
 
-				Slider.BackgroundColor3 = Color3.fromRGB(30, 15, 45)
-				Slider.BackgroundTransparency = 0.25
+				Slider.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Slider.BackgroundTransparency = 0.935
 				Slider.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				Slider.BorderSizePixel = 0
 				Slider.LayoutOrder = CountItem
@@ -1729,8 +1729,8 @@ end
 				local UICorner13 = Instance.new("UICorner");
 				local InputTextBox = Instance.new("TextBox");
 
-				Input.BackgroundColor3 = Color3.fromRGB(30, 15, 45)
-				Input.BackgroundTransparency = 0.25
+				Input.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Input.BackgroundTransparency = 0.935
 				Input.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				Input.BorderSizePixel = 0
 				Input.LayoutOrder = CountItem
@@ -1856,8 +1856,8 @@ end
 				local OptionSelecting = Instance.new("TextLabel");
 				local OptionImg = Instance.new("ImageLabel");
 
-				Dropdown.BackgroundColor3 = Color3.fromRGB(30, 15, 45)
-				Dropdown.BackgroundTransparency = 0.25
+				Dropdown.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Dropdown.BackgroundTransparency = 0.935
 				Dropdown.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				Dropdown.BorderSizePixel = 0
 				Dropdown.LayoutOrder = CountItem
