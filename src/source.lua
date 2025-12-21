@@ -733,7 +733,6 @@ function FlurioreLib:MakeGui(GuiConfig)
 
 	ConnectButton.MouseButton1Down:Connect(function()
 		if MoreBlur.Visible then
-			TweenService:Create(MoreBlur, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
 			TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, 172, 0.5, 0)}):Play()
 			task.wait(0.3)
 			MoreBlur.Visible = false
@@ -1951,15 +1950,6 @@ if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
 				UICorner11.CornerRadius = UDim.new(0, 4)
 				UICorner11.Parent = SelectOptionsFrame
 
-				--[[DropdownButton.MouseButton1Click:Connect(function()
-					if not MoreBlur.Visible then
-						MoreBlur.Visible = true 
-						DropPageLayout:JumpToIndex(SelectOptionsFrame.LayoutOrder)
-						TweenService:Create(MoreBlur, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
-						TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, -11, 0.5, 0)}):Play()
-					end
-				end)]]
-
 				OptionSelecting.Font = Enum.Font.GothamBold
 				OptionSelecting.Text = ""
 				OptionSelecting.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -1993,11 +1983,22 @@ if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
 				local UIListLayout4 = Instance.new("UIListLayout");
 
 				DropdownButton.MouseButton1Click:Connect(function()
+	                CircleClick(DropdownButton, Mouse.X, Mouse.Y)
+	                if not MoreBlur.Visible then
+		            MoreBlur.Visible = true 
+		            DropPageLayout:JumpToIndex(SelectOptionsFrame.LayoutOrder)
+		        -- Remove the blur tween, keep it fully transparent
+		            MoreBlur.BackgroundTransparency = 1  -- Always transparent (no blur)
+		            TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, -8, 0.5, 0)}):Play()
+				end
+			end)
+				
+				--[[DropdownButton.MouseButton1Click:Connect(function()
                     CircleClick(DropdownButton, Mouse.X, Mouse.Y)
                     DropdownSelect.Visible = true
                     DropPageLayout:JumpToIndex(SelectOptionsFrame.LayoutOrder)
                     TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, -8, 0.5, 0)}):Play()
-				end)
+				end)]]
 
 				ScrollSelect.CanvasSize = UDim2.new(0, 0, 0, 0)
 				ScrollSelect.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
