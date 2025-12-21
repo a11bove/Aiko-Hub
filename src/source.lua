@@ -463,7 +463,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 
 	TextLabel1.Font = Enum.Font.GothamBold
 	TextLabel1.Text = GuiConfig.Description
-	TextLabel.TextColor3 = GuiConfig.Color
+	TextLabel1.TextColor3 = GuiConfig.Color
 	TextLabel1.TextSize = 14
 	TextLabel1.TextXAlignment = Enum.TextXAlignment.Left
 	TextLabel1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
