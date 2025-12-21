@@ -262,6 +262,11 @@ dcsec:AddButton({
         end
 })
 
+task.spawn(function()
+    task.wait(1)
+    dcsec:Open()
+end)
+
 local srv = Home:AddSection("Server")
 
 srv:AddToggle({
@@ -308,6 +313,11 @@ srv:AddToggle({
         end
     end
 })
+
+task.spawn(function()
+    task.wait(1)
+    srv:Open()
+end)
 
 local fsh = Fishing:AddSection("Legit")
 
@@ -402,6 +412,8 @@ fsh:AddToggle({
     Callback = ToggleAutoLegitFish
 })
 
+fsh:Close()
+
 local fin = Fishing:AddSection("Instant")
 
 local InstantFishEnabled = false
@@ -494,6 +506,8 @@ local SuperCompleteDelayInput = fin:AddInput({
         end
     end
 })
+
+fin:Close()
 
 local bts = Fishing:AddSection("Blatant [5x]")
 
