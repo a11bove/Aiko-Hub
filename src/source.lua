@@ -1995,7 +1995,7 @@ if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
 
 				DropdownButton.MouseButton1Click:Connect(function()
                     CircleClick(DropdownButton, Mouse.X, Mouse.Y)
-                    DropdownSelect.Visible = true
+                    DropdownSelect.Visible = false
                     DropPageLayout:JumpToIndex(SelectOptionsFrame.LayoutOrder)
                     TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, -8, 0.5, 0)}):Play()
 				end)
@@ -2099,7 +2099,7 @@ end
 					local UICorner38 = Instance.new("UICorner");
 					
 					Option.BackgroundColor3 = Color3.fromRGB(30, 15, 45)
-					Option.BackgroundTransparency = 0.25
+					Option.BackgroundTransparency = 1
 					Option.BorderColor3 = Color3.fromRGB(0, 0, 0)
 					Option.BorderSizePixel = 0
 					Option.LayoutOrder = DropCount
