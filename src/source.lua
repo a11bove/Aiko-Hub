@@ -402,7 +402,6 @@ function FlurioreLib:MakeGui(GuiConfig)
 
 	HirimiGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 	HirimiGui.Name = "HirimiGui"
-	HirimiGui.BackgroundTransparency = 0.8
 	HirimiGui.Parent = CoreGui
 
 	DropShadowHolder.BackgroundTransparency = 0.85
