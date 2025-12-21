@@ -285,6 +285,7 @@ srv:AddToggle({
 })
 
 srv:AddToggle({
+    
     Title = "Auto Reconnect",
     Content = "",
     Default = false,
@@ -1558,38 +1559,146 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
-local overhead = (LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()):WaitForChild("HumanoidRootPart"):WaitForChild("Overhead")
-local NameLabel = overhead.Content.Header
-local LevelLabel = overhead.LevelContainer.Label
+-- Function to get overhead elements
+local function getOverheadElements()
+    local character = LocalPlayer.Character
+    if not character then return nil, nil, nil end
+    
+    local hrp = character:FindFirstChild("HumanoidRootPart")
+    if not hrp then return nil, nil, nil end
+    
+    local overhead = hrp:FindFirstChild("Overhead")
+    if not overhead then return nil, nil, nil end
+    
+    local nameLabel = overhead:FindFirstChild("Content") and overhead.Content:FindFirstChild("Header")
+    local levelLabel = overhead:FindFirstChild("LevelContainer") and overhead.LevelContainer:FindFirstChild("Label")
+    
+    return overhead, nameLabel, levelLabel
+end
 
-local OriginalName = NameLabel.Text
-local OriginalLevel = LevelLabel.Text
+-- Get initial overhead elements
+local overhead, NameLabel, LevelLabel = getOverheadElements()
 
+-- Store original values
+local OriginalName = NameLabel and NameLabel.Text or "Player"
+local OriginalLevel = LevelLabel and LevelLabel.Text or "1"
+
+-- Custom values
 local CustomName = OriginalName
 local CustomLevel = OriginalLevel
 
+-- State
 local HideIdentityEnabled = false
 
+-- Create "Anti Solace" text label
+local AntiSolaceLabel = nil
+
+local function createAntiSolaceLabel()
+    if overhead and not AntiSolaceLabel then
+        -- Check if it already exists
+        AntiSolaceLabel = overhead:FindFirstChild("AntiSolaceLabel")
+        
+        if not AntiSolaceLabel then
+            -- Clone the header to maintain same styling
+            local content = overhead:FindFirstChild("Content")
+            if content and NameLabel then
+                AntiSolaceLabel = NameLabel:Clone()
+                AntiSolaceLabel.Name = "AntiSolaceLabel"
+                AntiSolaceLabel.Text = "Anti Solace"
+                AntiSolaceLabel.Parent = content
+                
+                -- Position it above the name label
+                AntiSolaceLabel.Position = NameLabel.Position + UDim2.new(0, 0, -0.3, 0)
+                AntiSolaceLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
+                AntiSolaceLabel.Visible = false
+            end
+        end
+    end
+end
+
+-- Function to update identity display
+local function updateIdentityDisplay()
+    local _, nameLabel, levelLabel = getOverheadElements()
+    
+    if nameLabel and levelLabel then
+        if HideIdentityEnabled then
+            nameLabel.Text = CustomName
+            levelLabel.Text = CustomLevel
+            
+            -- Show Anti Solace label
+            if AntiSolaceLabel then
+                AntiSolaceLabel.Visible = true
+            end
+        else
+            nameLabel.Text = OriginalName
+            levelLabel.Text = OriginalLevel
+            
+            -- Hide Anti Solace label
+            if AntiSolaceLabel then
+                AntiSolaceLabel.Visible = false
+            end
+        end
+    end
+end
+
+-- Monitor for overhead changes (fixes the level up issue)
+local overheadConnection
+local function startOverheadMonitoring()
+    if overheadConnection then
+        overheadConnection:Disconnect()
+    end
+    
+    overheadConnection = RunService.Heartbeat:Connect(function()
+        if HideIdentityEnabled then
+            updateIdentityDisplay()
+        end
+    end)
+end
+
+-- Handle character respawn
+LocalPlayer.CharacterAdded:Connect(function(character)
+    task.wait(1) -- Wait for character to fully load
+    
+    -- Re-get overhead elements
+    overhead, NameLabel, LevelLabel = getOverheadElements()
+    
+    -- Recreate Anti Solace label
+    AntiSolaceLabel = nil
+    createAntiSolaceLabel()
+    
+    -- Update display if enabled
+    if HideIdentityEnabled then
+        updateIdentityDisplay()
+    end
+end)
+
+-- Create initial Anti Solace label
+createAntiSolaceLabel()
+
+-- Input for custom name
 idn:AddInput({
-    Title = "Hide Name",
+    Title = "Custom Name",
     Placeholder = "Enter Text",
     Content = "",
+    Default = CustomName,
     Callback = function(value)
         CustomName = value
         if HideIdentityEnabled then
-            NameLabel.Text = CustomName
+            updateIdentityDisplay()
         end
     end
 })
 
+-- Input for custom level
 idn:AddInput({
-    Title = "Hide Level",
+    Title = "Custom Level",
     Content = "",
     Placeholder = "Enter Text",
+    Default = CustomLevel,
     Callback = function(value)
         CustomLevel = value
         if HideIdentityEnabled then
-            LevelLabel.Text = CustomLevel
+            updateIdentityDisplay()
         end
     end
 })
@@ -1597,19 +1706,53 @@ idn:AddInput({
 -- Toggle to enable/disable identity hiding
 idn:AddToggle({
     Title = "Enable Hide Identity",
-    Content = "",
+    Content = "Continuously hides your identity",
     Default = false,
     Callback = function(enabled)
         HideIdentityEnabled = enabled
+        
         if enabled then
-            NameLabel.Text = CustomName
-            LevelLabel.Text = CustomLevel
+            startOverheadMonitoring()
+            updateIdentityDisplay()
+            
+            Library:MakeNotify({
+                Title = "@aikoware",
+                Description = "| Hide Identity",
+                Content = "Enabled",
+                Delay = 2
+            })
         else
-            NameLabel.Text = OriginalName
-            LevelLabel.Text = OriginalLevel
+            if overheadConnection then
+                overheadConnection:Disconnect()
+                overheadConnection = nil
+            end
+            
+            updateIdentityDisplay()
+            
+            Library:MakeNotify({
+                Title = "@aikoware",
+                Description = "| Hide Identity",
+                Content = "Disabled",
+                Delay = 2
+            })
         end
     end
 })
+
+-- Rainbow text effect for Anti Solace label
+coroutine.wrap(function()
+    local hue = 0
+    while true do
+        if HideIdentityEnabled and AntiSolaceLabel then
+            hue = (hue + 0.01) % 1
+            local rainbowColor = Color3.fromHSV(hue, 1, 1)
+            if AntiSolaceLabel and AntiSolaceLabel.Parent then
+                AntiSolaceLabel.TextColor3 = rainbowColor
+            end
+        end
+        wait(0.05)
+    end
+end)()
 
 --[[ Rainbow text effect
 coroutine.wrap(function()
