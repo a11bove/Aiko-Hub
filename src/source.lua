@@ -33,7 +33,7 @@ local function MakeDraggable(topbarobject, object)
 		local function UpdatePos(input)
 			local Delta = input.Position - DragStart
 			local pos = UDim2.new(StartPosition.X.Scale, StartPosition.X.Offset + Delta.X, StartPosition.Y.Scale, StartPosition.Y.Offset + Delta.Y)
-			object.Position = pos  -- Changed from TweenService
+			object.Position = pos
 		end
 
 		topbarobject.InputBegan:Connect(function(input)
@@ -404,7 +404,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	HirimiGui.Name = "HirimiGui"
 	HirimiGui.Parent = CoreGui
 
-	DropShadowHolder.BackgroundTransparency = 0.7
+	DropShadowHolder.BackgroundTransparency = 0.85
 	DropShadowHolder.BorderSizePixel = 0
 	DropShadowHolder.Position = UDim2.new(0.5, -250, 0.5, -150)
 	DropShadowHolder.Size = UDim2.new(0, 480, 0, 300)
