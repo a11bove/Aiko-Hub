@@ -1587,8 +1587,8 @@ local function updateIdentityDisplay()
     
     if nameLabel and levelLabel then
         if HideIdentityEnabled then
-            nameLabel.Text = "Anti Solace"
-            levelLabel.Text = "@aikoware"
+            nameLabel.Text = "Anti Solace | @aikoware"
+            levelLabel.Text = "Anti Solace | @aikoware"
         else
             nameLabel.Text = OriginalName
             levelLabel.Text = OriginalLevel
@@ -1634,13 +1634,6 @@ idn:AddToggle({
         if enabled then
             startOverheadMonitoring()
             updateIdentityDisplay()
-            
-            Library:MakeNotify({
-                Title = "@aikoware",
-                Description = "| Hide Identity",
-                Content = "Enabled",
-                Delay = 2
-            })
         else
             if overheadConnection then
                 overheadConnection:Disconnect()
@@ -1648,13 +1641,6 @@ idn:AddToggle({
             end
             
             updateIdentityDisplay()
-            
-            Library:MakeNotify({
-                Title = "@aikoware",
-                Description = "| Hide Identity",
-                Content = "Disabled",
-                Delay = 2
-            })
         end
     end
 })
