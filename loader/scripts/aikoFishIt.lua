@@ -1499,21 +1499,53 @@ autotrade:AddButton({
 
 local idn = Misc:AddSection("Identity")
 
-local overhead = (Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()):WaitForChild("HumanoidRootPart"):WaitForChild("Overhead")
-
-local NameLabel = overhead.Content.Header
-local LevelLabel = overhead.LevelContainer.Label
-local OriginalName = NameLabel.Text
-local OriginalLevel = LevelLabel.Text
-local CustomName = OriginalName
-local CustomLevel = OriginalLevel
 local HideIdentifierEnabled = true
+local OriginalName = ""
+local OriginalLevel = ""
 
-local overhead = (Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()):WaitForChild("HumanoidRootPart"):WaitForChild("Overhead")
-local NameLabel = overhead.Content.Header
-local LevelLabel = overhead.LevelContainer.Label
-local OriginalName = NameLabel.Text
-local OriginalLevel = LevelLabel.Text
+local function UpdateIdentity()
+    local character = Players.LocalPlayer.Character
+    if not character then return end
+    
+    local overhead = character:FindFirstChild("HumanoidRootPart")
+    overhead = overhead and overhead:FindFirstChild("Overhead")
+    if not overhead then return end
+    
+    local NameLabel = overhead:FindFirstChild("Content") and overhead.Content:FindFirstChild("Header")
+    local LevelLabel = overhead:FindFirstChild("LevelContainer") and overhead.LevelContainer:FindFirstChild("Label")
+    
+    if NameLabel and LevelLabel then
+        if OriginalName == "" then
+            OriginalName = NameLabel.Text
+        end
+        if OriginalLevel == "" then
+            OriginalLevel = LevelLabel.Text
+        end
+        
+        if HideIdentifierEnabled then
+            NameLabel.Text = "@aikoware"
+            LevelLabel.Text = "@aikoware"
+        else
+            NameLabel.Text = OriginalName
+            LevelLabel.Text = OriginalLevel
+            OriginalName = NameLabel.Text
+            OriginalLevel = LevelLabel.Text
+        end
+    end
+end
+
+task.spawn(function()
+    while task.wait(0.1) do
+        UpdateIdentity()
+    end
+end)
+
+Players.LocalPlayer.CharacterAdded:Connect(function()
+    task.wait(1)
+    OriginalName = ""
+    OriginalLevel = ""
+    UpdateIdentity()
+end)
 
 idn:AddToggle({
     Title = "Hide Identity",
@@ -1521,13 +1553,7 @@ idn:AddToggle({
     Default = true,
     Callback = function(enabled)
         HideIdentifierEnabled = enabled
-        if enabled then
-            NameLabel.Text = "@aikoware"
-            LevelLabel.Text = "@aikoware"
-        else
-            NameLabel.Text = OriginalName
-            LevelLabel.Text = OriginalLevel
-        end
+        UpdateIdentity()
     end
 })
 
