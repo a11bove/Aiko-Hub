@@ -427,7 +427,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	DropShadow.Parent = DropShadowHolder
 
 	Main.AnchorPoint = Vector2.new(0.5, 0.5)
-	Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	Main.BackgroundColor3 = Color3.fromRGB(28, 1, 56)
 	Main.BackgroundTransparency = 0.5
 	Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Main.BorderSizePixel = 0
@@ -1050,7 +1050,9 @@ function FlurioreLib:MakeGui(GuiConfig)
 			UIListLayout2.SortOrder = Enum.SortOrder.LayoutOrder
 			UIListLayout2.Parent = SectionAdd
 
-local OpenSection = false
+-- Find this part in your code (around line 1050-1150) and replace it:
+
+local OpenSection = false  -- CHANGED: Start with section CLOSED
 local function UpdateSizeScroll()
 	local OffsetY = 0
 	for _, child in ScrolLayers:GetChildren() do
@@ -1078,7 +1080,7 @@ local function UpdateSizeSection()
 	else
 		TweenService:Create(FeatureImg, TweenInfo.new(0.5), {Rotation = 0}):Play()
 		TweenService:Create(Section, TweenInfo.new(0.5), {Size = UDim2.new(1, 1, 0, 30)}):Play()
-		TweenService:Create(SectionAdd, TweenInfo.new(0.5), {Size = UDim2.new(1, 0, 0, 0)}):Play()
+		TweenService:Create(SectionAdd, TweenInfo.new(0.5), {Size = UDim2.new(1, 0, 0, 0)}):Play()  -- CHANGED: Size to 0
 		TweenService:Create(SectionDecideFrame, TweenInfo.new(0.5), {Size = UDim2.new(0, 0, 0, 2)}):Play()
 		task.wait(0.5)
 		UpdateSizeScroll()
@@ -1087,13 +1089,16 @@ end
 
 SectionButton.MouseButton1Click:Connect(function()
 	CircleClick(SectionButton, Mouse.X, Mouse.Y)
-	OpenSection = not OpenSection
-	UpdateSizeSection()
+	if FeatureFrame.Visible then  -- Only allow toggle if arrow is visible
+		OpenSection = not OpenSection
+		UpdateSizeSection()
+	end
 end)
 
 SectionAdd.ChildAdded:Connect(UpdateSizeSection)
 SectionAdd.ChildRemoved:Connect(UpdateSizeSection)
 
+-- Set initial state (closed)
 Section.Size = UDim2.new(1, 1, 0, 30)
 SectionAdd.Size = UDim2.new(1, 0, 0, 0)
 FeatureImg.Rotation = 0
@@ -1105,7 +1110,8 @@ local SectionFunc = {}
 function SectionFunc:Open()
 	if not OpenSection then
 		OpenSection = true
-		FeatureFrame.Visible = false
+		FeatureFrame.Visible = false  -- Hide the arrow icon
+		FeatureImg.Rotation = -90  -- Set rotation for open state
 		UpdateSizeSection()
 	end
 end
