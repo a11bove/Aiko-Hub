@@ -404,7 +404,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	HirimiGui.Name = "HirimiGui"
 	HirimiGui.Parent = CoreGui
 
-	DropShadowHolder.BackgroundTransparency = 0.85
+	DropShadowHolder.BackgroundTransparency = 0.8
 	DropShadowHolder.BorderSizePixel = 0
 	DropShadowHolder.Position = UDim2.new(0.5, -250, 0.5, -150)
 	DropShadowHolder.Size = UDim2.new(0, 480, 0, 300)
@@ -418,7 +418,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	DropShadow.ScaleType = Enum.ScaleType.Slice
 	DropShadow.SliceCenter = Rect.new(49, 49, 450, 450)
 	DropShadow.AnchorPoint = Vector2.new(0.5, 0.5)
-	DropShadow.BackgroundTransparency = 1
+	DropShadow.BackgroundTransparency = 0.8
 	DropShadow.BorderSizePixel = 0
 	DropShadow.Position = UDim2.new(0.5, 0, 0.5, 0)
 	DropShadow.Size = UDim2.new(1, 47, 1, 47)
