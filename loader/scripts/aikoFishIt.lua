@@ -1529,15 +1529,6 @@ autotrade:AddButton({
     end
 })
 
-autotrade:AddToggle({
-    Title = "Auto Accept Trade",
-    Content = "Automatically accepts incoming trade requests",
-    Default = false,
-    Callback = function(state)
-        Trade.SetAutoAccept(state)
-    end
-})
-
 autotrade:AddButton({
     Title = "Refresh Player List",
     Icon = "refresh-cw",
@@ -1550,6 +1541,17 @@ autotrade:AddButton({
             Content = "Player list updated", 
             Delay = 3
         })
+    end
+})
+
+local aaac = Trade:AddSection("Auto Accept")
+
+aaac:AddToggle({
+    Title = "Auto Accept Trade",
+    Content = "",
+    Default = false,
+    Callback = function(state)
+        Trade.SetAutoAccept(state)
     end
 })
 
@@ -1587,8 +1589,8 @@ local function updateIdentityDisplay()
     
     if nameLabel and levelLabel then
         if HideIdentityEnabled then
-            nameLabel.Text = "Anti Solace | @aikoware"
-            levelLabel.Text = "Anti Solace | @aikoware"
+            nameLabel.Text = "Protected by @aikoware"
+            levelLabel.Text = "@aikoware"
         else
             nameLabel.Text = OriginalName
             levelLabel.Text = OriginalLevel
