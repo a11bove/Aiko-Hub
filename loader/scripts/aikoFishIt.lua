@@ -1607,8 +1607,9 @@ local function createAntiSolaceLabel()
                 AntiSolaceLabel.Text = "Anti Solace"
                 AntiSolaceLabel.Parent = content
                 
-                -- Position it above the name label
-                AntiSolaceLabel.Position = NameLabel.Position + UDim2.new(0, 0, -0.3, 0)
+                -- Position it directly above the name label (centered)
+                AntiSolaceLabel.Position = UDim2.new(0.5, 0, 0, -25)
+                AntiSolaceLabel.AnchorPoint = Vector2.new(0.5, 0.5)
                 AntiSolaceLabel.TextColor3 = Color3.fromRGB(255, 100, 100)
                 AntiSolaceLabel.Visible = false
             end
