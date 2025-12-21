@@ -1783,6 +1783,7 @@ local freezeConnection = nil
 
 frc:AddToggle({
     Title = "Freeze Character",
+    Content = "",
     Default = false,
     Callback = function(enabled)
         _G.FreezeCharacter = enabled
