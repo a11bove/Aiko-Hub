@@ -371,7 +371,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	local GuiConfig = GuiConfig or {}
 	GuiConfig.NameHub = GuiConfig.NameHub or "Hirimi Hub"
 	GuiConfig.Description = GuiConfig.Description or ""
-	GuiConfig.Color = GuiConfig.Color or Color3.fromRGB(0, 0, 0)
+	GuiConfig.Color = GuiConfig.Color or Color3.fromRGB(138, 43, 226)
 	GuiConfig["Tab Width"] = GuiConfig["Tab Width"] or 120
 	local GuiFunc = {}
 
@@ -427,7 +427,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	DropShadow.Parent = DropShadowHolder
 
 	Main.AnchorPoint = Vector2.new(0.5, 0.5)
-	Main.BackgroundColor3 = Color3.fromRGB(25, 15, 40)
+	Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	Main.BackgroundTransparency = 0.5
 	Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Main.BorderSizePixel = 0
