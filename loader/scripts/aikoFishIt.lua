@@ -287,7 +287,6 @@ srv:AddToggle({
 })
 
 srv:AddToggle({
-    
     Title = "Auto Reconnect",
     Content = "",
     Default = false,
@@ -310,8 +309,6 @@ srv:AddToggle({
         end
     end
 })
-
-srv:Toggle()
 
 local fsh = Fishing:AddSection("Legit")
 
@@ -406,8 +403,6 @@ fsh:AddToggle({
     Callback = ToggleAutoLegitFish
 })
 
-fsh:Toggle()
-
 local fin = Fishing:AddSection("Instant")
 
 local InstantFishEnabled = false
@@ -500,8 +495,6 @@ local SuperCompleteDelayInput = fin:AddInput({
         end
     end
 })
-
-fin:Toggle()
 
 local bts = Fishing:AddSection("Blatant [5x]")
 
@@ -620,8 +613,6 @@ local function StopSuperInstant()
     SuperInstantEnabled = false
 end
 
-bts:Toggle()
-
 local bt1 = Fishing:AddSection("Blatant [BETA]")
 
 bt1:AddToggle({
@@ -665,8 +656,6 @@ local SuperCompleteDelayInput = bt1:AddInput({
     end
 })
 
-bt1:Toggle()
-
 local ench = Fishing:AddSection("Enchant")
 
 ench:AddToggle({
@@ -704,8 +693,6 @@ ench:AddToggle({
     end
 })
 
-ench:Toggle()
-
 local ntf = Fishing:AddSection("Fish Notification")
 
 local function ToggleCaughtNotifications(visible)
@@ -730,8 +717,6 @@ ntf:AddToggle({
         ToggleCaughtNotifications(not enabled)
     end
 })
-
-ntf:Toggle()
 
 local rds = Shop:AddSection("Rod Shop")
 
@@ -830,8 +815,6 @@ rds:AddButton({
     end
 })
 
-rds:Toggle()
-
 local bs = Shop:AddSection("Bait Shop")
 
 local RFPurchaseBait = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RF/PurchaseBait"]
@@ -921,8 +904,6 @@ bs:AddButton({
         end
     end
 })
-
-bs:Toggle()
 
 local bos = Shop:AddSection("Boat Shop")
 
@@ -1030,8 +1011,6 @@ bos:AddButton({
     end
 })
 
-bos:Toggle()
-
 local ws = Shop:AddSection("Weather Shop")
 
 local weathers = {
@@ -1125,8 +1104,6 @@ local autobuyweather = ws:AddToggle({
     end
 })
 
-ws:Toggle()
-
 local sell = Shop:AddSection("Sell")
 
 sell:AddToggle({
@@ -1195,8 +1172,6 @@ sell:AddButton({
         })
     end
 })
-
-sell:Toggle()
 
 local fav = Favo:AddSection("Auto Favorite")
 
@@ -1326,8 +1301,6 @@ loc:AddButton({
     end
 })
 
-loc:Toggle()
-
 local npcl = Teleport:AddSection("NPC Location")
 
 local npcNames = {}
@@ -1382,8 +1355,6 @@ npcl:AddButton({
     end
 })
 
-npcl:Toggle()
-
 local mach = Teleport:AddSection("Machines")
 
 local machineNames = {}
@@ -1437,8 +1408,6 @@ mach:AddButton({
         end
     end
 })
-
-mach:Toggle()
 
 local ply = Teleport:AddSection("Player")
 
@@ -1512,8 +1481,6 @@ ply:AddButton({
         })
     end
 })
-
-ply:Toggle()
 
 local autotrade = Trade:AddSection("Auto Trade")
 
@@ -1722,8 +1689,6 @@ coroutine.wrap(function()
     end
 end)()]]
 
-idn:Toggle()
-
 local uset = Misc:AddSection("User Settings")
 
 uset:AddSlider({
@@ -1814,8 +1779,6 @@ uset:AddToggle({
         end
     end
 })
-
-uset:Toggle()
 
 local perf = Misc:AddSection("Performance")
 
@@ -1964,8 +1927,6 @@ perf:AddToggle({
             end
 })
 
-perf:Toggle()
-
 local frc = Misc:AddSection("Freeze Character")
 
 local originalCFrame = nil
@@ -2028,8 +1989,6 @@ LocalPlayer.CharacterAdded:Connect(function()
     end
     _G.FreezeCharacter = false
 end)
-
-frc:Toggle()
 
 --[[local oxy = Misc:AddSection("Oxygen")
 
@@ -2130,5 +2089,3 @@ radsr:AddToggle({
         end
     end
 })
-
-radsr:Toggle()
