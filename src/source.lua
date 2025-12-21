@@ -404,7 +404,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	HirimiGui.Name = "HirimiGui"
 	HirimiGui.Parent = CoreGui
 
-	DropShadowHolder.BackgroundTransparency = 0.8
+	DropShadowHolder.BackgroundTransparency = 0.5
 	DropShadowHolder.BorderSizePixel = 0
 	DropShadowHolder.Position = UDim2.new(0.5, -250, 0.5, -150)
 	DropShadowHolder.Size = UDim2.new(0, 480, 0, 300)
