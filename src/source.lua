@@ -1866,7 +1866,7 @@ if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
     DropdownTitle.Size = UDim2.new(1, -180, 1, 0)
     DropdownContent.Visible = false
     Dropdown.Size = UDim2.new(1, 0, 0, 33)
-end
+				end
 
 				DropdownContent:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
 					DropdownContent.TextWrapped = false
@@ -1877,8 +1877,8 @@ end
 				end)
 
 				SelectOptionsFrame.AnchorPoint = Vector2.new(1, 0.5)
-				SelectOptionsFrame.BackgroundColor3 = Color3.fromRGB(35, 18, 50)
-				SelectOptionsFrame.BackgroundTransparency = 0.3
+				SelectOptionsFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				SelectOptionsFrame.BackgroundTransparency = 0.949999988079071
 				SelectOptionsFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				SelectOptionsFrame.BorderSizePixel = 0
 				SelectOptionsFrame.Position = UDim2.new(1, -7, 0.5, 0)
@@ -1889,15 +1889,6 @@ end
 
 				UICorner11.CornerRadius = UDim.new(0, 4)
 				UICorner11.Parent = SelectOptionsFrame
-
-				DropdownButton.MouseButton1Click:Connect(function()
-					if not MoreBlur.Visible then
-						MoreBlur.Visible = true 
-						DropPageLayout:JumpToIndex(SelectOptionsFrame.LayoutOrder)
-						TweenService:Create(MoreBlur, TweenInfo.new(0.3), {BackgroundTransparency = 0.5}):Play()
-						TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, -8, 0.5, 0)}):Play()
-					end
-				end)
 
 				OptionSelecting.Font = Enum.Font.GothamBold
 				OptionSelecting.Text = ""
@@ -2028,6 +2019,7 @@ end
 					local ChooseFrame = Instance.new("Frame");
 					local UIStroke15 = Instance.new("UIStroke");
 					local UICorner38 = Instance.new("UICorner");
+					local OptionStroke = Instance.new("UIStroke")
 					
 					Option.BackgroundColor3 = Color3.fromRGB(30, 15, 45)
 					Option.BackgroundTransparency = 0.25
@@ -2084,6 +2076,11 @@ end
 					UIStroke15.Parent = ChooseFrame
 				
 					UICorner38.Parent = ChooseFrame
+
+					OptionStroke.Color = GuiConfig.Color
+                    OptionStroke.Thickness = 1
+                    OptionStroke.Transparency = 0.7
+                    OptionStroke.Parent = Option
 					
 					OptionButton.MouseButton1Click:Connect(function()
 						CircleClick(OptionButton, Mouse.X, Mouse.Y) 
