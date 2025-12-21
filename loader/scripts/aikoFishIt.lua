@@ -1827,7 +1827,7 @@ uset:AddToggle({
     end
 })
 
-uset:Close
+uset:Close()
 
 local perf = Misc:AddSection("Performance")
 
