@@ -1116,29 +1116,26 @@ function FlurioreLib:MakeGui(GuiConfig)
 			function SectionFunc:Open()
 				if not OpenSection then
 					OpenSection = true
-					TweenService:Create(FeatureFrame, TweenInfo.new(0.5), {Rotation = 90}):Play()
-					local SectionSizeYWitdh = 38
-					for i, v in SectionAdd:GetChildren() do
-						if v.Name ~= "UIListLayout" and v.Name ~= "UICorner" then
-							SectionSizeYWitdh = SectionSizeYWitdh + v.Size.Y.Offset + 3
-						end
-					end
-					TweenService:Create(Section, TweenInfo.new(0.5), {Size = UDim2.new(1, 1, 0, SectionSizeYWitdh)}):Play()
-					TweenService:Create(SectionAdd, TweenInfo.new(0.5), {Size = UDim2.new(1, 0, 0, SectionSizeYWitdh - 38)}):Play()
-					TweenService:Create(SectionDecideFrame, TweenInfo.new(0.5), {Size = UDim2.new(1, 0, 0, 2)}):Play()
-					task.wait(0.5)
-					UpdateSizeScroll()
+					UpdateSizeSection()
 				end
 			end
 			
 			function SectionFunc:Close()
 				if OpenSection then
+					OpenSection = false
 					TweenService:Create(FeatureFrame, TweenInfo.new(0.5), {Rotation = 0}):Play()
 					TweenService:Create(Section, TweenInfo.new(0.5), {Size = UDim2.new(1, 1, 0, 30)}):Play()
 					TweenService:Create(SectionDecideFrame, TweenInfo.new(0.5), {Size = UDim2.new(0, 0, 0, 2)}):Play()
-					OpenSection = false
 					task.wait(0.5)
 					UpdateSizeScroll()
+				end
+			end
+			
+			function SectionFunc:Toggle()
+				if OpenSection then
+					SectionFunc:Close()
+				else
+					SectionFunc:Open()
 				end
 			end
 			
