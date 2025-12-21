@@ -427,8 +427,8 @@ function FlurioreLib:MakeGui(GuiConfig)
 	DropShadow.Parent = DropShadowHolder
 
 	Main.AnchorPoint = Vector2.new(0.5, 0.5)
-	Main.BackgroundColor3 = Color3.fromRGB(25, 10, 40)  -- Dark purple
-    Main.BackgroundTransparency = 0.3
+	Main.BackgroundColor3 = Color3.fromRGB(20, 8, 35)  -- Dark purple
+    Main.BackgroundTransparency = 0.4
 	Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Main.BorderSizePixel = 0
 	Main.Position = UDim2.new(0.5, 0, 0.5, 0)
