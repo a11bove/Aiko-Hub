@@ -681,6 +681,19 @@ function FlurioreLib:MakeGui(GuiConfig)
 	UICorner36.CornerRadius = UDim.new(0, 3)
 	UICorner36.Parent = DropdownSelect
 
+	local CloseDropdown = Instance.new("TextButton")
+        CloseDropdown.BackgroundTransparency = 1
+        CloseDropdown.Size = UDim2.new(1, 0, 1, 0)
+        CloseDropdown.Text = ""
+        CloseDropdown.ZIndex = -1
+        CloseDropdown.Parent = DropdownSelect
+
+    CloseDropdown.MouseButton1Click:Connect(function()
+        TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, 172, 0.5, 0)}):Play()
+        task.wait(0.3)
+        DropdownSelect.Visible = false
+    end)
+
 	DropdownSelectReal.AnchorPoint = Vector2.new(0.5, 0.5)
 	DropdownSelectReal.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	DropdownSelectReal.BackgroundTransparency = 0.9990000128746033
@@ -1921,6 +1934,13 @@ if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
 
 				local ScrollSelect = Instance.new("ScrollingFrame");
 				local UIListLayout4 = Instance.new("UIListLayout");
+
+				DropdownButton.MouseButton1Click:Connect(function()
+                    CircleClick(DropdownButton, Mouse.X, Mouse.Y)
+                    DropdownSelect.Visible = true
+                    DropPageLayout:JumpToIndex(SelectOptionsFrame.LayoutOrder)
+                    TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, -8, 0.5, 0)}):Play()
+				end)
 
 				ScrollSelect.CanvasSize = UDim2.new(0, 0, 0, 0)
 				ScrollSelect.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
