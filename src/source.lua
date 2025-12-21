@@ -654,6 +654,59 @@ function FlurioreLib:MakeGui(GuiConfig)
     DropShadowHolder.Size = UDim2.new(0, finalWidth, 0, finalHeight)
     DropShadowHolder.Position = UDim2.new(0.5, -finalWidth/2, 0.5, -finalHeight/2)
 	MakeDraggable(Top, DropShadowHolder)
+	--// Blur
+	local MoreBlur = Instance.new("Frame");
+	local DropShadowHolder1 = Instance.new("Frame");
+	local DropShadow1 = Instance.new("ImageLabel");
+	local UICorner28 = Instance.new("UICorner");
+	local ConnectButton = Instance.new("TextButton");
+	
+	MoreBlur.AnchorPoint = Vector2.new(1, 1)
+	MoreBlur.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	MoreBlur.BackgroundTransparency = 0.999
+	MoreBlur.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	MoreBlur.BorderSizePixel = 0
+	MoreBlur.ClipsDescendants = true
+	MoreBlur.Position = UDim2.new(1, 8, 1, 8)
+	MoreBlur.Size = UDim2.new(1, 154, 1, 54)
+	MoreBlur.Visible = false
+	MoreBlur.Name = "MoreBlur"
+	MoreBlur.Parent = Layers
+
+	DropShadowHolder1.BackgroundTransparency = 1
+	DropShadowHolder1.BorderSizePixel = 0
+	DropShadowHolder1.Size = UDim2.new(1, 0, 1, 0)
+	DropShadowHolder1.ZIndex = 0
+	DropShadowHolder1.Name = "DropShadowHolder"
+	DropShadowHolder1.Parent = MoreBlur
+
+	DropShadow1.Image = "rbxassetid://6015897843"
+	DropShadow1.ImageColor3 = Color3.fromRGB(0, 0, 0)
+	DropShadow1.ImageTransparency = 0.5
+	DropShadow1.ScaleType = Enum.ScaleType.Slice
+	DropShadow1.SliceCenter = Rect.new(49, 49, 450, 450)
+	DropShadow1.AnchorPoint = Vector2.new(0.5, 0.5)
+	DropShadow1.BackgroundTransparency = 1
+	DropShadow1.BorderSizePixel = 0
+	DropShadow1.Position = UDim2.new(0.5, 0, 0.5, 0)
+	DropShadow1.Size = UDim2.new(1, 35, 1, 35)
+	DropShadow1.ZIndex = 0
+	DropShadow1.Name = "DropShadow"
+	DropShadow1.Parent = DropShadowHolder1
+
+	UICorner28.Parent = MoreBlur
+
+	ConnectButton.Font = Enum.Font.SourceSans
+	ConnectButton.Text = ""
+	ConnectButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+	ConnectButton.TextSize = 14
+	ConnectButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	ConnectButton.BackgroundTransparency = 0.999
+	ConnectButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	ConnectButton.BorderSizePixel = 0
+	ConnectButton.Size = UDim2.new(1, 0, 1, 0)
+	ConnectButton.Name = "ConnectButton"
+	ConnectButton.Parent = MoreBlur
 
 	local DropdownSelect = Instance.new("Frame");
 	local UICorner36 = Instance.new("UICorner");
@@ -663,7 +716,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	local DropPageLayout = Instance.new("UIPageLayout");
 
 	DropdownSelect.AnchorPoint = Vector2.new(1, 0.5)
-	DropdownSelect.BackgroundColor3 = Color3.fromRGB(25, 10, 40)
+	DropdownSelect.BackgroundColor3 = Color3.fromRGB(30.00000011175871, 30.00000011175871, 30.00000011175871)
 	DropdownSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	DropdownSelect.BorderSizePixel = 0
 	DropdownSelect.LayoutOrder = 1
@@ -673,26 +726,21 @@ function FlurioreLib:MakeGui(GuiConfig)
 	DropdownSelect.ClipsDescendants = true
 	DropdownSelect.Parent = MoreBlur
 
-	UIStroke14.Color = Color3.fromRGB(30, 18, 50)
-	UIStroke14.Thickness = 1.5
-	UIStroke14.Transparency = 0.8
-	UIStroke14.Parent = DropdownSelect
-
+	ConnectButton.MouseButton1Down:Connect(function()
+		if MoreBlur.Visible then
+			TweenService:Create(MoreBlur, TweenInfo.new(0.3), {BackgroundTransparency = 0.999}):Play()
+			TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, 172, 0.5, 0)}):Play()
+			task.wait(0.3)
+			MoreBlur.Visible = false
+		end
+	end)
 	UICorner36.CornerRadius = UDim.new(0, 3)
 	UICorner36.Parent = DropdownSelect
 
-	local CloseDropdown = Instance.new("TextButton")
-        CloseDropdown.BackgroundTransparency = 1
-        CloseDropdown.Size = UDim2.new(1, 0, 1, 0)
-        CloseDropdown.Text = ""
-        CloseDropdown.ZIndex = -1
-        CloseDropdown.Parent = DropdownSelect
-
-    CloseDropdown.MouseButton1Click:Connect(function()
-        TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, 172, 0.5, 0)}):Play()
-        task.wait(0.3)
-        DropdownSelect.Visible = false
-    end)
+	UIStroke14.Color = Color3.fromRGB(255, 255, 255)
+	UIStroke14.Thickness = 2.5
+	UIStroke14.Transparency = 0.8
+	UIStroke14.Parent = DropdownSelect
 
 	DropdownSelectReal.AnchorPoint = Vector2.new(0.5, 0.5)
 	DropdownSelectReal.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -1902,6 +1950,15 @@ if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
 
 				UICorner11.CornerRadius = UDim.new(0, 4)
 				UICorner11.Parent = SelectOptionsFrame
+
+				DropdownButton.MouseButton1Click:Connect(function()
+					if not MoreBlur.Visible then
+						MoreBlur.Visible = true 
+						DropPageLayout:JumpToIndex(SelectOptionsFrame.LayoutOrder)
+						TweenService:Create(MoreBlur, TweenInfo.new(0.3), {BackgroundTransparency = 0.7}):Play()
+						TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, -11, 0.5, 0)}):Play()
+					end
+				end)
 
 				OptionSelecting.Font = Enum.Font.GothamBold
 				OptionSelecting.Text = ""
