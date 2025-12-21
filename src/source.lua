@@ -654,7 +654,7 @@ function FlurioreLib:MakeGui(GuiConfig)
     DropShadowHolder.Size = UDim2.new(0, finalWidth, 0, finalHeight)
     DropShadowHolder.Position = UDim2.new(0.5, -finalWidth/2, 0.5, -finalHeight/2)
 	MakeDraggable(Top, DropShadowHolder)
-	--[[Blur
+	--Blur
 	local MoreBlur = Instance.new("Frame");
 	local DropShadowHolder1 = Instance.new("Frame");
 	local DropShadow1 = Instance.new("ImageLabel");
@@ -706,7 +706,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	ConnectButton.BorderSizePixel = 0
 	ConnectButton.Size = UDim2.new(1, 0, 1, 0)
 	ConnectButton.Name = "ConnectButton"
-	ConnectButton.Parent = MoreBlur]]
+	ConnectButton.Parent = MoreBlur
 
 	local DropdownSelect = Instance.new("Frame");
 	local UICorner36 = Instance.new("UICorner");
@@ -724,16 +724,16 @@ function FlurioreLib:MakeGui(GuiConfig)
 	DropdownSelect.Size = UDim2.new(0, 160, 1, -16)
 	DropdownSelect.Name = "DropdownSelect"
 	DropdownSelect.ClipsDescendants = true
-	DropdownSelect.Parent = Layers
+	DropdownSelect.Parent = MoreBlur
 
-	--[[ConnectButton.MouseButton1Down:Connect(function()
+	ConnectButton.MouseButton1Down:Connect(function()
 		if MoreBlur.Visible then
-			TweenService:Create(MoreBlur, TweenInfo.new(0.3), {BackgroundTransparency = 0.999}):Play()
+			TweenService:Create(MoreBlur, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
 			TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, 172, 0.5, 0)}):Play()
 			task.wait(0.3)
 			MoreBlur.Visible = false
 		end
-	end)]]
+	end)
 
 	DropdownSelectReal.ZIndex = 5
     ScrollSelect.ZIndex = 10
@@ -1959,7 +1959,7 @@ if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
 					if not MoreBlur.Visible then
 						MoreBlur.Visible = true 
 						DropPageLayout:JumpToIndex(SelectOptionsFrame.LayoutOrder)
-						TweenService:Create(MoreBlur, TweenInfo.new(0.3), {BackgroundTransparency = 0.7}):Play()
+						TweenService:Create(MoreBlur, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
 						TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, -11, 0.5, 0)}):Play()
 					end
 				end)
@@ -2000,15 +2000,8 @@ if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
                     CircleClick(DropdownButton, Mouse.X, Mouse.Y)
                     DropdownSelect.Visible = true
                     DropPageLayout:JumpToIndex(SelectOptionsFrame.LayoutOrder)
-                    TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, -11, 0.5, 0)}):Play()
-                end)
-
-				--[[DropdownButton.MouseButton1Click:Connect(function()
-                    CircleClick(DropdownButton, Mouse.X, Mouse.Y)
-                    DropdownSelect.Visible = true
-                    DropPageLayout:JumpToIndex(SelectOptionsFrame.LayoutOrder)
                     TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, -8, 0.5, 0)}):Play()
-				end)]]
+				end)
 
 				ScrollSelect.CanvasSize = UDim2.new(0, 0, 0, 0)
 				ScrollSelect.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
