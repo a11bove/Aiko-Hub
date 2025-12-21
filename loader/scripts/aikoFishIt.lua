@@ -626,6 +626,8 @@ local function StopSuperInstant()
     SuperInstantEnabled = false
 end
 
+bts:Close()
+
 local bt1 = Fishing:AddSection("Blatant [BETA]")
 
 bt1:AddToggle({
@@ -669,6 +671,8 @@ local SuperCompleteDelayInput = bt1:AddInput({
     end
 })
 
+bt1:Close()
+
 local ench = Fishing:AddSection("Enchant")
 
 ench:AddToggle({
@@ -706,6 +710,8 @@ ench:AddToggle({
     end
 })
 
+ench:Close()
+
 local ntf = Fishing:AddSection("Fish Notification")
 
 local function ToggleCaughtNotifications(visible)
@@ -730,6 +736,8 @@ ntf:AddToggle({
         ToggleCaughtNotifications(not enabled)
     end
 })
+
+ntf:Close()
 
 local rds = Shop:AddSection("Rod Shop")
 
@@ -828,6 +836,8 @@ rds:AddButton({
     end
 })
 
+rds:Close()
+
 local bs = Shop:AddSection("Bait Shop")
 
 local RFPurchaseBait = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RF/PurchaseBait"]
@@ -917,6 +927,8 @@ bs:AddButton({
         end
     end
 })
+
+bs:Close()
 
 local bos = Shop:AddSection("Boat Shop")
 
@@ -1024,6 +1036,8 @@ bos:AddButton({
     end
 })
 
+bos:Close()
+
 local ws = Shop:AddSection("Weather Shop")
 
 local weathers = {
@@ -1117,6 +1131,8 @@ local autobuyweather = ws:AddToggle({
     end
 })
 
+ws:Close()
+
 local sell = Shop:AddSection("Sell")
 
 sell:AddToggle({
@@ -1185,6 +1201,8 @@ sell:AddButton({
         })
     end
 })
+
+sell:Close()
 
 local fav = Favo:AddSection("Auto Favorite")
 
@@ -1258,6 +1276,11 @@ fav:AddToggle({
     end
 })
 
+task.spawn(function()
+    task.wait(1)
+    fav:Open()
+end)
+
 local TeleportData = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/fishit/tpmdl.lua"))()
 
 local loc = Teleport:AddSection("Location")
@@ -1311,6 +1334,8 @@ loc:AddButton({
         end
     end
 })
+
+loc:Close()
 
 local npcl = Teleport:AddSection("NPC Location")
 
@@ -1366,6 +1391,8 @@ npcl:AddButton({
     end
 })
 
+npcl:Close()
+
 local mach = Teleport:AddSection("Machines")
 
 local machineNames = {}
@@ -1419,6 +1446,8 @@ mach:AddButton({
         end
     end
 })
+
+mach:Close()
 
 local ply = Teleport:AddSection("Player")
 
@@ -1493,6 +1522,8 @@ ply:AddButton({
     end
 })
 
+ply:Close()
+
 local autotrade = Trade:AddSection("Auto Trade")
 
 local TradeModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/fishit/autotrademdl.lua"))()
@@ -1566,6 +1597,11 @@ autotrade:AddButton({
         })
     end
 })
+
+task.spawn(function()
+    task.wait(1)
+    autotrade:Open()
+end)
 
 local idn = Misc:AddSection("Hide Identity")
 
@@ -1698,6 +1734,8 @@ coroutine.wrap(function()
     end
 end)()]]
 
+idn:Close()
+
 local uset = Misc:AddSection("User Settings")
 
 uset:AddSlider({
@@ -1788,6 +1826,8 @@ uset:AddToggle({
         end
     end
 })
+
+uset:Close
 
 local perf = Misc:AddSection("Performance")
 
@@ -1936,6 +1976,8 @@ perf:AddToggle({
             end
 })
 
+perf:Close()
+
 local frc = Misc:AddSection("Freeze Character")
 
 local originalCFrame = nil
@@ -1998,6 +2040,8 @@ LocalPlayer.CharacterAdded:Connect(function()
     end
     _G.FreezeCharacter = false
 end)
+
+frc:Close()
 
 --[[local oxy = Misc:AddSection("Oxygen")
 
@@ -2098,3 +2142,5 @@ radsr:AddToggle({
         end
     end
 })
+
+radsr:Close()
