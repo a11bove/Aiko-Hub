@@ -1954,7 +1954,7 @@ if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
 
 				DropdownButton.MouseButton1Click:Connect(function()
 					if not MoreBlur.Visible then
-						MoreBlur.Visible = false 
+						MoreBlur.Visible = true 
 						DropPageLayout:JumpToIndex(SelectOptionsFrame.LayoutOrder)
 						TweenService:Create(MoreBlur, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
 						TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, -11, 0.5, 0)}):Play()
