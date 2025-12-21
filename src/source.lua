@@ -731,13 +731,31 @@ function FlurioreLib:MakeGui(GuiConfig)
 	DropdownSelect.ClipsDescendants = true
 	DropdownSelect.Parent = MoreBlur
 
-	ConnectButton.MouseButton1Down:Connect(function()
+	ConnectButton.MouseButton1Click:Connect(function(input)
+	if MoreBlur.Visible then
+		local mousePos = UserInputService:GetMouseLocation()
+		local dropdownPos = DropdownSelect.AbsolutePosition
+		local dropdownSize = DropdownSelect.AbsoluteSize
+		
+		if mousePos.X < dropdownPos.X or 
+		   mousePos.X > dropdownPos.X + dropdownSize.X or
+		   mousePos.Y < dropdownPos.Y or
+		   mousePos.Y > dropdownPos.Y + dropdownSize.Y then
+			TweenService:Create(MoreBlur, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
+			TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, 172, 0.5, 0)}):Play()
+			task.wait(0.3)
+			MoreBlur.Visible = false
+		end
+	end
+end)
+
+	--[[ConnectButton.MouseButton1Down:Connect(function()
 		if MoreBlur.Visible then
 			TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, 172, 0.5, 0)}):Play()
 			task.wait(0.3)
 			MoreBlur.Visible = false
 		end
-	end)
+	end)]]
 	
 	UICorner36.CornerRadius = UDim.new(0, 6)
 	UICorner36.Parent = DropdownSelect
@@ -2097,8 +2115,8 @@ end
 					local UIStroke15 = Instance.new("UIStroke");
 					local UICorner38 = Instance.new("UICorner");
 					
-					Option.BackgroundColor3 = Color3.fromRGB(0,0,0)
-					Option.BackgroundTransparency = 0.5
+					Option.BackgroundColor3 = Color3.fromRGB(30, 15, 45)
+					Option.BackgroundTransparency = 1
 					Option.BorderColor3 = Color3.fromRGB(0, 0, 0)
 					Option.BorderSizePixel = 0
 					Option.LayoutOrder = DropCount
