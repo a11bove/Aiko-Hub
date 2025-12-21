@@ -436,7 +436,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	Main.Name = "Main"
 	Main.Parent = DropShadow
 
-	UICorner.BackgroundTransparency = 1
+	UICorner.CornerRadius = UDim.new(0, 8)
 	UICorner.Parent = Main
 
 	Top.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -549,6 +549,10 @@ function FlurioreLib:MakeGui(GuiConfig)
 	DecideFrame.Size = UDim2.new(1, 0, 0, 1)
 	DecideFrame.Name = "DecideFrame"
 	DecideFrame.Parent = Main
+
+	local DecideUICorner = Instance.new("UICorner")
+	DecideUICorner.CornerRadius = UDim.new(0, 6)
+	DecideUICorner.Parent = DecideFrame
 
 	Layers.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 	Layers.BackgroundTransparency = 0.9990000128746033
