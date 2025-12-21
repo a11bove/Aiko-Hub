@@ -716,7 +716,6 @@ ntf:AddToggle({
     end
 })
 
--- Fixed Rod Shop Section
 local rds = Shop:AddSection("Rod Shop")
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -767,13 +766,11 @@ rds:AddDropdown({
     Multi = false,
     Default = selectedRod,
     Callback = function(value)
-        -- Handle both string and table returns from dropdown
         if type(value) == "table" then
             selectedRod = value[1] or rodNames[1]
         else
             selectedRod = value
         end
-        print("Selected rod:", selectedRod) -- Debug print
     end
 })
 
@@ -781,13 +778,10 @@ rds:AddButton({
     Title = "Buy Rod",
     Content = "",
     Callback = function()
-        print("Attempting to buy:", selectedRod) -- Debug print
         local key = rodKeyMap[selectedRod]
-        print("Mapped key:", key) -- Debug print
         
         if key and rods[key] then
             local rodId = rods[key]
-            print("Rod ID:", rodId) -- Debug print
             
             local success, err = pcall(function()
                 RFPurchaseFishingRod:InvokeServer(rodId)
@@ -819,7 +813,6 @@ rds:AddButton({
     end
 })
 
--- Fixed Bait Shop Section
 local bs = Shop:AddSection("Bait Shop")
 
 local RFPurchaseBait = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RF/PurchaseBait"]
@@ -863,13 +856,11 @@ bs:AddDropdown({
     Default = selectedBait,
     Multi = false,
     Callback = function(value)
-        -- Handle both string and table returns from dropdown
         if type(value) == "table" then
             selectedBait = value[1] or baitNames[1]
         else
             selectedBait = value
         end
-        print("Selected bait:", selectedBait) -- Debug print
     end
 })
 
@@ -877,13 +868,10 @@ bs:AddButton({
     Title = "Buy Bait",
     Content = "",
     Callback = function()
-        print("Attempting to buy:", selectedBait) -- Debug print
         local key = baitKeyMap[selectedBait]
-        print("Mapped key:", key) -- Debug print
         
         if key and baits[key] then
             local baitId = baits[key]
-            print("Bait ID:", baitId) -- Debug print
             
             local success, err = pcall(function()
                 RFPurchaseBait:InvokeServer(baitId)
@@ -915,7 +903,6 @@ bs:AddButton({
     end
 })
 
--- Fixed Boat Shop Section
 local bos = Shop:AddSection("Boat Shop")
 
 local RFPurchaseBoat = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RF/PurchaseBoat"]
@@ -975,13 +962,11 @@ bos:AddDropdown({
     Default = selectedBoat,
     Multi = false,
     Callback = function(value)
-        -- Handle both string and table returns from dropdown
         if type(value) == "table" then
             selectedBoat = value[1] or boatNames[1]
         else
             selectedBoat = value
         end
-        print("Selected boat:", selectedBoat) -- Debug print
     end
 })
 
@@ -989,13 +974,10 @@ bos:AddButton({
     Title = "Buy Boat",
     Content = "",
     Callback = function()
-        print("Attempting to buy:", selectedBoat) -- Debug print
         local key = boatKeyMap[selectedBoat]
-        print("Mapped key:", key) -- Debug print
         
         if key and boats[key] then
             local boatId = boats[key].Id
-            print("Boat ID:", boatId) -- Debug print
             
             local success, err = pcall(function()
                 RFPurchaseBoat:InvokeServer(boatId)
@@ -1026,155 +1008,6 @@ bos:AddButton({
         end
     end
 })
-
---[[local rds = Shop:AddSection("Rod Shop")
-
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RFPurchaseFishingRod = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RF/PurchaseFishingRod"]
-local RFPurchaseBait = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RF/PurchaseBait"]
-local RFPurchaseWeatherEvent = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RF/PurchaseWeatherEvent"]
-local RFPurchaseBoat = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RF/PurchaseBoat"]
-
-local rods = {
-    ["Luck Rod"] = 79,
-    ["Carbon Rod"] = 76,
-    ["Grass Rod"] = 85,
-    ["Demascus Rod"] = 77,
-    ["Ice Rod"] = 78,
-    ["Lucky Rod"] = 4,
-    ["Midnight Rod"] = 80,
-    ["Steampunk Rod"] = 6,
-    ["Chrome Rod"] = 7,
-    ["Astral Rod"] = 5,
-    ["Ares Rod"] = 126,
-    ["Angler Rod"] = 168
-}
-
-local rodNames = {
-    "Luck Rod (350 Coins)", "Carbon Rod (900 Coins)", "Grass Rod (1.5k Coins)", "Demascus Rod (3k Coins)",
-    "Ice Rod (5k Coins)", "Lucky Rod (15k Coins)", "Midnight Rod (50k Coins)", "Steampunk Rod (215k Coins)",
-    "Chrome Rod (437k Coins)", "Astral Rod (1M Coins)", "Ares Rod (3M Coins)", "Angler Rod ($8M Coins)"
-}
-
-local rodKeyMap = {
-    ["Luck Rod (350 Coins)"]="Luck Rod",
-    ["Carbon Rod (900 Coins)"]="Carbon Rod",
-    ["Grass Rod (1.5k Coins)"]="Grass Rod",
-    ["Demascus Rod (3k Coins)"]="Demascus Rod",
-    ["Ice Rod (5k Coins)"]="Ice Rod",
-    ["Lucky Rod (15k Coins)"]="Lucky Rod",
-    ["Midnight Rod (50k Coins)"]="Midnight Rod",
-    ["Steampunk Rod (215k Coins)"]="Steampunk Rod",
-    ["Chrome Rod (437k Coins)"]="Chrome Rod",
-    ["Astral Rod (1M Coins)"]="Astral Rod",
-    ["Ares Rod (3M Coins)"]="Ares Rod",
-    ["Angler Rod (8M Coins)"]="Angler Rod"
-}
-
-local selectedRod = rodNames[1]
-
-rds:AddDropdown({
-    Title = "Select Rod",
-    Content = "",
-    Options = rodNames,
-    Multi = false,
-    Default = selectedRod,
-    Callback = function(value)
-        selectedRod = value
-    end
-})
-
-rds:AddButton({
-    Title = "Buy Rod",
-    Content = "",
-    Callback = function()
-        local key = rodKeyMap[selectedRod]
-        if key and rods[key] then
-            local success, err = pcall(function()
-                RFPurchaseFishingRod:InvokeServer(rods[key])
-            end)
-            if success then
-                Library:MakeNotify({Title = "@aikoware",Description="| Rod Purchase", Content="Purchased "..selectedRod, Delay=3})
-            else
-                Library:MakeNotify({Title = "@aikoware",Description="| Rod Purchase Error", Content=tostring(err), Delay=5})
-            end
-        end
-    end
-})
-
-local bs = Shop:AddSection("Bait Shop")
-
-local baits = {
-    ["TopWater Bait"] = 10,
-    ["Lucky Bait"] = 2,
-    ["Midnight Bait"] = 3,
-    ["Chroma Bait"] = 6,
-    ["Dark Mater Bait"] = 8,
-    ["Corrupt Bait"] = 15,
-    ["Aether Bait"] = 16
-}
-
-local baitNames = {
-    "TopWater Bait (100 Coins)",
-    "Lucky Bait (1k Coins)",
-    "Midnight Bait (3k Coins)",
-    "Chroma Bait (290k Coins)",
-    "Dark Mater Bait (630k Coins)",
-    "Corrupt Bait (1.15M Coins)",
-    "Aether Bait (3.7M Coins)"
-}
-
-local baitKeyMap = {
-    ["TopWater Bait (100 Coins)"] = "TopWater Bait",
-    ["Lucky Bait (1k Coins)"] = "Lucky Bait",
-    ["Midnight Bait (3k Coins)"] = "Midnight Bait",
-    ["Chroma Bait (290k Coins)"] = "Chroma Bait",
-    ["Dark Mater Bait (630k Coins)"] = "Dark Mater Bait",
-    ["Corrupt Bait (1.15M Coins)"] = "Corrupt Bait",
-    ["Aether Bait (3.7M Coins)"] = "Aether Bait"
-}
-
-local selectedBait = baitNames[1]
-
-bs:AddDropdown({
-    Title = "Select Bait",
-    Content = "",
-    Options = baitNames,
-    Default = selectedBait,
-    Multi = false,
-    Callback = function(value)
-        selectedBait = value
-    end
-})
-
-bs:AddButton({
-    Title = "Buy Bait",
-    Content = "",
-    Callback = function()
-        local key = baitKeyMap[selectedBait]
-        if key and baits[key] then
-            local amount = baits[key]
-            local success, err = pcall(function()
-                RFPurchaseBait:InvokeServer(amount)
-            end)
-            if success then
-                Library:MakeNotify({
-                    Title = "@aikoware",
-                    Description = "| Bait Purchase",
-                    Content = "Purchased "..selectedBait.." x"..amount,
-                    Delay = 3
-                })
-            else
-                Library:MakeNotify({
-                    Title = "@aikoware",
-                    Description = "| Bait Purchase Error",
-                    Content = tostring(err),
-                    Delay = 5
-                })
-            end
-        end
-    end
-})]]
 
 local ws = Shop:AddSection("Weather Shop")
 
@@ -1268,95 +1101,6 @@ local autobuyweather = ws:AddToggle({
         end
     end
 })
-
---[[local bos = Shop:AddSection("Boat Shop")
-
-local boatOrder = {
-    "Small Boat",
-    "Kayak",
-    "Jetski",
-    "Highfield",
-    "Speed Boat",
-    "Fishing Boat",
-    "Mini Yacht",
-    "Hyper Boat",
-    "Frozen Boat",
-    "Cruiser Boat"
-}
-
-local boats = {
-    ["Small Boat"] = {Id = 1, Price = 300},
-    ["Kayak"] = {Id = 2, Price = 1100},
-    ["Jetski"] = {Id = 3, Price = 7500},
-    ["Highfield"] = {Id = 4, Price = 25000},
-    ["Speed Boat"] = {Id = 5, Price = 70000},
-    ["Fishing Boat"] = {Id = 6, Price = 180000},
-    ["Mini Yacht"] = {Id = 14, Price = 1200000},
-    ["Hyper Boat"] = {Id = 7, Price = 999000},
-    ["Frozen Boat"] = {Id = 11, Price = 0},
-    ["Cruiser Boat"] = {Id = 13, Price = 0}
-}
-
-local boatNames = {}
-for _, name in ipairs(boatOrder) do
-    local data = boats[name]
-    local priceStr
-    if data.Price >= 1000000 then
-        priceStr = string.format("%.2fM Coins", data.Price/1000000)
-    elseif data.Price >= 1000 then
-        priceStr = string.format("%.0fk Coins", data.Price/1000)
-    else
-        priceStr = data.Price.." Coins"
-    end
-    table.insert(boatNames, name.." ("..priceStr..")")
-end
-
-local boatKeyMap = {}
-for _, displayName in ipairs(boatNames) do
-    local nameOnly = displayName:match("^(.-) %(")
-    boatKeyMap[displayName] = nameOnly
-end
-
-local selectedBoat = boatNames[1]
-
-bos:AddDropdown({
-    Title = "Select Boat",
-    Content = "",
-    Options = boatNames,
-    Default = selectedBoat,
-    Multi = false,
-    Callback = function(value)
-        selectedBoat = value
-    end
-})
-
-bos:AddButton({
-    Title = "Buy Boat",
-    Content = "",
-    Callback = function()
-        local key = boatKeyMap[selectedBoat]
-        if key and boats[key] then
-            local success, err = pcall(function()
-                RFPurchaseBoat:InvokeServer(boats[key].Id)
-            end)
-            if success then
-                Library:MakeNotify({
-                    Title = "@aikoware",
-                    Description = "| Boat Purchase",
-                    Content = "Purchased "..selectedBoat,
-                    Delay = 3
-                })
-            else
-                Library:MakeNotify({
-                    Title = "@aikoware",
-                    Description = "| Boat Purchase Error",
-                    Content = tostring(err),
-                    Delay = 5
-                })
-            end
-        end
-    end
-})]]
 
 local sell = Shop:AddSection("Sell")
 
