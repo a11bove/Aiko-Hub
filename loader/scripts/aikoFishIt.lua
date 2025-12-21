@@ -1116,28 +1116,6 @@ sell:AddButton({
     end
 })
 
-local merch = Shop:AddSection("Traveling Merchant") -- or Shop:AddSection("Traveling Merchant")
-
-local DialogueEnded = game:GetService("ReplicatedStorage")
-    :WaitForChild("Packages", 9e9)
-    :WaitForChild("_Index", 9e9)
-    :WaitForChild("sleitnick_net@0.2.0", 9e9)
-    :WaitForChild("net", 9e9)
-    :WaitForChild("RE/DialogueEnded", 9e9)
-
-merch:AddToggle({
-    Title = "Traveling Merchant",
-    Content = "",
-    Default = false,
-    Callback = function(enabled)
-        if enabled then
-            pcall(function()
-                DialogueEnded:FireServer()
-            end)
-        end
-    end
-})
-
 local fav = Favo:AddSection("Auto Favorite")
 
 local REFavoriteItem = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RE/FavoriteItem"]
@@ -1185,7 +1163,7 @@ end
 fav:AddDropdown({
     Title = "Rarity",
     Content = "",
-    Options = FavoriteTiers,
+    Options = {"Artifact Items", "Epic", "Legendary", "Mythic", "Secret"},
     Default = {},
     Multi = true,
     Callback = function(selected)
