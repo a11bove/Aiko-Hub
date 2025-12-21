@@ -1092,6 +1092,55 @@ function FlurioreLib:MakeGui(GuiConfig)
 			SectionAdd.ChildAdded:Connect(UpdateSizeSection)
 			SectionAdd.ChildRemoved:Connect(UpdateSizeSection)
 			UpdateSizeScroll()
+
+			SectionButton.MouseButton1Click:Connect(function()
+				CircleClick(SectionButton, Mouse.X, Mouse.Y)
+				if OpenSection then
+					TweenService:Create(FeatureFrame, TweenInfo.new(0.5), {Rotation = 0}):Play()
+					TweenService:Create(Section, TweenInfo.new(0.5), {Size = UDim2.new(1, 1, 0, 30)}):Play()
+					TweenService:Create(SectionDecideFrame, TweenInfo.new(0.5), {Size = UDim2.new(0, 0, 0, 2)}):Play()
+					OpenSection = false
+					task.wait(0.5)
+					UpdateSizeScroll()
+				else
+					OpenSection = true
+					UpdateSizeSection()
+				end
+			end)
+			SectionAdd.ChildAdded:Connect(UpdateSizeSection)
+			SectionAdd.ChildRemoved:Connect(UpdateSizeSection)
+			UpdateSizeScroll()
+			
+			local SectionFunc = {}
+			
+			function SectionFunc:Open()
+				if not OpenSection then
+					OpenSection = true
+					TweenService:Create(FeatureFrame, TweenInfo.new(0.5), {Rotation = 90}):Play()
+					local SectionSizeYWitdh = 38
+					for i, v in SectionAdd:GetChildren() do
+						if v.Name ~= "UIListLayout" and v.Name ~= "UICorner" then
+							SectionSizeYWitdh = SectionSizeYWitdh + v.Size.Y.Offset + 3
+						end
+					end
+					TweenService:Create(Section, TweenInfo.new(0.5), {Size = UDim2.new(1, 1, 0, SectionSizeYWitdh)}):Play()
+					TweenService:Create(SectionAdd, TweenInfo.new(0.5), {Size = UDim2.new(1, 0, 0, SectionSizeYWitdh - 38)}):Play()
+					TweenService:Create(SectionDecideFrame, TweenInfo.new(0.5), {Size = UDim2.new(1, 0, 0, 2)}):Play()
+					task.wait(0.5)
+					UpdateSizeScroll()
+				end
+			end
+			
+			function SectionFunc:Close()
+				if OpenSection then
+					TweenService:Create(FeatureFrame, TweenInfo.new(0.5), {Rotation = 0}):Play()
+					TweenService:Create(Section, TweenInfo.new(0.5), {Size = UDim2.new(1, 1, 0, 30)}):Play()
+					TweenService:Create(SectionDecideFrame, TweenInfo.new(0.5), {Size = UDim2.new(0, 0, 0, 2)}):Play()
+					OpenSection = false
+					task.wait(0.5)
+					UpdateSizeScroll()
+				end
+			end
 			
 			local Items = {}
 			local CountItem = 0
@@ -1994,7 +2043,6 @@ end
 					end
 				end
 					function DropdownFunc:Set(Value)
-    -- Ensure Value is always a table
     if type(Value) == "string" then
         DropdownFunc.Value = {Value}
     elseif type(Value) ~= "table" then
@@ -2005,7 +2053,6 @@ end
     
     for _, Drop in ScrollSelect:GetChildren() do
         local dropValue = DropdownFunc.Value
-        -- Ensure dropValue is a table
         if type(dropValue) == "string" then
             dropValue = {dropValue}
         elseif type(dropValue) ~= "table" then
@@ -2044,8 +2091,8 @@ end
                 TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
                 {BackgroundTransparency = 0.935}
             ):Play()
-        end  -- THIS END WAS MISSING
-    end  -- THIS END CLOSES THE FOR LOOP
+        end
+    end
     
     local DropdownValueTable = table.concat(DropdownFunc.Value, ", ")
     if DropdownValueTable == "" then
@@ -2054,7 +2101,7 @@ end
         OptionSelecting.Text = tostring(DropdownValueTable)
     end
     DropdownConfig.Callback(DropdownFunc.Value)
-end  -- THIS END CLOSES THE FUNCTION
+end
 				function DropdownFunc:AddOption(OptionName)
 					OptionName = OptionName or "Option"
 					local Option = Instance.new("Frame");
@@ -2167,7 +2214,12 @@ end  -- THIS END CLOSES THE FUNCTION
 				return DropdownFunc
 			end
 			CountSection = CountSection + 1
-			return Items
+			
+			for key, value in pairs(Items) do
+				SectionFunc[key] = value
+			end
+			
+			return SectionFunc
 		end
 		CountTab = CountTab + 1
 		return Sections
