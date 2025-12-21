@@ -262,10 +262,7 @@ dcsec:AddButton({
         end
 })
 
-task.spawn(function()
-    task.wait(1)
-    dcsec:Open()
-end)
+dcsec:Open()
 
 local srv = Home:AddSection("Server")
 
@@ -314,10 +311,7 @@ srv:AddToggle({
     end
 })
 
-task.spawn(function()
-    task.wait(1)
-    srv:Open()
-end)
+srv:Toggle()
 
 local fsh = Fishing:AddSection("Legit")
 
@@ -412,7 +406,7 @@ fsh:AddToggle({
     Callback = ToggleAutoLegitFish
 })
 
-fsh:Close()
+fsh:Toggle()
 
 local fin = Fishing:AddSection("Instant")
 
@@ -507,7 +501,7 @@ local SuperCompleteDelayInput = fin:AddInput({
     end
 })
 
-fin:Close()
+fin:Toggle()
 
 local bts = Fishing:AddSection("Blatant [5x]")
 
@@ -626,7 +620,7 @@ local function StopSuperInstant()
     SuperInstantEnabled = false
 end
 
-bts:Close()
+bts:Toggle()
 
 local bt1 = Fishing:AddSection("Blatant [BETA]")
 
@@ -671,7 +665,7 @@ local SuperCompleteDelayInput = bt1:AddInput({
     end
 })
 
-bt1:Close()
+bt1:Toggle()
 
 local ench = Fishing:AddSection("Enchant")
 
@@ -710,7 +704,7 @@ ench:AddToggle({
     end
 })
 
-ench:Close()
+ench:Toggle()
 
 local ntf = Fishing:AddSection("Fish Notification")
 
@@ -737,7 +731,7 @@ ntf:AddToggle({
     end
 })
 
-ntf:Close()
+ntf:Toggle()
 
 local rds = Shop:AddSection("Rod Shop")
 
@@ -836,7 +830,7 @@ rds:AddButton({
     end
 })
 
-rds:Close()
+rds:Toggle()
 
 local bs = Shop:AddSection("Bait Shop")
 
@@ -928,7 +922,7 @@ bs:AddButton({
     end
 })
 
-bs:Close()
+bs:Toggle()
 
 local bos = Shop:AddSection("Boat Shop")
 
@@ -1036,7 +1030,7 @@ bos:AddButton({
     end
 })
 
-bos:Close()
+bos:Toggle()
 
 local ws = Shop:AddSection("Weather Shop")
 
@@ -1131,7 +1125,7 @@ local autobuyweather = ws:AddToggle({
     end
 })
 
-ws:Close()
+ws:Toggle()
 
 local sell = Shop:AddSection("Sell")
 
@@ -1202,7 +1196,7 @@ sell:AddButton({
     end
 })
 
-sell:Close()
+sell:Toggle()
 
 local fav = Favo:AddSection("Auto Favorite")
 
@@ -1276,10 +1270,7 @@ fav:AddToggle({
     end
 })
 
-task.spawn(function()
-    task.wait(1)
-    fav:Open()
-end)
+fav:Open()
 
 local TeleportData = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/fishit/tpmdl.lua"))()
 
@@ -1335,7 +1326,7 @@ loc:AddButton({
     end
 })
 
-loc:Close()
+loc:Toggle()
 
 local npcl = Teleport:AddSection("NPC Location")
 
@@ -1391,7 +1382,7 @@ npcl:AddButton({
     end
 })
 
-npcl:Close()
+npcl:Toggle()
 
 local mach = Teleport:AddSection("Machines")
 
@@ -1447,7 +1438,7 @@ mach:AddButton({
     end
 })
 
-mach:Close()
+mach:Toggle()
 
 local ply = Teleport:AddSection("Player")
 
@@ -1522,7 +1513,7 @@ ply:AddButton({
     end
 })
 
-ply:Close()
+ply:Toggle()
 
 local autotrade = Trade:AddSection("Auto Trade")
 
@@ -1598,10 +1589,7 @@ autotrade:AddButton({
     end
 })
 
-task.spawn(function()
-    task.wait(1)
-    autotrade:Open()
-end)
+autotrade:Open()
 
 local idn = Misc:AddSection("Hide Identity")
 
@@ -1734,7 +1722,7 @@ coroutine.wrap(function()
     end
 end)()]]
 
-idn:Close()
+idn:Toggle()
 
 local uset = Misc:AddSection("User Settings")
 
@@ -1827,7 +1815,7 @@ uset:AddToggle({
     end
 })
 
-uset:Close()
+uset:Toggle()
 
 local perf = Misc:AddSection("Performance")
 
@@ -1976,7 +1964,7 @@ perf:AddToggle({
             end
 })
 
-perf:Close()
+perf:Toggle()
 
 local frc = Misc:AddSection("Freeze Character")
 
@@ -2041,7 +2029,7 @@ LocalPlayer.CharacterAdded:Connect(function()
     _G.FreezeCharacter = false
 end)
 
-frc:Close()
+frc:Toggle()
 
 --[[local oxy = Misc:AddSection("Oxygen")
 
@@ -2143,4 +2131,4 @@ radsr:AddToggle({
     end
 })
 
-radsr:Close()
+radsr:Toggle()
