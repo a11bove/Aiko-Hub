@@ -2097,7 +2097,6 @@ end
 					local ChooseFrame = Instance.new("Frame");
 					local UIStroke15 = Instance.new("UIStroke");
 					local UICorner38 = Instance.new("UICorner");
-					local OptionStroke = Instance.new("UIStroke")
 					
 					Option.BackgroundColor3 = Color3.fromRGB(30, 15, 45)
 					Option.BackgroundTransparency = 0.25
@@ -2154,11 +2153,6 @@ end
 					UIStroke15.Parent = ChooseFrame
 				
 					UICorner38.Parent = ChooseFrame
-					
-					OptionStroke.Color = Color3.fromRGB(255, 255, 255)
-                    OptionStroke.Thickness = 1
-                    OptionStroke.Transparency = 0.7
-                    OptionStroke.Parent = Option
 					
 					OptionButton.MouseButton1Click:Connect(function()
 						CircleClick(OptionButton, Mouse.X, Mouse.Y) 
