@@ -427,8 +427,8 @@ function FlurioreLib:MakeGui(GuiConfig)
 	DropShadow.Parent = DropShadowHolder
 
 	Main.AnchorPoint = Vector2.new(0.5, 0.5)
-	Main.BackgroundColor3 = Color3.fromRGB(28, 1, 56)
-	Main.BackgroundTransparency = 0.5
+	Main.BackgroundColor3 = Color3.fromRGB(25, 10, 40)  -- Dark purple
+    Main.BackgroundTransparency = 0.3
 	Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	Main.BorderSizePixel = 0
 	Main.Position = UDim2.new(0.5, 0, 0.5, 0)
@@ -801,9 +801,9 @@ function FlurioreLib:MakeGui(GuiConfig)
 
 		Tab.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		if CountTab == 0 then
-			Tab.BackgroundTransparency = 0.9200000166893005
+			Tab.BackgroundTransparency = 0.85
 		else
-			Tab.BackgroundTransparency = 0.9990000128746033
+			Tab.BackgroundTransparency = 0.97
 		end
 		Tab.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		Tab.BorderSizePixel = 0
@@ -946,8 +946,8 @@ function FlurioreLib:MakeGui(GuiConfig)
 			local SectionTitle = Instance.new("TextLabel");
 
 			SectionReal.AnchorPoint = Vector2.new(0.5, 0)
-			SectionReal.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-			SectionReal.BackgroundTransparency = 0.9350000023841858
+			SectionReal.BackgroundColor3 = Color3.fromRGB(30, 15, 45)  -- Dark purple
+            SectionReal.BackgroundTransparency = 0.25
 			SectionReal.BorderColor3 = Color3.fromRGB(0, 0, 0)
 			SectionReal.BorderSizePixel = 0
 			SectionReal.LayoutOrder = 1
@@ -1098,7 +1098,6 @@ end)
 SectionAdd.ChildAdded:Connect(UpdateSizeSection)
 SectionAdd.ChildRemoved:Connect(UpdateSizeSection)
 
--- Set initial state (closed)
 Section.Size = UDim2.new(1, 1, 0, 30)
 SectionAdd.Size = UDim2.new(1, 0, 0, 0)
 FeatureImg.Rotation = 0
@@ -1134,8 +1133,8 @@ end
 				local ParagraphTitle = Instance.new("TextLabel");
 				local ParagraphContent = Instance.new("TextLabel");
 
-				Paragraph.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				Paragraph.BackgroundTransparency = 0.9350000023841858
+				Paragraph.BackgroundColor3 = Color3.fromRGB(30, 15, 45)
+				Paragraph.BackgroundTransparency = 0.25
 				Paragraph.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				Paragraph.BorderSizePixel = 0
 				Paragraph.LayoutOrder = CountItem
@@ -1228,8 +1227,8 @@ end
 				local FeatureFrame1 = Instance.new("Frame");
 				local FeatureImg3 = Instance.new("ImageLabel");
 
-				Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				Button.BackgroundTransparency = 0.9350000023841858
+				Button.BackgroundColor3 = Color3.fromRGB(30, 15, 45)  -- Dark purple
+                Button.BackgroundTransparency = 0.25
 				Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				Button.BorderSizePixel = 0
 				Button.LayoutOrder = CountItem
@@ -1354,8 +1353,8 @@ end
 				local ToggleCircle = Instance.new("Frame");
 				local UICorner23 = Instance.new("UICorner");
 
-				Toggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				Toggle.BackgroundTransparency = 0.9350000023841858
+				Toggle.BackgroundColor3 = Color3.fromRGB(30, 15, 45)
+				Toggle.BackgroundTransparency = 0.25
 				Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				Toggle.BorderSizePixel = 0
 				Toggle.LayoutOrder = CountItem
@@ -1540,8 +1539,8 @@ end
 				local UIStroke6 = Instance.new("UIStroke");
 				local UIStroke7 = Instance.new("UIStroke");
 
-				Slider.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				Slider.BackgroundTransparency = 0.9350000023841858
+				Slider.BackgroundColor3 = Color3.fromRGB(30, 15, 45)
+				Slider.BackgroundTransparency = 0.25
 				Slider.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				Slider.BorderSizePixel = 0
 				Slider.LayoutOrder = CountItem
@@ -1735,8 +1734,8 @@ end
 				local UICorner13 = Instance.new("UICorner");
 				local InputTextBox = Instance.new("TextBox");
 
-				Input.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				Input.BackgroundTransparency = 0.9350000023841858
+				Input.BackgroundColor3 = Color3.fromRGB(30, 15, 45)
+				Input.BackgroundTransparency = 0.25
 				Input.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				Input.BorderSizePixel = 0
 				Input.LayoutOrder = CountItem
@@ -1862,8 +1861,8 @@ end
 				local OptionSelecting = Instance.new("TextLabel");
 				local OptionImg = Instance.new("ImageLabel");
 
-				Dropdown.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				Dropdown.BackgroundTransparency = 0.9350000023841858
+				Dropdown.BackgroundColor3 = Color3.fromRGB(30, 15, 45)
+				Dropdown.BackgroundTransparency = 0.25
 				Dropdown.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				Dropdown.BorderSizePixel = 0
 				Dropdown.LayoutOrder = CountItem
