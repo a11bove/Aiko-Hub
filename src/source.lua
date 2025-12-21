@@ -1954,7 +1954,7 @@ if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
 
 				DropdownButton.MouseButton1Click:Connect(function()
 					if not MoreBlur.Visible then
-						MoreBlur.Visible = true 
+						MoreBlur.Visible = false 
 						DropPageLayout:JumpToIndex(SelectOptionsFrame.LayoutOrder)
 						TweenService:Create(MoreBlur, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
 						TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, -11, 0.5, 0)}):Play()
@@ -1995,7 +1995,7 @@ if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
 
 				DropdownButton.MouseButton1Click:Connect(function()
                     CircleClick(DropdownButton, Mouse.X, Mouse.Y)
-                    DropdownSelect.Visible = false
+                    DropdownSelect.Visible = true
                     DropPageLayout:JumpToIndex(SelectOptionsFrame.LayoutOrder)
                     TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, -8, 0.5, 0)}):Play()
 				end)
