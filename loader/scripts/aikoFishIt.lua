@@ -1134,18 +1134,25 @@ local function AutoFavoriteItems(tierSelection)
     local inventoryData = Data:Get("Inventory")
     if inventoryData and inventoryData.Items then
         for _, item in pairs(inventoryData.Items) do
-            local itemId = item.Id
-            if itemId then
+            if item and item.Id then
+                -- Check for Artifact Items
                 if tierSelection == "Artifact Items" then
                     for _, artifactId in ipairs(FavoriteTiers["Artifact Items"].Ids) do
                         if item.Id == artifactId and item.UUID and not item.Favorited then
-                            REFavoriteItem:FireServer(item.UUID)
+                            pcall(function()
+                                REFavoriteItem:FireServer(item.UUID)
+                            end)
                         end
                     end
-                elseif itemId.Data.Type == "Fishes" and itemId.Probability then
-                    local tier = TierUtility.GetTierFromRarity(nil, itemId.Probability.Chance)
-                    if tier and tier.Name == FavoriteTiers[tierSelection].TierName and item.UUID and not item.Favorited then
-                        REFavoriteItem:FireServer(item.UUID)
+                else
+                    -- For fish items, check if Id is a table with Data
+                    if type(item.Id) == "table" and item.Id.Data and item.Id.Data.Type == "Fishes" and item.Id.Probability then
+                        local tier = TierUtility:GetTierFromRarity(item.Id.Probability.Chance)
+                        if tier and tier.Name == FavoriteTiers[tierSelection].TierName and item.UUID and not item.Favorited then
+                            pcall(function()
+                                REFavoriteItem:FireServer(item.UUID)
+                            end)
+                        end
                     end
                 end
             end
@@ -1154,8 +1161,8 @@ local function AutoFavoriteItems(tierSelection)
 end
 
 fav:AddDropdown({
-    Title = "Favorite Tier",
-    Content = "Select which item type or rarity you want to auto-favorite.",
+    Title = "Rarity",
+    Content = "",
     Options = {"Artifact Items", "Epic", "Legendary", "Mythic", "Secret"},
     Default = {},
     Multi = true,
@@ -1166,7 +1173,7 @@ fav:AddDropdown({
 
 fav:AddToggle({
     Title = "Auto Favorite",
-    Content = "Automatically favorites selected tier in your inventory.",
+    Content = "Automatically favorites selected rarity.",
     Default = false,
     Callback = function(enabled)
         AutoFavoriteEnabled = enabled
