@@ -734,9 +734,6 @@ function FlurioreLib:MakeGui(GuiConfig)
 			MoreBlur.Visible = false
 		end
 	end)
-
-	DropdownSelectReal.ZIndex = 5
-    ScrollSelect.ZIndex = 10
 	
 	UICorner36.CornerRadius = UDim.new(0, 3)
 	UICorner36.Parent = DropdownSelect
@@ -2015,7 +2012,6 @@ if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
 				ScrollSelect.Size = UDim2.new(1, 0, 1, 0)
 				ScrollSelect.Name = "ScrollSelect"
 				ScrollSelect.Parent = DropdownFolder
-                ScrollSelect.ZIndex = 10
 			
 				UIListLayout4.Padding = UDim.new(0, 3)
 				UIListLayout4.SortOrder = Enum.SortOrder.LayoutOrder
