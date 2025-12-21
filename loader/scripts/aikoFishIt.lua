@@ -1854,6 +1854,46 @@ local OxygenBypassThread = nil
 local function StartOxygenBypass()
     if not OxygenBypassThread then
         OxygenBypassEnabled = true
+        OxygenBypassThread = task.spawn(function()
+            while OxygenBypassEnabled do
+                pcall(function()
+                    UpdateOxygen:FireServer(9999)
+                end)
+                task.wait(0.5)
+            end
+        end)
+    end
+end
+
+local function StopOxygenBypass()
+    OxygenBypassEnabled = false
+    if OxygenBypassThread then
+        task.cancel(OxygenBypassThread)
+        OxygenBypassThread = nil
+    end
+end
+
+oxy:AddToggle({
+    Title = "Unlimited Oxygen",
+    Content = "",
+    Default = false,
+    Callback = function(enabled)
+        if enabled then
+            StartOxygenBypass()
+        else
+            StopOxygenBypass()
+        end
+    end
+})
+
+--[[local oxy = Misc:AddSection("Oxygen")
+
+local OxygenBypassEnabled = false
+local OxygenBypassThread = nil
+
+local function StartOxygenBypass()
+    if not OxygenBypassThread then
+        OxygenBypassEnabled = true
         OxygenBypassThread = coroutine.create(function()
             while OxygenBypassEnabled do
                 UpdateOxygen:FireServer(-9999)
@@ -1881,7 +1921,7 @@ oxy:AddToggle({
         end
     end
 })
-
+]]
 local radsr = Misc:AddSection("Fishing Radar")
 
 radsr:AddToggle({
