@@ -436,6 +436,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	Main.Name = "Main"
 	Main.Parent = DropShadow
 
+	UICorner.Radius = UDim.new(0, 8)
 	UICorner.Parent = Main
 
 	Top.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -548,6 +549,10 @@ function FlurioreLib:MakeGui(GuiConfig)
 	DecideFrame.Size = UDim2.new(1, 0, 0, 1)
 	DecideFrame.Name = "DecideFrame"
 	DecideFrame.Parent = Main
+
+	local DecideUICorner = Instance.new("UICorner")
+	DecideUICorner.Radius = UDim.new(0, 2)
+	DecideUICorner.Parent = DecideFrame
 
 	Layers.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 	Layers.BackgroundTransparency = 0.9990000128746033
@@ -735,12 +740,12 @@ function FlurioreLib:MakeGui(GuiConfig)
 		end
 	end)
 	
-	UICorner36.CornerRadius = UDim.new(0, 3)
+	UICorner36.CornerRadius = UDim.new(0, 6)
 	UICorner36.Parent = DropdownSelect
 
 	UIStroke14.Color = Color3.fromRGB(138, 43, 226)
-	UIStroke14.Thickness = 2.5
-	UIStroke14.Transparency = 0.8
+	UIStroke14.Thickness = 1.5
+	UIStroke14.Transparency = 0.5
 	UIStroke14.Parent = DropdownSelect
 
 	DropdownSelectReal.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -1186,7 +1191,6 @@ end
                    ParagraphTitle.Position = UDim2.new(0, 10, 0, 0)
                    ParagraphTitle.Size = UDim2.new(1, -16, 1, 0)
                    ParagraphContent.Visible = false
-                   Paragraph.Size = UDim2.new(1, 0, 0, 33)
 				end
 
 				ParagraphContent:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
@@ -1280,7 +1284,6 @@ end
                    ButtonTitle.Position = UDim2.new(0, 10, 0, 0)
                    ButtonTitle.Size = UDim2.new(1, -100, 1, 0)
                    ButtonContent.Visible = false
-                   Button.Size = UDim2.new(1, 0, 0, 33)
 				end
 
 				ButtonContent:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
@@ -1406,7 +1409,6 @@ if ToggleConfig.Content == "" or ToggleConfig.Content == nil then
     ToggleTitle.Position = UDim2.new(0, 10, 0, 0)
     ToggleTitle.Size = UDim2.new(1, -100, 1, 0)
     ToggleContent.Visible = false
-    Toggle.Size = UDim2.new(1, 0, 0, 33)
 end
 
 				ToggleContent:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
@@ -1592,7 +1594,6 @@ if SliderConfig.Content == "" or SliderConfig.Content == nil then
     SliderTitle.Position = UDim2.new(0, 10, 0, 0)
     SliderTitle.Size = UDim2.new(1, -180, 1, 0)
     SliderContent.Visible = false
-    Slider.Size = UDim2.new(1, 0, 0, 33)
 end
 
 				SliderContent:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
@@ -1788,7 +1789,6 @@ if InputConfig.Content == "" or InputConfig.Content == nil then
     InputTitle.Position = UDim2.new(0, 10, 0, 0)
     InputTitle.Size = UDim2.new(1, -180, 1, 0)
     InputContent.Visible = false
-    Input.Size = UDim2.new(1, 0, 0, 33)
 end
 
 				InputContent:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
@@ -1927,7 +1927,6 @@ if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
     DropdownTitle.Position = UDim2.new(0, 10, 0, 0)
     DropdownTitle.Size = UDim2.new(1, -180, 1, 0)
     DropdownContent.Visible = false
-    Dropdown.Size = UDim2.new(1, 0, 0, 33)
 				end
 
 				DropdownContent:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
@@ -1952,14 +1951,14 @@ if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
 				UICorner11.CornerRadius = UDim.new(0, 4)
 				UICorner11.Parent = SelectOptionsFrame
 
-				DropdownButton.MouseButton1Click:Connect(function()
+				--[[DropdownButton.MouseButton1Click:Connect(function()
 					if not MoreBlur.Visible then
 						MoreBlur.Visible = true 
 						DropPageLayout:JumpToIndex(SelectOptionsFrame.LayoutOrder)
 						TweenService:Create(MoreBlur, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
 						TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, -11, 0.5, 0)}):Play()
 					end
-				end)
+				end)]]
 
 				OptionSelecting.Font = Enum.Font.GothamBold
 				OptionSelecting.Text = ""
