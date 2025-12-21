@@ -321,7 +321,7 @@ local LegitFishSettings = {}
 
 local function ClickAtPosition()
     local viewportSize = Camera.ViewportSize
-    local clickX = viewportSize.X * 0.95
+    local clickX = viewportSize.X * 0.9
     local clickY = viewportSize.Y * 0.95
     VirtualInputManager:SendMouseButtonEvent(clickX, clickY, 0, true, nil, 0)
     VirtualInputManager:SendMouseButtonEvent(clickX, clickY, 0, false, nil, 0)
