@@ -226,10 +226,10 @@ local Shop = Window:CreateTab({
     Icon = "piggy-bank"
 })
 
---[[local Favo = Window:CreateTab({
+local Favo = Window:CreateTab({
     Name = "Auto Favorite",
     Icon = "heart"
-})]]
+})
 
 local Teleport = Window:CreateTab({
     Name = "Teleport",
@@ -1172,6 +1172,81 @@ sell:AddButton({
         })
     end
 })
+
+local fav = Favo:AddSection("Auto Favorite")
+
+local REFavoriteItem = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RE/FavoriteItem"]
+
+local AutoFavoriteEnabled = false
+local FavoriteTiers = {
+    ["Artifact Items"] = {Ids = {265, 266, 267, 271}},
+    ["Epic"] = {TierName = "Epic"},
+    ["Legendary"] = {TierName = "Legendary"},
+    ["Mythic"] = {TierName = "Mythic"},
+    ["Secret"] = {TierName = "SECRET"}
+}
+
+local function AutoFavoriteItems(tierSelection)
+    local inventoryData = Data:Get("Inventory")
+    if inventoryData and inventoryData.Items then
+        for _, item in pairs(inventoryData.Items) do
+            if item and item.Id then
+                -- Check for Artifact Items
+                if tierSelection == "Artifact Items" then
+                    for _, artifactId in ipairs(FavoriteTiers["Artifact Items"].Ids) do
+                        if item.Id == artifactId and item.UUID and not item.Favorited then
+                            pcall(function()
+                                REFavoriteItem:FireServer(item.UUID)
+                            end)
+                        end
+                    end
+                else
+                    -- For fish items, check if Id is a table with Data
+                    if type(item.Id) == "table" and item.Id.Data and item.Id.Data.Type == "Fishes" and item.Id.Probability then
+                        local tier = TierUtility:GetTierFromRarity(item.Id.Probability.Chance)
+                        if tier and tier.Name == FavoriteTiers[tierSelection].TierName and item.UUID and not item.Favorited then
+                            pcall(function()
+                                REFavoriteItem:FireServer(item.UUID)
+                            end)
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+local FavoriteTier = {}
+
+fav:AddDropdown({
+    Title = "Rarity",
+    Content = "",
+    Options = {"Artifact Items", "Epic", "Legendary", "Mythic", "Secret"},
+    Default = {},
+    Multi = true,
+    Callback = function(selected)
+        FavoriteTier = selected
+    end
+})
+
+fav:AddToggle({
+    Title = "Auto Favorite",
+    Content = "Automatically favorites selected rarity.",
+    Default = false,
+    Callback = function(enabled)
+        AutoFavoriteEnabled = enabled
+        if enabled then
+            task.spawn(function()
+                while AutoFavoriteEnabled do
+                    AutoFavoriteItems(FavoriteTier)
+                    task.wait(10)
+                end
+            end)
+        end
+    end
+})
+
+fav:Open()
 
 local TeleportData = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/fishit/tpmdl.lua"))()
 
