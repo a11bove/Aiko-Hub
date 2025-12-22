@@ -1219,7 +1219,7 @@ end
 local FavoriteTier = {}
 
 fav:AddDropdown({
-    Title = "Rarity",
+    Title = "Fish Rarity",
     Content = "",
     Options = {"Artifact Items", "Epic", "Legendary", "Mythic", "Secret"},
     Default = {},
