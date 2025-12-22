@@ -675,7 +675,6 @@ function FlurioreLib:MakeGui(GuiConfig)
 	MoreBlur.Position = UDim2.new(1, 8, 1, 8)
 	MoreBlur.Size = UDim2.new(1, 154, 1, 54)
 	MoreBlur.Visible = false
-	MoreBlur.Active = false
 	MoreBlur.Name = "MoreBlur"
 	MoreBlur.Parent = Layers
 
@@ -713,7 +712,6 @@ function FlurioreLib:MakeGui(GuiConfig)
 	ConnectButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	ConnectButton.BorderSizePixel = 0
 	ConnectButton.Size = UDim2.new(1, 0, 1, 0)
-	ConnectButton.Active = false
 	ConnectButton.Name = "ConnectButton"
 	ConnectButton.Parent = MoreBlur
 
@@ -733,6 +731,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	DropdownSelect.Size = UDim2.new(0, 160, 1, -16)
 	DropdownSelect.Name = "DropdownSelect"
 	DropdownSelect.ClipsDescendants = true
+	DropdownSelect.Active = true
 	DropdownSelect.Parent = MoreBlur
 
 	ConnectButton.MouseButton1Click:Connect(function(input)
