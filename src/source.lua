@@ -2037,7 +2037,84 @@ if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
 						end
 					end
 				end
-					function DropdownFunc:Set(Value)
+
+				function DropdownFunc:Set(Value)
+    -- Convert input to table format
+    local valueTable = {}
+    if type(Value) == "string" then
+        valueTable = {Value}
+    elseif type(Value) == "table" then
+        valueTable = Value
+    end
+    
+    -- Update the stored value
+    DropdownFunc.Value = valueTable
+    
+    -- Update UI for all options
+    for _, Drop in ScrollSelect:GetChildren() do
+        if Drop.Name == "Option" then
+            local isSelected = false
+            
+            -- Check if this option is selected
+            for _, selectedValue in pairs(valueTable) do
+                if Drop.OptionText.Text == selectedValue then
+                    isSelected = true
+                    break
+                end
+            end
+            
+            -- Update the visual state based on selection
+            if isSelected then
+                -- Selected state
+                TweenService:Create(
+                    Drop.ChooseFrame.UIStroke,
+                    TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
+                    {Transparency = 0}
+                ):Play()
+                TweenService:Create(
+                    Drop.ChooseFrame,
+                    TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
+                    {Size = UDim2.new(0, 1, 0, 12)}
+                ):Play()
+                TweenService:Create(
+                    Drop,
+                    TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
+                    {BackgroundTransparency = 0.5}
+                ):Play()
+            else
+                -- Unselected state
+                TweenService:Create(
+                    Drop.ChooseFrame,
+                    TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
+                    {Size = UDim2.new(0, 0, 0, 0)}
+                ):Play()
+                TweenService:Create(
+                    Drop.ChooseFrame.UIStroke,
+                    TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
+                    {Transparency = 0.999}
+                ):Play()
+                TweenService:Create(
+                    Drop,
+                    TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut),
+                    {BackgroundTransparency = 1}
+                ):Play()
+            end
+        end
+    end
+    
+    -- Update the display text
+    local displayText = table.concat(valueTable, ", ")
+    if displayText == "" then
+        OptionSelecting.Text = "Select Options"
+    else
+        OptionSelecting.Text = displayText
+    end
+    
+    -- Call the callback with the value table
+    DropdownConfig.Callback(valueTable)
+end
+				
+					--[[function DropdownFunc:Set(Value)
     if type(Value) == "string" then
         DropdownFunc.Value = {Value}
     elseif type(Value) ~= "table" then
@@ -2096,7 +2173,7 @@ if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
         OptionSelecting.Text = tostring(DropdownValueTable)
     end
     DropdownConfig.Callback(DropdownFunc.Value)
-end
+end]]
 				function DropdownFunc:AddOption(OptionName)
 					OptionName = OptionName or "Option"
 					local Option = Instance.new("Frame");
