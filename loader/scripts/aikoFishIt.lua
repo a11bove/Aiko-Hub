@@ -1178,7 +1178,6 @@ local fav = Favo:AddSection("Auto Favorite")
 local REFavoriteItem = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RE/FavoriteItem"]
 
 local AutoFavoriteEnabled = false
-local FavoriteTier = "Legendary"
 local FavoriteTiers = {
     ["Artifact Items"] = {Ids = {265, 266, 267, 271}},
     ["Epic"] = {TierName = "Epic"},
@@ -1217,7 +1216,41 @@ local function AutoFavoriteItems(tierSelection)
     end
 end
 
+local FavoriteTier = {}
+
 fav:AddDropdown({
+    Title = "Rarity",
+    Content = "",
+    Options = {"Artifact Items", "Epic", "Legendary", "Mythic", "Secret"},
+    Default = {},
+    Multi = true,
+    Callback = function(selected)
+        FavoriteTier = selected
+    end
+})
+
+fav:AddToggle({
+    Title = "Auto Favorite",
+    Content = "Automatically favorites selected rarity.",
+    Default = false,
+    Callback = function(enabled)
+        AutoFavoriteEnabled = enabled
+        if enabled then
+            task.spawn(function()
+                while AutoFavoriteEnabled do
+                    if type(FavoriteTier) == "table" then
+                        for _, tier in ipairs(FavoriteTier) do
+                            AutoFavoriteItems(tier)
+                        end
+                    end
+                    task.wait(10)
+                end
+            end)
+        end
+    end
+})
+
+--[[fav:AddDropdown({
     Title = "Rarity",
     Content = "",
     Options = {"Artifact Items", "Epic", "Legendary", "Mythic", "Secret"},
@@ -1243,7 +1276,7 @@ fav:AddToggle({
             end)
         end
     end
-})
+})]]
 
 fav:Open()
 
