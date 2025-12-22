@@ -1173,11 +1173,14 @@ sell:AddButton({
     end
 })
 
+-- Auto Favorite Section
 local fav = Favo:AddSection("Auto Favorite")
 
 local REFavoriteItem = ReplicatedStorage.Packages._Index["sleitnick_net@0.2.0"].net["RE/FavoriteItem"]
 
 local AutoFavoriteEnabled = false
+local SelectedTiers = {} -- Initialize empty table
+
 local FavoriteTiers = {
     ["Artifact Items"] = {Ids = {265, 266, 267, 271}},
     ["Epic"] = {TierName = "Epic"},
@@ -1186,13 +1189,12 @@ local FavoriteTiers = {
     ["Secret"] = {TierName = "SECRET"}
 }
 
-local SelectedTiers = {}
-
 local function AutoFavoriteItems(tierSelection)
     local inventoryData = Data:Get("Inventory")
     if inventoryData and inventoryData.Items then
         for _, item in pairs(inventoryData.Items) do
             if item and item.Id then
+                -- Check for Artifact Items
                 if tierSelection == "Artifact Items" then
                     for _, artifactId in ipairs(FavoriteTiers["Artifact Items"].Ids) do
                         if item.Id == artifactId and item.UUID and not item.Favorited then
@@ -1202,6 +1204,7 @@ local function AutoFavoriteItems(tierSelection)
                         end
                     end
                 else
+                    -- For fish items, check if Id is a table with Data
                     if type(item.Id) == "table" and item.Id.Data and item.Id.Data.Type == "Fishes" and item.Id.Probability then
                         local tier = TierUtility:GetTierFromRarity(item.Id.Probability.Chance)
                         if tier and tier.Name == FavoriteTiers[tierSelection].TierName and item.UUID and not item.Favorited then
@@ -1216,45 +1219,87 @@ local function AutoFavoriteItems(tierSelection)
     end
 end
 
-fav:AddDropdown({
+-- Create the dropdown
+local RarityDropdown = fav:AddDropdown({
     Title = "Rarity",
-    Content = "",
+    Content = "Select rarities to auto-favorite",
     Options = {"Artifact Items", "Epic", "Legendary", "Mythic", "Secret"},
     Default = {},
     Multi = true,
     Callback = function(selected)
+        print("Dropdown callback triggered!") -- Debug
+        print("Type of selected:", type(selected)) -- Debug
+        
+        -- Clear previous selections
+        SelectedTiers = {}
+        
+        -- Handle the callback properly
         if type(selected) == "table" then
-            SelectedTiers = selected
-        else
-            SelectedTiers = {selected}
+            for _, tier in ipairs(selected) do
+                table.insert(SelectedTiers, tier)
+            end
+        elseif type(selected) == "string" and selected ~= "" then
+            table.insert(SelectedTiers, selected)
         end
         
+        -- Debug prints
+        print("Number of selected tiers:", #SelectedTiers)
+        for i, tier in ipairs(SelectedTiers) do
+            print("Selected tier "..i..":", tier)
+        end
+        
+        -- Show notification
+        local displayText = #SelectedTiers > 0 and table.concat(SelectedTiers, ", ") or "None"
         Library:MakeNotify({
             Title = "@aikoware",
             Description = "| Tiers Selected",
-            Content = table.concat(SelectedTiers, ", "),
+            Content = displayText,
             Delay = 2
         })
     end
 })
 
+-- Create the toggle
 fav:AddToggle({
     Title = "Auto Favorite",
     Content = "Automatically favorites selected rarity.",
     Default = false,
     Callback = function(enabled)
         AutoFavoriteEnabled = enabled
+        
         if enabled then
+            if #SelectedTiers == 0 then
+                Library:MakeNotify({
+                    Title = "@aikoware",
+                    Description = "| Warning",
+                    Content = "No rarities selected!",
+                    Delay = 3
+                })
+                return
+            end
+            
+            Library:MakeNotify({
+                Title = "@aikoware",
+                Description = "| Auto Favorite Started",
+                Content = "Favoriting: " .. table.concat(SelectedTiers, ", "),
+                Delay = 3
+            })
+            
             task.spawn(function()
                 while AutoFavoriteEnabled do
-                    if #SelectedTiers > 0 then
-                        for _, tier in ipairs(SelectedTiers) do
-                            AutoFavoriteItems(tier)
-                        end
+                    for _, tier in ipairs(SelectedTiers) do
+                        AutoFavoriteItems(tier)
                     end
                     task.wait(10)
                 end
             end)
+        else
+            Library:MakeNotify({
+                Title = "@aikoware",
+                Description = "| Auto Favorite Stopped",
+                Content = "",
+                Delay = 2
+            })
         end
     end
 })
