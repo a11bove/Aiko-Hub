@@ -1186,12 +1186,13 @@ local FavoriteTiers = {
     ["Secret"] = {TierName = "SECRET"}
 }
 
+local SelectedTiers = {}
+
 local function AutoFavoriteItems(tierSelection)
     local inventoryData = Data:Get("Inventory")
     if inventoryData and inventoryData.Items then
         for _, item in pairs(inventoryData.Items) do
             if item and item.Id then
-                -- Check for Artifact Items
                 if tierSelection == "Artifact Items" then
                     for _, artifactId in ipairs(FavoriteTiers["Artifact Items"].Ids) do
                         if item.Id == artifactId and item.UUID and not item.Favorited then
@@ -1201,7 +1202,6 @@ local function AutoFavoriteItems(tierSelection)
                         end
                     end
                 else
-                    -- For fish items, check if Id is a table with Data
                     if type(item.Id) == "table" and item.Id.Data and item.Id.Data.Type == "Fishes" and item.Id.Probability then
                         local tier = TierUtility:GetTierFromRarity(item.Id.Probability.Chance)
                         if tier and tier.Name == FavoriteTiers[tierSelection].TierName and item.UUID and not item.Favorited then
@@ -1216,16 +1216,25 @@ local function AutoFavoriteItems(tierSelection)
     end
 end
 
-local FavoriteTier = {}
-
 fav:AddDropdown({
-    Title = "Fish Rarity",
+    Title = "Rarity",
     Content = "",
     Options = {"Artifact Items", "Epic", "Legendary", "Mythic", "Secret"},
     Default = {},
     Multi = true,
     Callback = function(selected)
-        FavoriteTier = selected
+        if type(selected) == "table" then
+            SelectedTiers = selected
+        else
+            SelectedTiers = {selected}
+        end
+        
+        Library:MakeNotify({
+            Title = "@aikoware",
+            Description = "| Tiers Selected",
+            Content = table.concat(SelectedTiers, ", "),
+            Delay = 2
+        })
     end
 })
 
@@ -1238,8 +1247,8 @@ fav:AddToggle({
         if enabled then
             task.spawn(function()
                 while AutoFavoriteEnabled do
-                    if type(FavoriteTier) == "table" then
-                        for _, tier in ipairs(FavoriteTier) do
+                    if #SelectedTiers > 0 then
+                        for _, tier in ipairs(SelectedTiers) do
                             AutoFavoriteItems(tier)
                         end
                     end
@@ -1249,6 +1258,8 @@ fav:AddToggle({
         end
     end
 })
+
+fav:Open()
 
 --[[fav:AddDropdown({
     Title = "Rarity",
@@ -1277,8 +1288,6 @@ fav:AddToggle({
         end
     end
 })]]
-
-fav:Open()
 
 local TeleportData = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/fishit/tpmdl.lua"))()
 
