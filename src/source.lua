@@ -683,6 +683,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	DropShadowHolder1.Size = UDim2.new(1, 0, 1, 0)
 	DropShadowHolder1.ZIndex = 0
 	DropShadowHolder1.Name = "DropShadowHolder"
+	DropShadowHolder1.Visible = false
 	DropShadowHolder1.Parent = MoreBlur
 
 	DropShadow1.Image = "rbxassetid://6015897843"
@@ -697,6 +698,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	DropShadow1.Size = UDim2.new(1, 35, 1, 35)
 	DropShadow1.ZIndex = 0
 	DropShadow1.Name = "DropShadow"
+	DropShadow1.Visible = false
 	DropShadow1.Parent = DropShadowHolder1
 
 	UICorner28.Parent = MoreBlur
@@ -748,14 +750,6 @@ function FlurioreLib:MakeGui(GuiConfig)
 		end
 	end
 end)
-
-	--[[ConnectButton.MouseButton1Down:Connect(function()
-		if MoreBlur.Visible then
-			TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, 172, 0.5, 0)}):Play()
-			task.wait(0.3)
-			MoreBlur.Visible = false
-		end
-	end)]]
 	
 	UICorner36.CornerRadius = UDim.new(0, 6)
 	UICorner36.Parent = DropdownSelect
@@ -826,7 +820,7 @@ end)
 		if CountTab == 0 then
 			Tab.BackgroundTransparency = 0.85
 		else
-			Tab.BackgroundTransparency = 0.97
+			Tab.BackgroundTransparency = 1
 		end
 		Tab.BorderColor3 = Color3.fromRGB(0, 0, 0)
 		Tab.BorderSizePixel = 0
@@ -916,7 +910,7 @@ end)
 				TweenService:Create(
 					Tab,
 					TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.EasingDirection.InOut),
-					{BackgroundTransparency = 0.9200000166893005}
+					{BackgroundTransparency = 1}
 				):Play()
 				TweenService:Create(
 					FrameChoose,
@@ -970,7 +964,7 @@ end)
 
 			SectionReal.AnchorPoint = Vector2.new(0.5, 0)
 			SectionReal.BackgroundColor3 = Color3.fromRGB(255, 255, 255)  -- Dark purple
-            SectionReal.BackgroundTransparency = 0.5
+            SectionReal.BackgroundTransparency = 0.97
 			SectionReal.BorderColor3 = Color3.fromRGB(0, 0, 0)
 			SectionReal.BorderSizePixel = 0
 			SectionReal.LayoutOrder = 1
@@ -1157,7 +1151,7 @@ end
 				local ParagraphContent = Instance.new("TextLabel");
 
 				Paragraph.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				Paragraph.BackgroundTransparency = 0.5
+				Paragraph.BackgroundTransparency = 0.97
 				Paragraph.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				Paragraph.BorderSizePixel = 0
 				Paragraph.LayoutOrder = CountItem
@@ -1250,7 +1244,7 @@ end
 				local FeatureImg3 = Instance.new("ImageLabel");
 
 				Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)  -- Dark purple
-                Button.BackgroundTransparency = 0.5
+                Button.BackgroundTransparency = 0.97
 				Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				Button.BorderSizePixel = 0
 				Button.LayoutOrder = CountItem
@@ -1375,7 +1369,7 @@ end
 				local UICorner23 = Instance.new("UICorner");
 
 				Toggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				Toggle.BackgroundTransparency = 0.5
+				Toggle.BackgroundTransparency = 0.97
 				Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				Toggle.BorderSizePixel = 0
 				Toggle.LayoutOrder = CountItem
@@ -1560,7 +1554,7 @@ end
 				local UIStroke7 = Instance.new("UIStroke");
 
 				Slider.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				Slider.BackgroundTransparency = 0.5
+				Slider.BackgroundTransparency = 0.97
 				Slider.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				Slider.BorderSizePixel = 0
 				Slider.LayoutOrder = CountItem
@@ -1754,7 +1748,7 @@ end
 				local InputTextBox = Instance.new("TextBox");
 
 				Input.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				Input.BackgroundTransparency = 0.5
+				Input.BackgroundTransparency = 0.97
 				Input.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				Input.BorderSizePixel = 0
 				Input.LayoutOrder = CountItem
@@ -1880,7 +1874,7 @@ end
 				local OptionImg = Instance.new("ImageLabel");
 
 				Dropdown.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				Dropdown.BackgroundTransparency = 0.5
+				Dropdown.BackgroundTransparency = 0.97
 				Dropdown.BorderColor3 = Color3.fromRGB(0, 0, 0)
 				Dropdown.BorderSizePixel = 0
 				Dropdown.LayoutOrder = CountItem
