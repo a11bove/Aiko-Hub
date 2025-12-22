@@ -879,6 +879,33 @@ local Misc = Window:CreateTab({
     Icon = "rbxassetid://10734954538"
 })
 
+local infosec = Home:AddSection("Information")
+
+infosec:AddParagraph({
+    Title = "Warning:",
+    Content = "I made this script for testing purposes only, I am not responsible for any bans or any other consequences."
+})
+
+infosec:AddParagraph({
+    Title = "Discord:",
+    Content = "Join to our discord server for more updates and information."
+})
+
+infosec:AddButton({
+    Title = "Copy Server Invite",
+    Content = "",
+    Callback = function()
+            setclipboard("https://discord.gg/JccfFGpDNV")
+        Library:MakeNotify({
+            Title = "@aikoware",
+            Description = "",
+            Content = "Link Copied!"
+        })
+    end
+})
+
+infosec:Open()
+
 local infO = Home:AddSection("Anti Afk")
 
 infO:AddToggle({
@@ -988,31 +1015,6 @@ Grapics:AddButton({
     end
 })
 
-local infosec = Home:AddSection("Information")
-
-infosec:AddParagraph({
-    Title = "Warning:",
-    Content = "I made this script for testing purposes only, I am not responsible for any bans or any other consequences."
-})
-
-infosec:AddParagraph({
-    Title = "Discord:",
-    Content = "Join to our discord server for more updates and information."
-})
-
-infosec:AddButton({
-    Title = "Copy Server Invite",
-    Content = "",
-    Callback = function()
-            setclipboard("https://discord.gg/JccfFGpDNV")
-        Library:MakeNotify({
-            Title = "@aikoware",
-            Description = "",
-            Content = "Link Copied!"
-        })
-    end
-})
-
 local aur = Combat:AddSection("Aura")
 
 aur:AddToggle({
@@ -1054,6 +1056,8 @@ aur:AddSlider({
 
 local hbmob = Combat:AddSection("Hitbox Mobs")
 
+local SelectedMobs = {} -- Already correct
+
 hbmob:AddDropdown({
     Title = "Select Mobs",
     Content = "Select mobs to add hitbox.",
@@ -1061,7 +1065,11 @@ hbmob:AddDropdown({
     Options = MobsList,
     Default = {},
     Callback = function(options)
-        SelectedMobs = options
+        if type(options) == "table" then
+            SelectedMobs = options
+        else
+            SelectedMobs = {}
+        end
         UpdateHitboxes()
     end
 })
@@ -1141,7 +1149,11 @@ aucf:AddDropdown({
     Options = campfireFuelItems,
     Default = {},
     Callback = function(options)
-        selectedCampfireItems = options or {}
+        if type(options) == "table" then
+            selectedCampfireItems = options
+        else
+            selectedCampfireItems = {}
+        end
     end
 })
 
@@ -1186,10 +1198,16 @@ acok:AddDropdown({
     Options = autocookItems,
     Default = {},
     Callback = function(options)
-            for _, itemName in ipairs(autocookItems) do
-                    autoCookEnabledItems[itemName] = table.find(options, itemName) ~= nil
-                end
+        for _, itemName in ipairs(autocookItems) do
+            autoCookEnabledItems[itemName] = false
+        end
+        
+        if type(options) == "table" then
+            for _, itemName in ipairs(options) do
+                autoCookEnabledItems[itemName] = true
             end
+        end
+    end
 })
 
 acok:AddToggle({
@@ -1227,8 +1245,12 @@ acft:AddDropdown({
     Options = craftableItems,
     Default = {},
     Callback = function(options)
-            selectedCraftItems = options or {}
-            end
+        if type(options) == "table" then
+            selectedCraftItems = options
+        else
+            selectedCraftItems = {}
+        end
+    end
 })
 
 acft:AddToggle({
@@ -1262,11 +1284,15 @@ bpr:AddDropdown({
     Title = "Select Blueprint",
     Content = "Select blueprints to bring.",
     Multi = true,
-    Options = selectedBlueprintItems,
+    Options = BlueprintItems,
     Default = {},
     Callback = function(options)
+        if type(options) == "table" then
             selectedBlueprintItems = options
-            end
+        else
+            selectedBlueprintItems = {}
+        end
+    end
 })
 
 bpr:AddToggle({
@@ -1311,7 +1337,11 @@ plt:AddDropdown({
     Options = PeltsItems,
     Default = {},
     Callback = function(options)
-        selectedPeltsItems = options
+        if type(options) == "table" then
+            selectedPeltsItems = options
+        else
+            selectedPeltsItems = {}
+        end
     end
 })
 
@@ -1357,7 +1387,11 @@ scr:AddDropdown({
     Options = junkItems,
     Default = {},
     Callback = function(options)
-    selectedJunkItems = options
+        if type(options) == "table" then
+            selectedJunkItems = options
+        else
+            selectedJunkItems = {}
+        end
     end
 })
 
@@ -1403,7 +1437,11 @@ ful:AddDropdown({
     Options = fuelItems,
     Default = {},
     Callback = function(options)
-    selectedFuelItems = options
+        if type(options) == "table" then
+            selectedFuelItems = options
+        else
+            selectedFuelItems = {}
+        end
     end
 })
 
@@ -1449,7 +1487,11 @@ fod:AddDropdown({
     Options = foodItems,
     Default = {},
     Callback = function(options)
-    selectedFoodItems = options
+        if type(options) == "table" then
+            selectedFoodItems = options
+        else
+            selectedFoodItems = {}
+        end
     end
 })
 
@@ -1496,7 +1538,11 @@ med:AddDropdown({
     Options = medicalItems,
     Default = {},
     Callback = function(options)
-    selectedMedicalItems = options
+        if type(options) == "table" then
+            selectedMedicalItems = options
+        else
+            selectedMedicalItems = {}
+        end
     end
 })
 
@@ -1543,8 +1589,12 @@ mobz:AddDropdown({
     Options = cultistItems,
     Default = {},
     Callback = function(options)
+        if type(options) == "table" then
             selectedCultistItems = options
-                end
+        else
+            selectedCultistItems = {}
+        end
+    end
 })
 
 mobz:AddToggle({
@@ -1590,7 +1640,11 @@ eqp:AddDropdown({
     Options = equipmentItems,
     Default = {},
     Callback = function(options)
-    selectedEquipmentItems = options
+        if type(options) == "table" then
+            selectedEquipmentItems = options
+        else
+            selectedEquipmentItems = {}
+        end
     end
 })
 
