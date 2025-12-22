@@ -1260,8 +1260,7 @@ local bpr =br:AddSection("Blueprint")
 
 bpr:AddDropdown({
     Title = "Select Blueprint",
-    Content = "Select blueprints to bring.
-		",
+    Content = "Select blueprints to bring.",
     Multi = true,
     Options = selectedBlueprintItems,
     Default = {},
