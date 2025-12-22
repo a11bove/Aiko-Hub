@@ -683,7 +683,6 @@ function FlurioreLib:MakeGui(GuiConfig)
 	DropShadowHolder1.Size = UDim2.new(1, 0, 1, 0)
 	DropShadowHolder1.ZIndex = 0
 	DropShadowHolder1.Name = "DropShadowHolder"
-	--DropShadowHolder1.Visible = false
 	DropShadowHolder1.Parent = MoreBlur
 
 	DropShadow1.Image = "rbxassetid://6015897843"
@@ -698,7 +697,6 @@ function FlurioreLib:MakeGui(GuiConfig)
 	DropShadow1.Size = UDim2.new(1, 35, 1, 35)
 	DropShadow1.ZIndex = 0
 	DropShadow1.Name = "DropShadow"
-	--DropShadow1.Visible = false
 	DropShadow1.Parent = DropShadowHolder1
 
 	UICorner28.Parent = MoreBlur
@@ -731,7 +729,6 @@ function FlurioreLib:MakeGui(GuiConfig)
 	DropdownSelect.Size = UDim2.new(0, 160, 1, -16)
 	DropdownSelect.Name = "DropdownSelect"
 	DropdownSelect.ClipsDescendants = true
-	DropdownSelect.Active = true
 	DropdownSelect.Parent = MoreBlur
 
 	ConnectButton.MouseButton1Click:Connect(function(input)
