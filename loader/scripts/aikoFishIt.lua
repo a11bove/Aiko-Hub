@@ -1139,19 +1139,19 @@ sell:AddToggle({
                 while _G.AutoSell do
                     task.wait(5)
                     
-                    -- Check if inventory count meets threshold
-                    local inventoryData = Data:Get("Inventory")
-                    if inventoryData and inventoryData.Items then
-                        local itemCount = 0
-                        for _, item in pairs(inventoryData.Items) do
-                            if item then
-                                itemCount = itemCount + 1
+                    pcall(function()
+                        -- Check if inventory count meets threshold
+                        local inventoryData = Data:Get("Inventory")
+                        if inventoryData and inventoryData.Items then
+                            local itemCount = 0
+                            for _, item in pairs(inventoryData.Items) do
+                                if item then
+                                    itemCount = itemCount + 1
+                                end
                             end
-                        end
-                        
-                        -- Only sell if threshold is reached
-                        if itemCount >= sellThreshold then
-                            pcall(function()
+                            
+                            -- Only sell if threshold is reached
+                            if itemCount and itemCount >= (sellThreshold or 4500) then
                                 SellAllItems:InvokeServer()
                                 Library:MakeNotify({
                                     Title = "@aikoware",
@@ -1159,9 +1159,9 @@ sell:AddToggle({
                                     Content = "Sold " .. itemCount .. " items",
                                     Delay = 2
                                 })
-                            end)
+                            end
                         end
-                    end
+                    end)
                 end
             end)
         end
