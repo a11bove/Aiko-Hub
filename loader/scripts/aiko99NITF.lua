@@ -2082,7 +2082,12 @@ afed:AddToggle({
     end
 })
 
-local hh = Fly:AddSection("LocalPlayer")
+local hh = Fly:AddSection("User Settings")
+
+local humanoid = character:FindFirstChildOfClass("Humanoid")
+if humanoid then
+    humanoid.HipHeight = 2
+end
 
 hh:AddSlider({
     Title = "Hip Height",
@@ -2094,6 +2099,26 @@ hh:AddSlider({
         _G.HipHeight = v
         if _G.HipHeightOn then
             game.Players.LocalPlayer.Character.Humanoid.HipHeight = v
+        end
+    end
+})
+
+hh:AddToggle({
+    Title = "Enable HipHeight",
+    Content = "",
+    Default = false,
+    Callback = function(PH)
+        _G.HipHeightOn = PH
+        local humanoid = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+        
+        if PH then
+            if humanoid then
+                humanoid.HipHeight = _G.HipHeight or 2
+            end
+        else
+            if humanoid then
+                humanoid.HipHeight = 2  -- Reset to default
+            end
         end
     end
 })
@@ -2123,30 +2148,6 @@ hh:AddSlider({
     end
 })
 
-local humanoid = Players.LocalPlayer.Character and Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-hh:AddSlider({
-    Title = "Walkspeed",
-    Content = "",
-    Min = 16,
-    Max = 150,
-    Default = 16,
-    Callback = function(val)
-        humanoid.WalkSpeed = val
-	end
-})
-
-hh:AddToggle({
-    Title = "Enable HipHeight",
-    Content = "",
-    Default = false,
-    Callback = function(PH)
-        _G.HipHeightOn = PH
-        if PH then
-            game.Players.LocalPlayer.Character.Humanoid.HipHeight = _G.HipHeight or 2
-        end
-    end
-})
-
 hh:AddToggle({
     Title = "Enable Fly",
     Content = "",
@@ -2163,6 +2164,41 @@ hh:AddToggle({
             FlyModule.NOFLY()
             FlyModule.UnMobileFly()
         end
+    end
+})
+
+hh:AddSlider({
+    Title = "Walkspeed",
+    Content = "",
+    Min = 16,
+    Max = 200,
+    Default = 16,
+    Callback = function(value)
+        local player = game.Players.LocalPlayer
+        local char = player.Character or player.CharacterAdded:Wait()
+        local humanoid = char:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid.WalkSpeed = value
+        end
+    end
+})
+
+hh:AddButton({
+    Title = "Reset Walkspeed",
+    Content = "Returns to default speed.",
+    Callback = function()
+        local player = game.Players.LocalPlayer
+        local char = player.Character or player.CharacterAdded:Wait()
+        local humanoid = char:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid.WalkSpeed = 16
+        end
+        Library:MakeNotify({
+            Title = "@aikoware",
+            Description = "Walkspeed Reset",
+            Content = "Walkspeed back to default.",
+            Delay = 2,
+        })
     end
 })
 
@@ -2195,6 +2231,7 @@ hh:AddToggle({
 local infJumpConnection
 hh:AddToggle({
     Title = "Inf Jump",
+	Content = "",
     Default = false,
     Callback = function(state)
         if state then
