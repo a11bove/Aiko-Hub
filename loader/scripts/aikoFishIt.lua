@@ -1106,7 +1106,7 @@ local autobuyweather = ws:AddToggle({
 
 local sell = Shop:AddSection("Sell")
 
-sell:AddToggle({
+--[[sell:AddToggle({
     Title = "Auto Sell",
     Content = "",
     Default = false,
@@ -1121,6 +1121,46 @@ sell:AddToggle({
                     end)
                     if not success then
                         warn("Auto Sell Error:", err)
+                    end
+                end
+            end)
+        end
+    end
+})]]
+
+sell:AddToggle({
+    Title = "Auto Sell",
+    Content = "",
+    Default = false,
+    Callback = function(enabled)
+        _G.AutoSell = enabled
+        if enabled then
+            task.spawn(function()
+                while _G.AutoSell do
+                    task.wait(5)
+                    
+                    -- Check if inventory count meets threshold
+                    local inventoryData = Data:Get("Inventory")
+                    if inventoryData and inventoryData.Items then
+                        local itemCount = 0
+                        for _, item in pairs(inventoryData.Items) do
+                            if item then
+                                itemCount = itemCount + 1
+                            end
+                        end
+                        
+                        -- Only sell if threshold is reached
+                        if itemCount >= sellThreshold then
+                            pcall(function()
+                                SellAllItems:InvokeServer()
+                                Library:MakeNotify({
+                                    Title = "@aikoware",
+                                    Description = "| Auto Sell",
+                                    Content = "Sold " .. itemCount .. " items",
+                                    Delay = 2
+                                })
+                            end)
+                        end
                     end
                 end
             end)
