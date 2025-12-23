@@ -2084,89 +2084,6 @@ afed:AddToggle({
 
 local hh = Fly:AddSection("User Settings")
 
---[[local humanoid = character:FindFirstChildOfClass("Humanoid")
-if humanoid then
-    humanoid.HipHeight = 2
-end
-
-hh:AddSlider({
-    Title = "Hip Height",
-    Content = "",
-    Min = 1,
-    Max = 50,
-    Default = 2,
-    Callback = function(v)
-        _G.HipHeight = v
-        if _G.HipHeightOn then
-            game.Players.LocalPlayer.Character.Humanoid.HipHeight = v
-        end
-    end
-})
-
-hh:AddToggle({
-    Title = "Enable HipHeight",
-    Content = "",
-    Default = false,
-    Callback = function(PH)
-        _G.HipHeightOn = PH
-        local humanoid = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-        
-        if PH then
-            if humanoid then
-                humanoid.HipHeight = _G.HipHeight or 2
-            end
-        else
-            if humanoid then
-                humanoid.HipHeight = 2  -- Reset to default
-            end
-        end
-    end
-})]]
-
-hh:AddSlider({
-    Title = "Fly Speed",
-    Content = "",
-    Min = 1,
-    Max = 20,
-    Default = 1,
-    Callback = function(value)
-        FlyModule.flySpeed = value
-        if FlyModule.FLYING then
-            task.spawn(function()
-                while FlyModule.FLYING do
-                    task.wait(0.1)
-                    if game:GetService("UserInputService").TouchEnabled then
-                        local root = Players.LocalPlayer.Character and Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-                        if root and root:FindFirstChild("BodyVelocity") then
-                            local bv = root:FindFirstChild("BodyVelocity")
-                            bv.Velocity = bv.Velocity.Unit * (FlyModule.flySpeed * 50)
-                        end
-                    end
-                end
-            end)
-        end
-    end
-})
-
-hh:AddToggle({
-    Title = "Enable Fly",
-    Content = "",
-    Default = false,
-    Callback = function(state)
-        FlyModule.flyToggle = state
-        if FlyModule.flyToggle then
-            if game:GetService("UserInputService").TouchEnabled then
-                FlyModule.MobileFly()
-            else
-                FlyModule.sFLY()
-            end
-        else
-            FlyModule.NOFLY()
-            FlyModule.UnMobileFly()
-        end
-    end
-})
-
 local walkspeedValue = 16
 
 hh:AddSlider({
@@ -2220,6 +2137,89 @@ hh:AddButton({
             Content = "Walkspeed back to default.",
             Delay = 2,
         })
+    end
+})
+
+local humanoid = character:FindFirstChildOfClass("Humanoid")
+if humanoid then
+    humanoid.HipHeight = 2
+end
+
+hh:AddSlider({
+    Title = "Hip Height",
+    Content = "",
+    Min = 1,
+    Max = 50,
+    Default = 2,
+    Callback = function(v)
+        _G.HipHeight = v
+        if _G.HipHeightOn then
+            game.Players.LocalPlayer.Character.Humanoid.HipHeight = v
+        end
+    end
+})
+
+hh:AddToggle({
+    Title = "Enable HipHeight",
+    Content = "",
+    Default = false,
+    Callback = function(PH)
+        _G.HipHeightOn = PH
+        local humanoid = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+        
+        if PH then
+            if humanoid then
+                humanoid.HipHeight = _G.HipHeight or 2
+            end
+        else
+            if humanoid then
+                humanoid.HipHeight = 2  -- Reset to default
+            end
+        end
+    end
+})
+
+hh:AddSlider({
+    Title = "Fly Speed",
+    Content = "",
+    Min = 1,
+    Max = 20,
+    Default = 1,
+    Callback = function(value)
+        FlyModule.flySpeed = value
+        if FlyModule.FLYING then
+            task.spawn(function()
+                while FlyModule.FLYING do
+                    task.wait(0.1)
+                    if game:GetService("UserInputService").TouchEnabled then
+                        local root = Players.LocalPlayer.Character and Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                        if root and root:FindFirstChild("BodyVelocity") then
+                            local bv = root:FindFirstChild("BodyVelocity")
+                            bv.Velocity = bv.Velocity.Unit * (FlyModule.flySpeed * 50)
+                        end
+                    end
+                end
+            end)
+        end
+    end
+})
+
+hh:AddToggle({
+    Title = "Enable Fly",
+    Content = "",
+    Default = false,
+    Callback = function(state)
+        FlyModule.flyToggle = state
+        if FlyModule.flyToggle then
+            if game:GetService("UserInputService").TouchEnabled then
+                FlyModule.MobileFly()
+            else
+                FlyModule.sFLY()
+            end
+        else
+            FlyModule.NOFLY()
+            FlyModule.UnMobileFly()
+        end
     end
 })
 
