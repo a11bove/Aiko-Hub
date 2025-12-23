@@ -531,7 +531,7 @@ end
 local function InstantFishCycle()
     if InstantFishEnabled then
         pcall(function()
-            ChargeFishingRod:InvokeServer(1756863567.217075)
+            ChargeFishingRod:InvokeServer(100)
             RequestFishingMinigame:InvokeServer(-139.63796997070312, 0.9964792798079721)
         end)
         task.wait(CancelDelay)
@@ -1665,15 +1665,26 @@ mach:AddButton({
 local evt = Teleport:AddSection("Event")
 
 local eventMap = {
-    ["Shark Hunt"] = "Shark Hunt",
-    ["Ghost Shark Hunt"] = "Ghost Shark Hunt",
-    ["Megalodon Hunt"] = "Megalodon Hunt",
-    ["Black Hole"] = "BlackHole",
-    ["Meteor Rain"] = "MeteorRain",
-    ["Worm Hunt"] = "Worm Hunt"
+    ["Shark Hunt"]         = { name = "Shark Hunt", part = "Color" },
+    ["Ghost Shark Hunt"]   = { name = "Ghost Shark Hunt", part = "Part" },
+    ["Worm Hunt"]          = { name = "Model", part = "Part" },
+    ["Black Hole"]         = { name = "BlackHole", part = nil },
+    ["Meteor Rain"]        = { name = "MeteorRain", part = nil },
+    ["Ghost Worm"]         = { name = "Model", part = "Part" },
+    ["Shocked"]            = { name = "Shocked", part = nil },
+    ["Megalodon Hunt"]     = { name = "Megalodon Hunt", part = "Color" },
 }
 
-local selectedEventForTP = nil
+local eventNames = {}
+for _, data in pairs(eventMap) do
+    if data.name ~= "Model" then
+        table.insert(eventNames, data.name)
+    end
+end
+table.insert(eventNames, "Worm Hunt") 
+table.insert(eventNames, "Ghost Worm")
+
+local selectedEvent = nil
 local eventPlatform = nil
 
 local function createEventPlatform(position)
@@ -1682,30 +1693,95 @@ local function createEventPlatform(position)
     end
 
     eventPlatform = Instance.new("Part")
-    eventPlatform.Size = Vector3.new(20, 1, 20)
-    eventPlatform.Position = position - Vector3.new(0, 3, 0)
+    eventPlatform.Size = Vector3.new(10, 1, 10)
+    eventPlatform.Position = position - Vector3.new(0, 3.5, 0)
     eventPlatform.Anchored = true
     eventPlatform.CanCollide = true
-    eventPlatform.Transparency = 0.4
-    eventPlatform.Color = Color3.fromRGB(0, 0, 255)
-    eventPlatform.Material = Enum.Material.Neon
+    eventPlatform.Transparency = 0.3
+    eventPlatform.Color = Color3.fromRGB(75, 0, 130)
+    eventPlatform.Material = Enum.Material.ForceField
     eventPlatform.Name = "EventPlatform"
     eventPlatform.Parent = workspace
 end
 
+local function getPartRecursive(o)
+    if o:IsA("BasePart") then return o end
+    for _, c in ipairs(o:GetChildren()) do
+        local p = getPartRecursive(c)
+        if p then return p end
+    end
+    return nil
+end
+
+local function findEventModel(eventName)
+    local menuRings = workspace:FindFirstChild("!!! MENU RINGS")
+    if not menuRings then return nil end
+
+    local props = menuRings:FindFirstChild("Props")
+    if not props then return nil end
+
+    local targetEventData = nil
+
+    for uiName, data in pairs(eventMap) do
+        if uiName == eventName then
+            targetEventData = data
+            break
+        end
+    end
+
+    if not targetEventData then return nil end
+
+    local eventModel = props:FindFirstChild(targetEventData.name) 
+
+    if eventModel and eventModel:IsA("Model") then
+        local targetPart = nil
+
+        if eventName == "Megalodon Hunt" then
+            targetPart = eventModel:FindFirstChild("Color")
+        elseif eventName == "Ghost Shark Hunt" then
+            targetPart = eventModel:FindFirstChild("Part")
+        elseif eventName == "Worm Hunt" or eventName == "Ghost Worm" then
+            targetPart = eventModel:FindFirstChild("Part")
+        elseif eventName == "Shark Hunt" then
+            targetPart = eventModel:FindFirstChild("Color")
+        elseif targetEventData.part then
+            targetPart = eventModel:FindFirstChild(targetEventData.part)
+        end
+
+        if targetPart and targetPart:IsA("BasePart") then
+            return targetPart
+        elseif eventModel.PrimaryPart and eventModel.PrimaryPart:IsA("BasePart") then
+            return eventModel.PrimaryPart
+        else 
+            return getPartRecursive(eventModel)
+        end
+    end
+
+    return nil
+end
+
 evt:AddDropdown({
     Title = "Select Event",
-    Content = "",
-    Options = {"Shark Hunt", "Ghost Shark Hunt", "Megalodon Hunt", "Black Hole", "Meteor Rain", "Worm Hunt"},
+    Content = "Choose event to teleport",
+    Options = {"Shark Hunt", "Ghost Shark Hunt", "Megalodon Hunt", "Black Hole", "Meteor Rain", "Worm Hunt", "Ghost Worm", "Shocked"},
     Multi = false,
     Default = {},
     Callback = function(selected)
         if type(selected) == "table" and #selected > 0 then
-            selectedEventForTP = selected[1]
+            selectedEvent = selected[1]
         elseif type(selected) == "string" then
-            selectedEventForTP = selected
+            selectedEvent = selected
         else
-            selectedEventForTP = nil
+            selectedEvent = nil
+        end
+        
+        if selectedEvent then
+            Library:MakeNotify({
+                Title = "@aikoware",
+                Description = "| Event Selected",
+                Content = selectedEvent,
+                Delay = 3
+            })
         end
     end
 })
@@ -1714,7 +1790,7 @@ evt:AddButton({
     Title = "Teleport to Event",
     Content = "Teleport to selected event.",
     Callback = function()
-        if not selectedEventForTP then
+        if not selectedEvent then
             Library:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Error",
@@ -1724,26 +1800,32 @@ evt:AddButton({
             return
         end
 
-        local menuRings = Workspace:FindFirstChild("!!! MENU RINGS")
-        local props = menuRings and menuRings:FindFirstChild("Props")
-        local eventModel = props and props:FindFirstChild(eventMap[selectedEventForTP])
+        local eventModel = findEventModel(selectedEvent)
 
         if eventModel then
-            local char = Workspace:FindFirstChild("Characters"):FindFirstChild(LocalPlayer.Name)
+            local char = workspace:FindFirstChild("Characters"):FindFirstChild(LocalPlayer.Name)
             local hrp = char and char:FindFirstChild("HumanoidRootPart")
 
             if hrp then
-                local targetPos = eventModel:GetPivot().Position
-                hrp.CFrame = CFrame.new(targetPos + Vector3.new(0, 20, 0))
+                local targetPos
+                if eventModel:IsA("BasePart") then
+                    targetPos = eventModel.Position
+                elseif eventModel:IsA("Model") then
+                    targetPos = eventModel:GetPivot().Position
+                end
 
-                createEventPlatform(targetPos + Vector3.new(0, 50, 0))
+                if targetPos then
+                    hrp.CFrame = CFrame.new(targetPos + Vector3.new(0, 20, 0))
+                    
+                    createEventPlatform(hrp.Position)
 
-                Library:MakeNotify({
-                    Title = "@aikoware",
-                    Description = "| Teleported",
-                    Content = "Teleported to " .. selectedEventForTP,
-                    Delay = 3
-                })
+                    Library:MakeNotify({
+                        Title = "@aikoware",
+                        Description = "| Teleported",
+                        Content = "Teleported to " .. selectedEvent,
+                        Delay = 3
+                    })
+                end
             end
         else
             Library:MakeNotify({
