@@ -2084,7 +2084,7 @@ afed:AddToggle({
 
 local hh = Fly:AddSection("User Settings")
 
-local humanoid = character:FindFirstChildOfClass("Humanoid")
+--[[local humanoid = character:FindFirstChildOfClass("Humanoid")
 if humanoid then
     humanoid.HipHeight = 2
 end
@@ -2121,7 +2121,7 @@ hh:AddToggle({
             end
         end
     end
-})
+})]]
 
 hh:AddSlider({
     Title = "Fly Speed",
@@ -2167,6 +2167,8 @@ hh:AddToggle({
     end
 })
 
+local walkspeedValue = 16
+
 hh:AddSlider({
     Title = "Walkspeed",
     Content = "",
@@ -2174,24 +2176,43 @@ hh:AddSlider({
     Max = 200,
     Default = 16,
     Callback = function(value)
+        walkspeedValue = value
         local player = game.Players.LocalPlayer
-        local char = player.Character or player.CharacterAdded:Wait()
-        local humanoid = char:FindFirstChild("Humanoid")
-        if humanoid then
-            humanoid.WalkSpeed = value
+        local char = player.Character
+        if char then
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.WalkSpeed = value
+            end
         end
     end
 })
+
+task.spawn(function()
+    while task.wait(0.1) do
+        local player = game.Players.LocalPlayer
+        local char = player.Character
+        if char then
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if humanoid and humanoid.WalkSpeed ~= walkspeedValue then
+                humanoid.WalkSpeed = walkspeedValue
+            end
+        end
+    end
+end)
 
 hh:AddButton({
     Title = "Reset Walkspeed",
     Content = "Returns to default speed.",
     Callback = function()
+        walkspeedValue = 16
         local player = game.Players.LocalPlayer
-        local char = player.Character or player.CharacterAdded:Wait()
-        local humanoid = char:FindFirstChild("Humanoid")
-        if humanoid then
-            humanoid.WalkSpeed = 16
+        local char = player.Character
+        if char then
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.WalkSpeed = 16
+            end
         end
         Library:MakeNotify({
             Title = "@aikoware",
