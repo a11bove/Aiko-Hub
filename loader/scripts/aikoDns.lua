@@ -18,7 +18,7 @@ Library:MakeNotify({
     Title = "@aikoware",
     Description = "| Script Loaded",
     Content = "Game: Diesel 'N Steel",
-    Delay = 3
+    Delay = 5
 })
 
 local Window = Library:MakeGui({
