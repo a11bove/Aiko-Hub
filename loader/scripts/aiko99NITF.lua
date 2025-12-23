@@ -16,9 +16,9 @@ local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bo
 
 Library:MakeNotify({
     Title = "@aikoware",
-    Description = "Script Loaded",
-    Content = "Game: 99 Nights in The Forest",
-    Delay = 3
+    Description = "",
+    Content = "Wait for the script to be fully loaded.",
+    Delay = 10
 })
 
 local Window = Library:MakeGui({
@@ -2223,32 +2223,6 @@ hh:AddToggle({
     end
 })
 
-local noclipConnection
-hh:AddToggle({
-    Title = "No Clip",
-    Content = "",
-    Default = false,
-    Callback = function(state)
-        if state then
-            noclipConnection = RunService.Stepped:Connect(function()
-                local char = Players.LocalPlayer.Character
-                if char then
-                    for _, part in ipairs(char:GetDescendants()) do
-                        if part:IsA("BasePart") then
-                            part.CanCollide = false
-                        end
-                    end
-                end
-            end)
-        else
-            if noclipConnection then
-                noclipConnection:Disconnect()
-                noclipConnection = nil
-            end
-        end
-    end
-})
-
 local infJumpConnection
 hh:AddToggle({
     Title = "Inf Jump",
@@ -2518,3 +2492,10 @@ UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
         playersText.Visible = showPlayers
     end
 end)
+
+Library:MakeNotify({
+    Title = "@aikoware",
+    Description = "Script Loaded",
+    Content = "Game: 99 Nights in The Forest",
+    Delay = 5
+})
