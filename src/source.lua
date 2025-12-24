@@ -1852,8 +1852,6 @@ end
 				CountItem = CountItem + 1
 				return InputFunc
 			end
--- Find the AddDropdown function (around line 1800+) and replace it with this enhanced version:
-
 function Items:AddDropdown(DropdownConfig)
 	local DropdownConfig = DropdownConfig or {}
 	DropdownConfig.Title = DropdownConfig.Title or "Title"
@@ -2011,8 +2009,8 @@ function Items:AddDropdown(DropdownConfig)
 		)
 	end
 	
-	SearchContainer.BackgroundColor3 = DarkenColor(GuiConfig.Color, 0.6)  -- CHANGED: 40% darker
-	SearchContainer.BackgroundTransparency = 0.3  -- CHANGED: Less transparent to show color better
+	SearchContainer.BackgroundColor3 = Color3.RGB(40, 40, 40)
+	SearchContainer.BackgroundTransparency = 0.7 -- CHANGED: Less transparent to show color better
 	SearchContainer.BorderSizePixel = 0
 	SearchContainer.Position = UDim2.new(0, 0, 0, 5)  -- CHANGED: 5px margin from top only
 	SearchContainer.Size = UDim2.new(1, 0, 0, 28)  -- CHANGED: Full width to match options
