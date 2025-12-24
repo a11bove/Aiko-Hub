@@ -168,144 +168,100 @@ BtnSection:AddButton({
 })
 
 -- Toggle Section
-local ToggleSection = Tabs.Main:AddSection("Chloe X | Toggle")
+local ToggleSection = Tabs.Main:AddSection("@aikoware | Toggle")
 
 -- Single Toggle
 ToggleSection:AddToggle({
-    Title = "Auto Fishing",
-    Content = "Enable auto fishing using Chloe X System.",
+    Title = "Toggle",
+    Content = "Content",
     Default = false,
-    Callback = function(state)
-        if state then
-            chloex("Auto Fishing enabled.")
-            _G.AutoFish = true
-        else
-            chloex("Auto Fishing disabled.")
-            _G.AutoFish = false
-        end
+    Callback = function(value)
+        print("Toggle set to: " .. value)
     end
 })
 
 -- Toggle with Subtitle
 ToggleSection:AddToggle({
-    Title = "Auto Sell",
-    Title2 = "Sell All Fish Automatically",
-    Content = "Sells all fish after catching them.",
+    Title = "Toggle",
+    Title2 = "Wih Subtitle",
+    Content = "Content",
     Default = false,
-    Callback = function(state)
-        if state then
-            chloex("Auto Sell active.")
-            _G.AutoSell = true
-        else
-            chloex("Auto Sell inactive.")
-            _G.AutoSell = false
-        end
+    Callback = function(v)
+        print("Toggle set to: " .. v)
     end
 })
 
 -- Slider Section
-local SliderSection = Tabs.Main:AddSection("Chloe X | Slider")
+local SliderSection = Tabs.Main:AddSection("@aikoware | Slider")
 
 -- Fishing Delay Slider
 SliderSection:AddSlider({
-    Title = "Fishing Delay",
-    Content = "Set auto fishing delay time.",
-    Min = 0.1,
-    Max = 5,
-    Increment = 0.1,
-    Default = 1,
-    Callback = function(value)
-        _G.Delay = value
-        chloex("Delay set to: " .. tostring(value) .. " seconds.")
-    end
-})
-
--- Volume Slider
-SliderSection:AddSlider({
-    Title = "Sound Volume",
-    Content = "Adjust Chloe X sound effects volume.",
-    Min = 0,
+    Title = "Slider",
+    Content = "Content",
+    Min = 1,
     Max = 100,
-    Increment = 5,
-    Default = 50,
-    Callback = function(value)
-        chloex("Volume changed to: " .. tostring(value) .. "%")
-    end
-})
-
--- Animation Speed Slider
-SliderSection:AddSlider({
-    Title = "Animation Speed",
-    Content = "Set Chloe X interface animation speed.",
-    Min = 0.5,
-    Max = 2,
-    Increment = 0.1,
+    Increment = 1,
     Default = 1,
     Callback = function(value)
-        _G.AnimationSpeed = value
-        chloex("Animation speed set to: " .. tostring(value) .. "x")
+        print("Delay set to: " .. tostring(value) .. " seconds.")
     end
 })
 
 -- Input Section
-local InputSection = Tabs.Main:AddSection("Chloe X | Input")
+local InputSection = Tabs.Main:AddSection("@aikoware | Input")
 
 -- Text Input
 InputSection:AddInput({
-    Title = "Username",
-    Content = "Enter your username to save in config.",
+    Title = "Inpt",
+    Content = "Content",
     Default = "",
     Callback = function(value)
-        _G.ChloeUsername = value
-        chloex("Username set to: " .. value)
+        print("Username set to: " .. value)
     end
 })
 
 -- Dropdown Section
-local DropdownSection = Tabs.Main:AddSection("Chloe X | Dropdown")
+local DropdownSection = Tabs.Main:AddSection("@aikoware | Dropdown")
 
 -- Basic Dropdown
 DropdownSection:AddDropdown({
-    Title = "Select Theme",
-    Content = "Choose interface theme for Chloe X.",
-    Options = { "Celestial", "Seraphin", "Nebula", "Luna" },
-    Default = "Celestial",
+    Title = "Basic Dropdown",
+    Content = "Content",
+    Options = { "Hi", "Hello", "Sup", "Banana" },
+    Default = "Hi",
     Callback = function(value)
-        _G.SelectedTheme = value
-        chloex("Theme changed to: " .. value)
+        print("Basic Dropdown set to: " .. value)
     end
 })
 
 -- Multi-Select Dropdown
 DropdownSection:AddDropdown({
-    Title = "Select Features",
-    Content = "Select multiple Chloe X features to enable.",
+    Title = "Multi Dropdown",
+    Content = "",
     Multi = true,
-    Options = { "Auto Fishing", "Auto Sell", "Auto Quest", "Webhook Notification" },
-    Default = { "Auto Fishing" },
+    Options = { "Banana", "Apple", "Papaya", "Mango" },
+    Default = { "Banana" },
     Callback = function(selected)
-        _G.ActiveFeatures = selected
-        chloex("Active features: " .. table.concat(selected, ", "))
+        print("Multi Dropdown set to: " .. table.concat(selected, ", "))
     end
 })
 
 -- Dynamic Dropdown
 local DynamicDropdown = DropdownSection:AddDropdown({
-    Title = "Select Bait",
-    Content = "Choose bait to use.",
+    Title = "Dynamic Dropdown",
+    Content = "Content",
     Options = {},
     Default = nil,
     Callback = function(value)
-        _G.SelectedBait = value
-        chloex("Bait selected: " .. value)
+        print("Dynamic Dropdown set to: " .. value)
     end
 })
 
 -- Update dropdown options dynamically
 task.spawn(function()
     task.wait(1)
-    local baitList = { "Common Bait", "Rare Bait", "Mythic Bait", "Divine Bait" }
-    DynamicDropdown:SetValues(baitList, "Common Bait")
+    local genderList = { "Man", "Woman", "Boy", "Girl" }
+    DynamicDropdown:SetValues(genderList, "Man")
 end)
 
 -- Config auto-saves/loads all elements. Use SaveConfig() if needed.
