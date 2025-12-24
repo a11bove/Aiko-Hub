@@ -2703,7 +2703,7 @@ end
                 Label.Size = UDim2.new(1, -20, 1, 0)
                 Label.BackgroundTransparency = 1
                 Label.Font = Enum.Font.GothamBold
-                Label.Text = "── [ " .. title .. " ] ──"
+                Label.Text = "" .. title .. ""
                 Label.TextColor3 = Color3.fromRGB(230, 230, 230)
                 Label.TextSize = 12
                 Label.TextXAlignment = Enum.TextXAlignment.Left
