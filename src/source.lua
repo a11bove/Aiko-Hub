@@ -2018,9 +2018,9 @@ function Items:AddDropdown(DropdownConfig)
     SearchContainer.Size = UDim2.new(1, 0, 0, 30)
 	SearchContainer.Name = "SearchContainer"
 	SearchContainer.LayoutOrder = -1
-	SearchContainer.Parent = ScrollSelect  -- CHANGED: Parent to ScrollSelect instead
+	SearchContainer.Parent = ScrollSelect
 	
-	SearchCorner.CornerRadius = UDim.new(0, 4)  -- CHANGED: Smaller corner radius
+	SearchCorner.CornerRadius = UDim.new(0, 6)
 	SearchCorner.Parent = SearchContainer
 	
 	SearchBar.Font = Enum.Font.GothamBold
