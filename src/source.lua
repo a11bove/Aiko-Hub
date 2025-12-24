@@ -766,7 +766,7 @@ end)
 	DropdownSelectReal.BorderSizePixel = 0
 	DropdownSelectReal.LayoutOrder = 1
 	DropdownSelectReal.Position = UDim2.new(0.5, 0, 0.5, 0)
-	DropdownSelectReal.Size = UDim2.new(1, -10, 1, -10)
+	DropdownSelectReal.Size = UDim2.new(1, 0, 1, 0)
 	DropdownSelectReal.Name = "DropdownSelectReal"
 	DropdownSelectReal.Parent = DropdownSelect
 
@@ -2011,11 +2011,11 @@ function Items:AddDropdown(DropdownConfig)
 		)
 	end
 	
-	SearchContainer.BackgroundColor3 = DarkenColor(GuiConfig.Color, 0.6)  -- CHANGED: 40% darker
-	SearchContainer.BackgroundTransparency = 0.3  -- CHANGED: Less transparent to show color better
-	SearchContainer.BorderSizePixel = 0
-	SearchContainer.Position = UDim2.new(0, 0, 0, 5)  -- CHANGED: 5px margin from top only
-	SearchContainer.Size = UDim2.new(1, 0, 0, 28)  -- CHANGED: Full width to match options
+	SearchContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 30)  -- Match dropdown background
+    SearchContainer.BackgroundTransparency = 0
+    SearchContainer.BorderSizePixel = 0
+    SearchContainer.Position = UDim2.new(0, 0, 0, 5)
+    SearchContainer.Size = UDim2.new(1, 0, 0, 30)
 	SearchContainer.Name = "SearchContainer"
 	SearchContainer.LayoutOrder = -1
 	SearchContainer.Parent = ScrollSelect  -- CHANGED: Parent to ScrollSelect instead
@@ -2029,10 +2029,10 @@ function Items:AddDropdown(DropdownConfig)
 	SearchBar.Text = ""
 	SearchBar.TextColor3 = Color3.fromRGB(255, 255, 255)
 	SearchBar.TextSize = 12  -- CHANGED: Reduced from 13 to 12
-	SearchBar.TextXAlignment = Enum.TextXAlignment.Left
 	SearchBar.BackgroundTransparency = 1
-	SearchBar.Position = UDim2.new(0, 8, 0, 0)  -- CHANGED: Reduced padding
-	SearchBar.Size = UDim2.new(1, -16, 1, 0)
+	SearchBar.TextXAlignment = Enum.TextXAlignment.Center  -- Change from Left
+    SearchBar.Position = UDim2.new(0, 0, 0, 0)  -- Change from (0, 8, 0, 0)
+    SearchBar.Size = UDim2.new(1, 0, 1, 0)  -- Change from (1, -16, 1, 0)
 	SearchBar.ClearTextOnFocus = false
 	SearchBar.Parent = SearchContainer
 
@@ -2060,7 +2060,8 @@ function Items:AddDropdown(DropdownConfig)
 	ScrollSelect.BackgroundTransparency = 0.9990000128746033
 	ScrollSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	ScrollSelect.BorderSizePixel = 0
-	ScrollSelect.Size = UDim2.new(1, 0, 1, 0)  -- CHANGED: Back to full height
+	ScrollSelect.Position = UDim2.new(0, 0, 0, 0)  -- ADD THIS LINE
+    ScrollSelect.Size = UDim2.new(1, 0, 1, 0)
 	ScrollSelect.Name = "ScrollSelect"
 	ScrollSelect.ScrollBarImageTransparency = 1  -- ADDED: Hide scrollbar completely
 	ScrollSelect.Parent = DropdownFolder
