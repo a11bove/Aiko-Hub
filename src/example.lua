@@ -1,49 +1,44 @@
--- [[ Load UI ]]
+-- Load UI Library
 local Chloex = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/Library.lua"))()
 
--- [[ load Window ]]
+-- Create Window
 local Window = Chloex:Window({
-    Title   = "@aikoware |",                --- title
-    Footer  = "made by untog",                   --- in right after title
-    Image   = "136505615779937",           ---- rbxassetid (texture)
-    Color   = Color3.fromRGB(0, 208, 255), --- colour text/ui
-    Theme   = 9542022979,                  ---- background for theme ui (rbxassetid)
-    Version = 1,                           --- version config set as default 1 if u remake / rewrite / big update and change name name in your hub change it to 2 and config will reset
+    Title   = "@aikoware |",                -- Main title
+    Footer  = "made by untog",              -- Text after title
+    Image   = "136505615779937",            -- Texture ID
+    Color   = Color3.fromRGB(0, 208, 255),  -- UI color
+    Theme   = 9542022979,                   -- Background theme ID
+    Version = 1,                            -- Config version (change to reset configs)
 })
 
---- [[ Notify ]]
-if Window then
-    than("Window loaded!")
-end
-
---- Or Use Like This
+-- Notification Example
 Chloex:MakeNotify({
-Title = "@aikoware",
-Description = "Notification",
-Content = "Contoh notifikasi",
-Color = Color3.fromRGB(0, 208, 255),
-Delay = 4
+    Title = "@aikoware",
+    Description = "Notification",
+    Content = "Example notification",
+    Color = Color3.fromRGB(0, 208, 255),
+    Delay = 4
 })
 
---- [[ Make a tab ]]
+-- Create Tabs
 local Tabs = {
-    Info = Window:AddTab({ Name = "Info", Icon = "player" }), --- rbxassetid / robloxassetid (decals - texture)
+    Info = Window:AddTab({ Name = "Info", Icon = "player" }),
     Main = Window:AddTab({ Name = "Main", Icon = "user" }),
 }
 
--- [[ Make A Section for tab ]]
-X1 = Tabs.Info:AddSection("Chloe X | Section") -- [[ X1 = for load elements section ]] ,
--- X1 = Tabs.Info:AddSection("Chloe X Section", false) set as default open after load UI
--- X1 = Tabs.Info:AddSection("Chloe X Section", true) set as default always open (cant closed section) after load UI
+-- Create Section
+X1 = Tabs.Info:AddSection("@aikoware | Section")
+-- X1 = Tabs.Info:AddSection("Section Name", false) -- Default closed
+-- X1 = Tabs.Info:AddSection("Section Name", true) -- Always open
 
---- [[ Paragraphh ]]
+-- Paragraph
 X1:AddParagraph({
-    Title = "Chloe X | Community",
-    Content = "Chloe Chloe Chloe Chloe",
+    Title = "@aikoware | UI",
+    Content = "Chloe X UI Modified by @untog",
     Icon = "star",
 })
 
---- [[ Paragraph with button ]]
+-- Paragraph with Button
 X1:AddParagraph({
     Title = "Join Our Discord",
     Content = "Join Us!",
@@ -58,39 +53,40 @@ X1:AddParagraph({
     end
 })
 
---- [[ Divider ]]
+-- Divider
 X1:AddDivider()
 
---- [[ Sub Section ]]
-X1:AddSubSection("CHLOE CHLOE CHLOE")
+-- Sub Section
+X1:AddSubSection("SUB SECTION")
 
-PanelSection = Tabs.Main:AddSection("Chloe X | Panel")
+-- Panel Section
+PanelSection = Tabs.Main:AddSection("@aikoware | Panel")
 
---- [[ Panel with 2 button ]]
+-- Panel with 2 Buttons
 PanelSection:AddPanel({
-    Title = "Chloe X | Discord",
-    --  Content = "Sub Title", --- can use sub title here.
+    Title = "@aikoware | Discord",
+    Content = "Optional Subtitle", -- Optional
     ButtonText = "Copy Discord Link",
     ButtonCallback = function()
         if setclipboard then
             setclipboard("https://discord.gg/chloex")
-            chloex("Link Discord telah disalin ke clipboard.")
+            chloex("Discord link copied to clipboard.")
         else
-            chloex("Executor tidak mendukung setclipboard.")
+            chloex("Executor doesn't support setclipboard.")
         end
     end,
     SubButtonText = "Open Discord",
     SubButtonCallback = function()
-        chloex("Membuka link Discord...")
+        chloex("Opening Discord link...")
         task.spawn(function()
             game:GetService("GuiService"):OpenBrowserWindow("https://discord.gg/chloex")
         end)
     end
 })
 
--- [[ Panel with 2 Button + 1 Input ]]
+-- Panel with Input and Button
 PanelSection:AddPanel({
-    Title = "Chloe X | Utility",
+    Title = "@aikoware | Utility",
     Placeholder = "https://discord.com/api/webhooks/...",
     ButtonText = "Rejoin Server",
     ButtonCallback = function()
@@ -100,31 +96,31 @@ PanelSection:AddPanel({
     end
 })
 
---= [[ Panel with 2 Button + 1 Input]]
+-- Panel with Input and 2 Buttons
 PanelSection:AddPanel({
-    Title = "Chloe X | Webhook",
+    Title = "@aikoware | Webhook",
     Placeholder = "https://discord.com/api/webhooks/...",
-    ButtonText = "Simpan Webhook",
+    ButtonText = "Save Webhook",
     ButtonCallback = function(url)
         if url == "" then
-            chloex("Mohon isi URL webhook terlebih dahulu.")
+            chloex("Please enter webhook URL first.")
             return
         end
         _G.ChloeWebhook = url
         ConfigData.WebhookURL = url
         SaveConfig()
-        chloex("Webhook telah disimpan.")
+        chloex("Webhook saved.")
     end,
     SubButtonText = "Test Webhook",
     SubButtonCallback = function()
         if not _G.ChloeWebhook or _G.ChloeWebhook == "" then
-            chloex("Webhook belum diset.")
+            chloex("Webhook not set.")
             return
         end
-        chloex("Mengirim test webhook...")
+        chloex("Sending test webhook...")
         task.spawn(function()
             local HttpService = game:GetService("HttpService")
-            local data = { content = "Test webhook dari Chloe X." }
+            local data = { content = "Test webhook from Chloe X." }
             pcall(function()
                 HttpService:PostAsync(_G.ChloeWebhook, HttpService:JSONEncode(data))
             end)
@@ -132,21 +128,21 @@ PanelSection:AddPanel({
     end
 })
 
--- [[ Button Section ]]
-local BtnSection = Tabs.Main:AddSection("Chloe X | Button")
+-- Button Section
+local BtnSection = Tabs.Main:AddSection("@aikoware | Button")
 
--- [[ Single Button ]]
+-- Single Button
 BtnSection:AddButton({
     Title = "Open Discord",
     Callback = function()
-        chloex("Membuka Discord...")
+        chloex("Opening Discord...")
         task.spawn(function()
             game:GetService("GuiService"):OpenBrowserWindow("https://discord.gg/chloex")
         end)
     end
 })
 
--- [[ Double Button ]]
+-- Double Button
 BtnSection:AddButton({
     Title = "Rejoin",
     SubTitle = "Server Hop",
@@ -156,7 +152,7 @@ BtnSection:AddButton({
         game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
     end,
     SubCallback = function()
-        chloex("Mencari server baru...")
+        chloex("Finding new server...")
         local Http = game:GetService("HttpService")
         local TPS = game:GetService("TeleportService")
         local Servers = Http:JSONDecode(game:HttpGetAsync("https://games.roblox.com/v1/games/" ..
@@ -167,150 +163,149 @@ BtnSection:AddButton({
                 return
             end
         end
-        chloex("Tidak ada server kosong ditemukan.")
+        chloex("No available servers found.")
     end
 })
 
--- [[ Toggle Section ]]
+-- Toggle Section
 local ToggleSection = Tabs.Main:AddSection("Chloe X | Toggle")
 
--- [[ Single Toggle ]]
+-- Single Toggle
 ToggleSection:AddToggle({
     Title = "Auto Fishing",
-    Content = "Aktifkan auto fishing menggunakan Chloe X System.",
+    Content = "Enable auto fishing using Chloe X System.",
     Default = false,
     Callback = function(state)
         if state then
-            chloex("Auto Fishing diaktifkan.")
+            chloex("Auto Fishing enabled.")
             _G.AutoFish = true
         else
-            chloex("Auto Fishing dimatikan.")
+            chloex("Auto Fishing disabled.")
             _G.AutoFish = false
         end
     end
 })
 
--- [[ Toggle with Sub Title ]]
+-- Toggle with Subtitle
 ToggleSection:AddToggle({
     Title = "Auto Sell",
     Title2 = "Sell All Fish Automatically",
-    Content = "Menjual semua ikan setelah menangkapnya.",
+    Content = "Sells all fish after catching them.",
     Default = false,
     Callback = function(state)
         if state then
-            chloex("Auto Sell aktif.")
+            chloex("Auto Sell active.")
             _G.AutoSell = true
         else
-            chloex("Auto Sell nonaktif.")
+            chloex("Auto Sell inactive.")
             _G.AutoSell = false
         end
     end
 })
 
--- [[ Slider Section ]]
+-- Slider Section
 local SliderSection = Tabs.Main:AddSection("Chloe X | Slider")
 
--- [[ Slider for Fishing Delay ]]
+-- Fishing Delay Slider
 SliderSection:AddSlider({
     Title = "Fishing Delay",
-    Content = "Atur jeda waktu auto fishing.",
+    Content = "Set auto fishing delay time.",
     Min = 0.1,
     Max = 5,
     Increment = 0.1,
     Default = 1,
     Callback = function(value)
         _G.Delay = value
-        chloex("Delay diset ke: " .. tostring(value) .. " detik.")
+        chloex("Delay set to: " .. tostring(value) .. " seconds.")
     end
 })
 
--- [[ Slider for Volume Control ]]
+-- Volume Slider
 SliderSection:AddSlider({
     Title = "Sound Volume",
-    Content = "Sesuaikan volume efek suara Chloe X.",
+    Content = "Adjust Chloe X sound effects volume.",
     Min = 0,
     Max = 100,
     Increment = 5,
     Default = 50,
     Callback = function(value)
-        chloex("Volume diubah ke: " .. tostring(value) .. "%")
+        chloex("Volume changed to: " .. tostring(value) .. "%")
     end
 })
 
--- [[ Slider for Animation Speed ]]
+-- Animation Speed Slider
 SliderSection:AddSlider({
     Title = "Animation Speed",
-    Content = "Atur kecepatan animasi antarmuka Chloe X.",
+    Content = "Set Chloe X interface animation speed.",
     Min = 0.5,
     Max = 2,
     Increment = 0.1,
     Default = 1,
     Callback = function(value)
         _G.AnimationSpeed = value
-        chloex("Kecepatan animasi diset ke: " .. tostring(value) .. "x")
+        chloex("Animation speed set to: " .. tostring(value) .. "x")
     end
 })
 
--- [[ Input Section ]]
+-- Input Section
 local InputSection = Tabs.Main:AddSection("Chloe X | Input")
 
--- [[ Input ]]
+-- Text Input
 InputSection:AddInput({
     Title = "Username",
-    Content = "Masukkan nama pengguna kamu untuk disimpan di konfigurasi.",
+    Content = "Enter your username to save in config.",
     Default = "",
     Callback = function(value)
         _G.ChloeUsername = value
-        chloex("Username diset ke: " .. value)
+        chloex("Username set to: " .. value)
     end
 })
 
--- [[ Dropdown Section ]]
+-- Dropdown Section
 local DropdownSection = Tabs.Main:AddSection("Chloe X | Dropdown")
 
--- [[ Basic Dropdown ]]
+-- Basic Dropdown
 DropdownSection:AddDropdown({
     Title = "Select Theme",
-    Content = "Pilih tema antarmuka untuk Chloe X.",
+    Content = "Choose interface theme for Chloe X.",
     Options = { "Celestial", "Seraphin", "Nebula", "Luna" },
     Default = "Celestial",
     Callback = function(value)
         _G.SelectedTheme = value
-        chloex("Tema diubah ke: " .. value)
+        chloex("Theme changed to: " .. value)
     end
 })
 
--- [[ Multi Select Dropdown ]]
+-- Multi-Select Dropdown
 DropdownSection:AddDropdown({
     Title = "Select Features",
-    Content = "Pilih beberapa fitur Chloe X yang ingin diaktifkan.",
+    Content = "Select multiple Chloe X features to enable.",
     Multi = true,
     Options = { "Auto Fishing", "Auto Sell", "Auto Quest", "Webhook Notification" },
     Default = { "Auto Fishing" },
     Callback = function(selected)
         _G.ActiveFeatures = selected
-        chloex("Fitur aktif: " .. table.concat(selected, ", "))
+        chloex("Active features: " .. table.concat(selected, ", "))
     end
 })
 
--- [[ Dynamic Dropdown ]]
+-- Dynamic Dropdown
 local DynamicDropdown = DropdownSection:AddDropdown({
     Title = "Select Bait",
-    Content = "Pilih umpan yang akan digunakan.",
+    Content = "Choose bait to use.",
     Options = {},
     Default = nil,
     Callback = function(value)
         _G.SelectedBait = value
-        chloex("Umpan dipilih: " .. value)
+        chloex("Bait selected: " .. value)
     end
 })
 
---- refresh value dropdown use SetValues
+-- Update dropdown options dynamically
 task.spawn(function()
     task.wait(1)
     local baitList = { "Common Bait", "Rare Bait", "Mythic Bait", "Divine Bait" }
     DynamicDropdown:SetValues(baitList, "Common Bait")
 end)
 
--- [[ Config ]]
--- This library is auto save / load all element without any if u got bug in saved in you ui use SaveConfig()
+-- Config auto-saves/loads all elements. Use SaveConfig() if needed.
