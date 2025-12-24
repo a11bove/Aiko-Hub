@@ -430,7 +430,7 @@ function FlurioreLib:MakeGui(GuiConfig)
     GuiConfig.Version = GuiConfig.Version or 1
 
     CURRENT_VERSION = GuiConfig.Version
-    LoadConfigFromFile()l
+    LoadConfigFromFile()
 
     local GuiFunc = {}
 
