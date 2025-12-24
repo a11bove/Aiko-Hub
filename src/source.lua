@@ -730,7 +730,7 @@ function FlurioreLib:MakeGui(GuiConfig)
 	DropdownSelect.Position = UDim2.new(1, 172, 0.5, 0)
 	DropdownSelect.Size = UDim2.new(0, 160, 1, -16)
 	DropdownSelect.Name = "DropdownSelect"
-	DropdownSelect.ClipsDescendants = false
+	DropdownSelect.ClipsDescendants = true
 	DropdownSelect.Parent = MoreBlur
 
 	ConnectButton.MouseButton1Click:Connect(function(input)
@@ -766,7 +766,7 @@ end)
 	DropdownSelectReal.BorderSizePixel = 0
 	DropdownSelectReal.LayoutOrder = 1
 	DropdownSelectReal.Position = UDim2.new(0.5, 0, 0.5, 0)
-	DropdownSelectReal.Size = UDim2.new(1, -10, 1, -10)
+	DropdownSelectReal.Size = UDim2.new(1, -20, 1, -10)
 	DropdownSelectReal.Name = "DropdownSelectReal"
 	DropdownSelectReal.Parent = DropdownSelect
 
@@ -2051,7 +2051,6 @@ function Items:AddDropdown(DropdownConfig)
 	ScrollSelect.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
 	ScrollSelect.ScrollBarThickness = 0
 	ScrollSelect.Active = true
-	ScrollSelect.ScrollingEnabled = true
 	ScrollSelect.LayoutOrder = CountDropdown
 	ScrollSelect.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 	ScrollSelect.BackgroundTransparency = 0.9990000128746033
