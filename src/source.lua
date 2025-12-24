@@ -1993,26 +1993,19 @@ function Items:AddDropdown(DropdownConfig)
 	OptionImg.Name = "OptionImg"
 	OptionImg.Parent = SelectOptionsFrame
 
--- Find the AddDropdown function and replace the search bar section with this:
-
--- Replace the section starting from "local ScrollSelect = Instance.new("ScrollingFrame");" 
--- up to where options are added, with this code:
-
--- Create container for search bar (OUTSIDE scroll frame)
 local SearchContainer = Instance.new("Frame")
 local SearchBar = Instance.new("TextBox")
 local SearchTopCorner = Instance.new("UICorner")
 
 SearchContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-SearchContainer.BackgroundTransparency = 0  -- Fully opaque to block scrolling content
+SearchContainer.BackgroundTransparency = 0
 SearchContainer.BorderSizePixel = 0
-SearchContainer.Position = UDim2.new(0, 0, 0, 0)  -- Absolutely stick to top
-SearchContainer.Size = UDim2.new(1, 0, 0, 35)  -- Full width
+SearchContainer.Position = UDim2.new(0, 0, 0, 0)
+SearchContainer.Size = UDim2.new(1, 0, 0, 35)
 SearchContainer.Name = "SearchContainer"
-SearchContainer.ZIndex = 10  -- Higher ZIndex to stay on top of scrolling content
-SearchContainer.Parent = DropdownSelectReal  -- Parent to DropdownSelectReal, NOT ScrollSelect
+SearchContainer.ZIndex = 10
+SearchContainer.Parent = DropdownSelectReal
 
--- Add rounded corners ONLY to top of search bar to match dropdown
 SearchTopCorner.CornerRadius = UDim.new(0, 6)
 SearchTopCorner.Parent = SearchContainer
 
@@ -2021,16 +2014,15 @@ SearchBar.PlaceholderText = "Search..."
 SearchBar.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
 SearchBar.Text = ""
 SearchBar.TextColor3 = Color3.fromRGB(255, 255, 255)
-SearchBar.TextSize = 12
+SearchBar.TextSize = 14
 SearchBar.BackgroundTransparency = 1
 SearchBar.TextXAlignment = Enum.TextXAlignment.Center
 SearchBar.Position = UDim2.new(0, 0, 0, 0)
 SearchBar.Size = UDim2.new(1, 0, 1, 0)
 SearchBar.ClearTextOnFocus = false
-SearchBar.ZIndex = 11  -- Higher than container
+SearchBar.ZIndex = 11
 SearchBar.Parent = SearchContainer
 
--- Create ScrollingFrame BELOW search bar
 local ScrollSelect = Instance.new("ScrollingFrame");
 local UIListLayout4 = Instance.new("UIListLayout");
 
@@ -2050,16 +2042,10 @@ ScrollSelect.Size = UDim2.new(1, 0, 1, -35)  -- Full width and height minus sear
 ScrollSelect.Name = "ScrollSelect"
 ScrollSelect.Parent = DropdownFolder
 
--- Add UICorner with rounded bottom corners to match dropdown
-local ScrollCorner = Instance.new("UICorner")
-ScrollCorner.CornerRadius = UDim.new(0, 6)
-ScrollCorner.Parent = ScrollSelect
-
 UIListLayout4.Padding = UDim.new(0, 3)
 UIListLayout4.SortOrder = Enum.SortOrder.LayoutOrder
 UIListLayout4.Parent = ScrollSelect
 
--- Add padding to prevent options from being cut off by rounded corners
 local ScrollPadding = Instance.new("UIPadding")
 ScrollPadding.PaddingBottom = UDim.new(0, 8)  -- Space for bottom rounded corner
 ScrollPadding.Parent = ScrollSelect
