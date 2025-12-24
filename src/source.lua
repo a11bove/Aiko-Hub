@@ -1141,12 +1141,19 @@ function Library:Window(GuiConfig)
         end
 
         if TabConfig.Icon ~= "" then
-            if Icons[TabConfig.Icon] then
-                FeatureImg.Image = Icons[TabConfig.Icon]
-            else
-                FeatureImg.Image = TabConfig.Icon
-            end
-        end
+    local iconKey = string.lower(TabConfig.Icon)
+    
+    -- Check LucideIcons first
+    if LucideIcons[iconKey] then
+        FeatureImg.Image = LucideIcons[iconKey]
+    -- Then check CustomIcons
+    elseif CustomIcons and CustomIcons[TabConfig.Icon] then
+        FeatureImg.Image = CustomIcons[TabConfig.Icon]
+    -- Finally use direct ID
+    else
+        FeatureImg.Image = TabConfig.Icon
+    end
+end
 
         TabButton.Activated:Connect(function()
             CircleClick(TabButton, Mouse.X, Mouse.Y)
@@ -1449,13 +1456,16 @@ function Library:Window(GuiConfig)
                     IconImg.BackgroundTransparency = 1
                     IconImg.Name = "ParagraphIcon"
                     IconImg.Parent = Paragraph
-
-                    if Icons and Icons[ParagraphConfig.Icon] then
-                        IconImg.Image = Icons[ParagraphConfig.Icon]
+    
+                local iconKey = string.lower(ParagraphConfig.Icon)
+                if LucideIcons[iconKey] then
+                    IconImg.Image = LucideIcons[iconKey]
+            elseif CustomIcons and CustomIcons[ParagraphConfig.Icon] then
+                        IconImg.Image = CustomIcons[ParagraphConfig.Icon]
                     else
                         IconImg.Image = ParagraphConfig.Icon
                     end
-
+                end
                     iconOffset = 30
                 end
 
