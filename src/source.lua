@@ -64,19 +64,41 @@ pcall(function()
     LucideIcons = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/icons.lua"))()
 end)
 
-local function GetIcon(iconName)
-    if not iconName or iconName == "" then
-        return "rbxassetid://16932740082" -- default icon
-    end
-    
-    if string.match(iconName, "rbxassetid://") then
-        return iconName
-    end
-    
-    local lowerName = string.lower(iconName)
-    
-    return LucideIcons[lowerName] or iconName
-end
+local CustomIcons = {
+    player    = "rbxassetid://12120698352",
+    web       = "rbxassetid://137601480983962",
+    bag       = "rbxassetid://8601111810",
+    shop      = "rbxassetid://4985385964",
+    cart      = "rbxassetid://128874923961846",
+    plug      = "rbxassetid://137601480983962",
+    loop      = "rbxassetid://122032243989747",
+    gps       = "rbxassetid://17824309485",
+    compas    = "rbxassetid://125300760963399",
+    gamepad   = "rbxassetid://84173963561612",
+    boss      = "rbxassetid://13132186360",
+    scroll    = "rbxassetid://114127804740858",
+    menu      = "rbxassetid://6340513838",
+    crosshair = "rbxassetid://12614416478",
+    user      = "rbxassetid://108483430622128",
+    stat      = "rbxassetid://12094445329",
+    eyes      = "rbxassetid://14321059114",
+    sword     = "rbxassetid://82472368671405",
+    discord   = "rbxassetid://94434236999817",
+    star      = "rbxassetid://107005941750079",
+    skeleton  = "rbxassetid://17313330026",
+    payment   = "rbxassetid://18747025078",
+    scan      = "rbxassetid://109869955247116",
+    alert     = "rbxassetid://73186275216515",
+    question  = "rbxassetid://17510196486",
+    idea      = "rbxassetid://16833255748",
+    strom     = "rbxassetid://13321880293",
+    water     = "rbxassetid://100076212630732",
+    dcs       = "rbxassetid://15310731934",
+    start     = "rbxassetid://108886429866687",
+    next      = "rbxassetid://12662718374",
+    rod       = "rbxassetid://103247953194129",
+    fish      = "rbxassetid://97167558235554",
+}
 
 local function isMobileDevice()
     return UserInputService.TouchEnabled
