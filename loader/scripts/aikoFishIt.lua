@@ -1985,136 +1985,20 @@ autotrade:AddButton({
     end
 })
 
+-- Load the Misc Module
+local MiscModule = loadstring(game:HttpGet("YOUR_URL_HERE"))()
+MiscModule:Initialize()
+
 local idn = Misc:AddSection("Hide Identity")
-
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-
-local function getOverheadElements()
-    local character = LocalPlayer.Character
-    if not character then return nil, nil end
-
-    local hrp = character:FindFirstChild("HumanoidRootPart")
-    if not hrp then return nil, nil end
-
-    local overhead = hrp:FindFirstChild("Overhead")
-    if not overhead then return nil, nil end
-
-    local nameLabel = overhead:FindFirstChild("Content") and overhead.Content:FindFirstChild("Header")
-    local levelLabel = overhead:FindFirstChild("LevelContainer") and overhead.LevelContainer:FindFirstChild("Label")
-
-    return nameLabel, levelLabel
-end
-
-local NameLabel, LevelLabel = getOverheadElements()
-
-local OriginalName = NameLabel and NameLabel.Text or "Player"
-local OriginalLevel = LevelLabel and LevelLabel.Text or "1"
-
-local HideIdentityEnabled = true
-
-local function updateIdentityDisplay()
-    local nameLabel, levelLabel = getOverheadElements()
-
-    if nameLabel and levelLabel then
-        if HideIdentityEnabled then
-            nameLabel.Text = "@aikoware [PROTECTED]"
-            levelLabel.Text = "@aikoware [PROTECTED]"
-        else
-            nameLabel.Text = OriginalName
-            levelLabel.Text = OriginalLevel
-        end
-    end
-end
-
-local overheadConnection
-local function startOverheadMonitoring()
-    if overheadConnection then
-        overheadConnection:Disconnect()
-    end
-
-    overheadConnection = RunService.Heartbeat:Connect(function()
-        if HideIdentityEnabled then
-            updateIdentityDisplay()
-        end
-    end)
-end
-
-LocalPlayer.CharacterAdded:Connect(function(character)
-    task.wait(1)
-
-    NameLabel, LevelLabel = getOverheadElements()
-
-    if NameLabel and LevelLabel then
-        OriginalName = NameLabel.Text
-        OriginalLevel = LevelLabel.Text
-    end
-
-    if HideIdentityEnabled then
-        updateIdentityDisplay()
-    end
-end)
 
 local antiSolace = idn:AddToggle({
     Title = "Enable Hide Identity",
     Content = "",
     Default = true,
     Callback = function(enabled)
-        HideIdentityEnabled = enabled
-
-        if enabled then
-            startOverheadMonitoring()
-            updateIdentityDisplay()
-        else
-            if overheadConnection then
-                overheadConnection:Disconnect()
-                overheadConnection = nil
-            end
-
-            updateIdentityDisplay()
-        end
+        MiscModule.Identity:Toggle(enabled)
     end
 })
-
-local OriginalNameColor = NameLabel and NameLabel.TextColor3 or Color3.new(1, 1, 1)
-
-coroutine.wrap(function()
-    local hue = 0
-    while true do
-        if HideIdentityEnabled then
-            local nameLabel, levelLabel = getOverheadElements()
-            if nameLabel then
-                hue = (hue + 0.01) % 1
-                local rainbowColor = Color3.fromHSV(hue, 1, 1)
-                nameLabel.TextColor3 = rainbowColor
-            end
-        else
-            local nameLabel, levelLabel = getOverheadElements()
-            if nameLabel then
-                nameLabel.TextColor3 = OriginalNameColor
-            end
-        end
-        wait(0.05)
-    end
-end)()
-
---[[ Rainbow text effect
-coroutine.wrap(function()
-    local hue = 0
-    while true do
-        if HideIdentityEnabled then
-            hue = (hue + 0.01) % 1
-            local rainbowColor = Color3.fromHSV(hue, 1, 1)
-            NameLabel.TextColor3 = rainbowColor
-            LevelLabel.TextColor3 = rainbowColor
-        else
-            NameLabel.TextColor3 = Color3.new(1, 1, 1)
-            LevelLabel.TextColor3 = Color3.new(1, 1, 1)
-        end
-        wait(0.05)
-    end
-end)()]]
 
 local uset = Misc:AddSection("User Settings")
 
@@ -2125,12 +2009,7 @@ local WALKSPEED = uset:AddSlider({
     Max = 200,
     Default = 18,
     Callback = function(value)
-        local player = game.Players.LocalPlayer
-        local char = player.Character or player.CharacterAdded:Wait()
-        local humanoid = char:FindFirstChild("Humanoid")
-        if humanoid then
-            humanoid.WalkSpeed = value
-        end
+        MiscModule.Walkspeed:Set(value)
     end
 })
 
@@ -2138,12 +2017,7 @@ uset:AddButton({
     Title = "Reset Walkspeed",
     Content = "Returns to default speed.",
     Callback = function()
-        local player = game.Players.LocalPlayer
-        local char = player.Character or player.CharacterAdded:Wait()
-        local humanoid = char:FindFirstChild("Humanoid")
-        if humanoid then
-            humanoid.WalkSpeed = 18
-        end
+        MiscModule.Walkspeed:Reset()
         Library:MakeNotify({
             Title = "@aikoware",
             Description = "Walkspeed Reset",
@@ -2158,120 +2032,22 @@ local INFJUMP = uset:AddToggle({
     Content = "",
     Default = false,
     Callback = function(enabled)
-        _G.InfiniteJump = enabled
-            Library:MakeNotify({
-                Title = "@aikoware",
-                Description = "| Infinite Jump",
-                Content = enabled and "Enabled" or "Disabled",
-            })
+        MiscModule.InfiniteJump:Toggle(enabled)
+        Library:MakeNotify({
+            Title = "@aikoware",
+            Description = "| Infinite Jump",
+            Content = enabled and "Enabled" or "Disabled",
+        })
     end
 })
 
 local perf = Misc:AddSection("Performance")
 
-local hidePlayersEnabled = false
-local function setCharacterVisibility(character, visible)
-    if character then
-        for _, descendant in ipairs(character:GetDescendants()) do
-            if descendant:IsA("BasePart") then
-                pcall(function()
-                    descendant.LocalTransparencyModifier = visible and 0 or 1
-                    descendant.CanCollide = visible
-                end)
-            elseif descendant:IsA("Decal") then
-                pcall(function()
-                    descendant.Transparency = visible and 0 or 1
-                end)
-            end
-        end
-    end
-end
-
-local function hideAllPlayers()
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer and player.Character then
-            setCharacterVisibility(player.Character, false)
-        end
-    end
-end
-
-local function showAllPlayers()
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer and player.Character then
-            setCharacterVisibility(player.Character, true)
-        end
-    end
-end
-
-local function enableHidePlayers()
-    if not hidePlayersEnabled then
-        hidePlayersEnabled = true
-        hideAllPlayers()
-
-        playerAddedConnection = Players.PlayerAdded:Connect(function(player)
-            characterConnections[player] = player.CharacterAdded:Connect(function(character)
-                task.wait(0.5)
-                setCharacterVisibility(character, false)
-            end)
-
-            if player.Character then
-                task.wait(0.1)
-                setCharacterVisibility(player.Character, false)
-            end
-        end)
-
-        for _, player in ipairs(Players:GetPlayers()) do
-            if player ~= LocalPlayer and not characterConnections[player] then
-                characterConnections[player] = player.CharacterAdded:Connect(function(character)
-                    task.wait(0.5)
-                    setCharacterVisibility(character, false)
-                end)
-            end
-        end
-    end
-end
-
-local function disableHidePlayers()
-    if hidePlayersEnabled then
-        hidePlayersEnabled = false
-        showAllPlayers()
-
-        if playerAddedConnection then
-            playerAddedConnection:Disconnect()
-            playerAddedConnection = nil
-        end
-
-        for player, connection in pairs(characterConnections) do
-            if connection then
-                connection:Disconnect()
-            end
-            characterConnections[player] = nil
-        end
-    end
-end
-
 perf:AddButton({
     Title = "Low GFX",
     Content = "Ultra low graphics mode.",
     Callback = function()
-        for _, v in pairs(game:GetDescendants()) do
-            if v:IsA("BasePart") then
-                v.Material = Enum.Material.SmoothPlastic
-                v.Reflectance = 0
-                v.CastShadow = false
-            elseif v:IsA("Decal") or v:IsA("Texture") then
-                v.Transparency = 1
-            elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
-                v.Enabled = false
-            end
-        end
-
-        local Lighting = game:GetService("Lighting")
-        Lighting.GlobalShadows = false
-        Lighting.FogEnd = 9e9
-        Lighting.Brightness = 1
-
-        settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+        MiscModule.Performance:LowGFX()
     end
 })
 
@@ -2280,12 +2056,12 @@ perf:AddToggle({
     Content = "",
     Default = false,
     Callback = function(enabled)
-            if enabled then
-                    enableHidePlayers()
-                else
-                    disableHidePlayers()
-                end
-            end
+        if enabled then
+            MiscModule.Performance:EnableHidePlayers()
+        else
+            MiscModule.Performance:DisableHidePlayers()
+        end
+    end
 })
 
 perf:AddToggle({
@@ -2293,10 +2069,8 @@ perf:AddToggle({
     Content = "",
     Default = false,
     Callback = function(enabled)
-            pcall(function()
-                    Lighting.GlobalShadows = not enabled
-                end)
-            end
+        MiscModule.Performance:RemoveShadows(enabled)
+    end
 })
 
 perf:AddToggle({
@@ -2304,10 +2078,8 @@ perf:AddToggle({
     Content = "",
     Default = false,
     Callback = function(enabled)
-            pcall(function()
-                    Lighting.EnvironmentSpecularScale = enabled and 0 or 1
-                end)
-            end
+        MiscModule.Performance:RemoveWaterReflections(enabled)
+    end
 })
 
 perf:AddToggle({
@@ -2315,14 +2087,8 @@ perf:AddToggle({
     Content = "",
     Default = false,
     Callback = function(enabled)
-            for _, descendant in ipairs(workspace:GetDescendants()) do
-                    if descendant:IsA("ParticleEmitter") or descendant:IsA("Trail") or descendant:IsA("Beam") then
-                        pcall(function()
-                            descendant.Enabled = not enabled
-                        end)
-                    end
-                end
-            end
+        MiscModule.Performance:RemoveParticles(enabled)
+    end
 })
 
 perf:AddToggle({
@@ -2330,22 +2096,27 @@ perf:AddToggle({
     Content = "",
     Default = false,
     Callback = function(enabled)
-            local terrain = workspace:FindFirstChildOfClass("Terrain")
-                if terrain then
-                    pcall(function()
-                        terrain.Decoration = not enabled
-                    end)
-                end
-            end
+        MiscModule.Performance:RemoveTerrainDecorations(enabled)
+    end
 })
 
-LocalPlayer.CharacterAdded:Connect(function()
-    if freezeConnection then
-        freezeConnection:Disconnect()
-        freezeConnection = nil
+local ntf = Fishing:AddSection("Auto Fish Misc")
+
+local freezeCHAR = ntf:AddToggle({
+    Title = "Freeze Character",
+    Content = "",
+    Default = false,
+    Callback = function(enabled)
+        MiscModule.FreezeCharacter:Toggle(enabled)
+        
+        Library:MakeNotify({
+            Title = "@aikoware",
+            Description = "| Freeze Character",
+            Content = enabled and "Enabled" or "Disabled",
+            Delay = 2
+        })
     end
-    _G.FreezeCharacter = false
-end)
+})
 
 local xpb = Misc:AddSection("Level Progress")
 
@@ -2354,59 +2125,36 @@ local xpProgress = xpb:AddToggle({
     Content = "",
     Default = true,
     Callback = function(state)
-        local XPBar = LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("XP")
-        if XPBar then
-            XPBar.Enabled = state
-        end
+        MiscModule.XPBar:Toggle(state)
     end
 })
 
 local oxy = Misc:AddSection("Oxygen")
-
-local AntiDrown_Enabled = false
-local rawmt = getrawmetatable(game)
-setreadonly(rawmt, false)
-local oldNamecall = rawmt.__namecall
-
-rawmt.__namecall = newcclosure(function(self, ...)
-    local args = { ... }
-    local method = getnamecallmethod()
-
-    if tostring(self) == "URE/UpdateOxygen" and method == "FireServer" and AntiDrown_Enabled then
-        return nil
-    end
-
-    return oldNamecall(self, ...)
-end)
-
-local DrownBN = true
 
 local antiDrown = oxy:AddToggle({
     Title = "Anti Drown",
     Content = "",
     Default = false,
     Callback = function(state)
-        AntiDrown_Enabled = state
-        if DrownBN then
-            DrownBN = false
-            return
-        end
-        if state then
-            Library:MakeNotify({
-                Title = "@aikoware",
-                Description = "| Anti Drown",
-                Content = "Enabled",
-                Delay = 2
-            })
-        else
-            Library:MakeNotify({
-                Title = "@aikoware",
-                Description = "| Anti Drown",
-                Content = "Disabled",
-                Delay = 2
-            })
-        end
+        MiscModule.AntiDrown:Toggle(state)
+        Library:MakeNotify({
+            Title = "@aikoware",
+            Description = "| Anti Drown",
+            Content = state and "Enabled" or "Disabled",
+            Delay = 2
+        })
     end,
+})
+
+local radsr = Misc:AddSection("Fishing Radar")
+
+radsr:AddToggle({
+    Title = "Fishing Radar",
+    Content = "",
+    Default = false,
+    Callback = function(state)
+        MiscModule.FishingRadar:Toggle(state)
+    end
 })
 
 Library:MakeNotify({
@@ -2420,67 +2168,3 @@ task.spawn(function()
     task.wait(2)
     LoadConfigElements()
 end)
-
-local radsr = Misc:AddSection("Fishing Radar")
-
-radsr:AddToggle({
-    Title = "Fishing Radar",
-    Content = "",
-    Default = false,
-    Callback = function(state)
-        local ReplicatedStorage = game:GetService("ReplicatedStorage")
-        local Lighting = game:GetService("Lighting")
-
-        local Replion = require(ReplicatedStorage.Packages.Replion)
-        local Net = require(ReplicatedStorage.Packages.Net)
-        local SPR = require(ReplicatedStorage.Packages.spr)
-        local Soundbook = require(ReplicatedStorage.Shared.Soundbook)
-        local ClientTime = require(ReplicatedStorage.Controllers.ClientTimeController)
-        local TextNotification = require(ReplicatedStorage.Controllers.TextNotificationController)
-
-        local UpdateFishingRadar = Net:RemoteFunction("UpdateFishingRadar")
-
-        local function SetRadar(enable)
-            local clientData = Replion.Client:GetReplion("Data")
-            if not clientData then return end
-
-            if clientData:Get("RegionsVisible") ~= enable then
-                if UpdateFishingRadar:InvokeServer(enable) then
-                    Soundbook.Sounds.RadarToggle:Play().PlaybackSpeed = 1 + math.random() * 0.3
-
-                    if enable then
-                        local ccEffect = Lighting:FindFirstChildWhichIsA("ColorCorrectionEffect")
-                        if ccEffect then
-                            SPR.stop(ccEffect)
-                            local lightingProfile = ClientTime:_getLightingProfile()
-                            local targetSettings = (lightingProfile and lightingProfile.ColorCorrection) or {}
-                            targetSettings.Brightness = targetSettings.Brightness or 0.04
-                            targetSettings.TintColor = targetSettings.TintColor or Color3.fromRGB(255, 255, 255)
-
-                            ccEffect.TintColor = Color3.fromRGB(42, 226, 118)
-                            ccEffect.Brightness = 0.4
-                            SPR.target(ccEffect, 1, 1, targetSettings)
-                        end
-
-                        SPR.stop(Lighting)
-                        Lighting.ExposureCompensation = 1
-                        SPR.target(Lighting, 1, 2, {ExposureCompensation = 0})
-                    end
-
-                    TextNotification:DeliverNotification({
-                        Type = "Text",
-                        Text = "Radar: "..(enable and "Enabled" or "Disabled"),
-                        TextColor = enable and {R = 9, G = 255, B = 0} or {R = 255, G = 0, B = 0}
-                    })
-                end
-            end
-        end
-
-        -- Toggle ON/OFF
-        if state then
-            SetRadar(true)
-        else
-            SetRadar(false)
-        end
-    end
-})
