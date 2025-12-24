@@ -2009,7 +2009,8 @@ ScrollSelect.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 ScrollSelect.BackgroundTransparency = 0.9990000128746033
 ScrollSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
 ScrollSelect.BorderSizePixel = 0
-ScrollSelect.Size = UDim2.new(1, 0, 1, 0)
+ScrollSelect.Position = UDim2.new(0, 0, 0, 40)  -- Start below search bar
+ScrollSelect.Size = UDim2.new(1, 0, 1, -40)  -- Take remaining space
 ScrollSelect.LayoutOrder = CountDropdown
 ScrollSelect.Name = "ScrollSelect"
 ScrollSelect.Parent = DropdownFolder
@@ -2018,7 +2019,12 @@ UIListLayout4.Padding = UDim.new(0, 3)
 UIListLayout4.SortOrder = Enum.SortOrder.LayoutOrder
 UIListLayout4.Parent = ScrollSelect
 
--- Create search bar as FIRST CHILD of ScrollSelect with LayoutOrder -1
+local ScrollPadding = Instance.new("UIPadding")
+ScrollPadding.PaddingTop = UDim.new(0, 5)
+ScrollPadding.PaddingBottom = UDim.new(0, 8)
+ScrollPadding.Parent = ScrollSelect
+
+-- Create search bar positioned absolutely at the top
 local SearchContainer = Instance.new("Frame")
 local SearchBar = Instance.new("TextBox")
 local SearchTopCorner = Instance.new("UICorner")
@@ -2026,10 +2032,11 @@ local SearchTopCorner = Instance.new("UICorner")
 SearchContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 SearchContainer.BackgroundTransparency = 0
 SearchContainer.BorderSizePixel = 0
+SearchContainer.Position = UDim2.new(0, 0, 0, 0)  -- Absolute position at top
 SearchContainer.Size = UDim2.new(1, 0, 0, 35)
 SearchContainer.Name = "SearchContainer"
-SearchContainer.LayoutOrder = -1  -- This keeps it at the top
-SearchContainer.Parent = ScrollSelect
+SearchContainer.ZIndex = 10  -- Higher ZIndex to appear on top
+SearchContainer.Parent = DropdownSelectReal  -- Parent to the main dropdown container
 
 SearchTopCorner.CornerRadius = UDim.new(0, 6)
 SearchTopCorner.Parent = SearchContainer
@@ -2045,6 +2052,7 @@ SearchBar.TextXAlignment = Enum.TextXAlignment.Center
 SearchBar.Position = UDim2.new(0, 0, 0, 0)
 SearchBar.Size = UDim2.new(1, 0, 1, 0)
 SearchBar.ClearTextOnFocus = false
+SearchBar.ZIndex = 11
 SearchBar.Parent = SearchContainer
 
 -- SEARCH FUNCTIONALITY
@@ -2061,7 +2069,7 @@ SearchBar:GetPropertyChangedSignal("Text"):Connect(function()
 		end
 	end
 	-- Update canvas size after filtering
-	local OffsetY = 38  -- Start with search container height
+	local OffsetY = 0
 	for _, child in ScrollSelect:GetChildren() do
 		if child.Name == "Option" and child.Visible then
 			OffsetY = OffsetY + 3 + child.Size.Y.Offset
