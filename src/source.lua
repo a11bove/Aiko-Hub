@@ -1993,7 +1993,7 @@ function Items:AddDropdown(DropdownConfig)
 	OptionImg.Name = "OptionImg"
 	OptionImg.Parent = SelectOptionsFrame
 
--- Replace the search bar and ScrollSelect section in your AddDropdown function with this:
+-- Replace the search bar and ScrollSelect section AND the canvas update in your AddDropdown function with this:
 
 -- Create a wrapper frame that will be managed by UIPageLayout
 local DropdownPage = Instance.new("Frame")
@@ -2088,7 +2088,7 @@ DropdownButton.MouseButton1Click:Connect(function()
 	CircleClick(DropdownButton, Mouse.X, Mouse.Y)
 	if not MoreBlur.Visible then
 		MoreBlur.Visible = true 
-		DropPageLayout:JumpToIndex(SelectOptionsFrame.LayoutOrder)
+		DropPageLayout:JumpToIndex(CountDropdown)  -- CHANGED: Use CountDropdown directly
 		MoreBlur.BackgroundTransparency = 1
 		TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, -8, 0.5, 0)}):Play()
 		SearchBar.Text = ""  -- Clear search when opening
