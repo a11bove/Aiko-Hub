@@ -1234,8 +1234,8 @@ local sellThreshold = 30
 local autoSellEnabled = false
 
 sell:AddInput({
-    Title = "Auto Sell Threshold",
-    Content = "Fish count in backpack.",
+    Title = "Auto Sell Delay",
+    Content = "",
     Placeholder = "30",
     Callback = function(value)
         local num = tonumber(value)
@@ -1694,7 +1694,7 @@ local function createEventPlatform(position)
 
     eventPlatform = Instance.new("Part")
     eventPlatform.Size = Vector3.new(10, 1, 10)
-    eventPlatform.Position = position - Vector3.new(0, 3.5, 0)
+    eventPlatform.Position = position - Vector3.new(0, 5, 0)
     eventPlatform.Anchored = true
     eventPlatform.CanCollide = true
     eventPlatform.Transparency = 0.3
