@@ -2056,8 +2056,7 @@ function Items:AddDropdown(DropdownConfig)
 	ScrollSelect.BackgroundTransparency = 0.9990000128746033
 	ScrollSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	ScrollSelect.BorderSizePixel = 0
-	ScrollSelect.ClipDescendants = true
-	ScrollSelect.Size = UDim2.new(1, 0, 1, 0)  -- CHANGED: Back to full height
+	ScrollSelect.Size = UDim2.new(1, -10, 1, 0)  -- CHANGED: Back to full height
 	ScrollSelect.Name = "ScrollSelect"
 	ScrollSelect.ScrollBarImageTransparency = 1  -- ADDED: Hide scrollbar completely
 	ScrollSelect.Parent = DropdownFolder
