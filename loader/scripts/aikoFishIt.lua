@@ -863,24 +863,24 @@ local rods = {
 }
 
 local rodNames = {
-    "Luck Rod (350 Coins)", "Carbon Rod (900 Coins)", "Grass Rod (1.5k Coins)", "Demascus Rod (3k Coins)",
-    "Ice Rod (5k Coins)", "Lucky Rod (15k Coins)", "Midnight Rod (50k Coins)", "Steampunk Rod (215k Coins)",
-    "Chrome Rod (437k Coins)", "Astral Rod (1M Coins)", "Ares Rod (3M Coins)", "Angler Rod (8M Coins)"
+    "Luck Rod", "Carbon Rod", "Grass Rod", "Demascus Rod",
+    "Ice Rod", "Lucky Rod", "Midnight Rod", "Steampunk Rod",
+    "Chrome Rod", "Astral Rod", "Ares Rod", "Angler Rod"
 }
 
 local rodKeyMap = {
-    ["Luck Rod (350 Coins)"]="Luck Rod",
-    ["Carbon Rod (900 Coins)"]="Carbon Rod",
-    ["Grass Rod (1.5k Coins)"]="Grass Rod",
-    ["Demascus Rod (3k Coins)"]="Demascus Rod",
-    ["Ice Rod (5k Coins)"]="Ice Rod",
-    ["Lucky Rod (15k Coins)"]="Lucky Rod",
-    ["Midnight Rod (50k Coins)"]="Midnight Rod",
-    ["Steampunk Rod (215k Coins)"]="Steampunk Rod",
-    ["Chrome Rod (437k Coins)"]="Chrome Rod",
-    ["Astral Rod (1M Coins)"]="Astral Rod",
-    ["Ares Rod (3M Coins)"]="Ares Rod",
-    ["Angler Rod (8M Coins)"]="Angler Rod"
+    ["Luck Rod"]="Luck Rod",
+    ["Carbon Rod"]="Carbon Rod",
+    ["Grass Rod"]="Grass Rod",
+    ["Demascus Rod"]="Demascus Rod",
+    ["Ice Rod"]="Ice Rod",
+    ["Lucky Rod"]="Lucky Rod",
+    ["Midnight Rod"]="Midnight Rod",
+    ["Steampunk Rod"]="Steampunk Rod",
+    ["Chrome Rod"]="Chrome Rod",
+    ["Astral Rod"]="Astral Rod",
+    ["Ares Rod"]="Ares Rod",
+    ["Angler Rod"]="Angler Rod"
 }
 
 local selectedRod = rodNames[1]
@@ -954,23 +954,23 @@ local baits = {
 }
 
 local baitNames = {
-    "TopWater Bait (100 Coins)",
-    "Lucky Bait (1k Coins)",
-    "Midnight Bait (3k Coins)",
-    "Chroma Bait (290k Coins)",
-    "Dark Mater Bait (630k Coins)",
-    "Corrupt Bait (1.15M Coins)",
-    "Aether Bait (3.7M Coins)"
+    "TopWater Bait",
+    "Lucky Bait",
+    "Midnight Bait",
+    "Chroma Bait",
+    "Dark Mater Bait",
+    "Corrupt Bait",
+    "Aether Bait"
 }
 
 local baitKeyMap = {
-    ["TopWater Bait (100 Coins)"] = "TopWater Bait",
-    ["Lucky Bait (1k Coins)"] = "Lucky Bait",
-    ["Midnight Bait (3k Coins)"] = "Midnight Bait",
-    ["Chroma Bait (290k Coins)"] = "Chroma Bait",
-    ["Dark Mater Bait (630k Coins)"] = "Dark Mater Bait",
-    ["Corrupt Bait (1.15M Coins)"] = "Corrupt Bait",
-    ["Aether Bait (3.7M Coins)"] = "Aether Bait"
+    ["TopWater Bait"] = "TopWater Bait",
+    ["Lucky Bait"] = "Lucky Bait",
+    ["Midnight Bait"] = "Midnight Bait",
+    ["Chroma Bait"] = "Chroma Bait",
+    ["Dark Mater Bait"] = "Dark Mater Bait",
+    ["Corrupt Bait"] = "Corrupt Bait",
+    ["Aether Bait"] = "Aether Bait"
 }
 
 local selectedBait = baitNames[1]
@@ -1147,17 +1147,17 @@ local weathers = {
 }
 
 local weatherNames = {
-    "Wind (10k Coins)", "Snow (15k Coins)", "Cloudy (20k Coins)", "Storm (35k Coins)",
-    "Radiant (50k Coins)", "Shark Hunt (300k Coins)"
+    "Wind", "Snow", "Cloudy", "Storm",
+    "Radiant", "Shark Hunt"
 }
 
 local weatherKeyMap = {
-    ["Wind (10k Coins)"] = "Wind",
-    ["Snow (15k Coins)"] = "Snow",
-    ["Cloudy (20k Coins)"] = "Cloudy",
-    ["Storm (35k Coins)"] = "Storm",
-    ["Radiant (50k Coins)"] = "Radiant",
-    ["Shark Hunt (300k Coins)"] = "Shark Hunt"
+    ["Wind"] = "Wind",
+    ["Snow"] = "Snow",
+    ["Cloudy"] = "Cloudy",
+    ["Storm"] = "Storm",
+    ["Radiant"] = "Radiant",
+    ["Shark Hunt"] = "Shark Hunt"
 }
 
 local selectedWeathers = {}
