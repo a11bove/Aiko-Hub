@@ -888,7 +888,6 @@ function Chloex:Window(GuiConfig)
         MainButton.BackgroundTransparency = 0.4
         MainButton.Image = "rbxassetid://140356301069419"
         MainButton.ScaleType = Enum.ScaleType.Fit
-        MainButton.BackgroundColor3 = Color3.RGB(0,0,0)
 
         local UICorner = Instance.new("UICorner")
         UICorner.CornerRadius = UDim.new(0, 6)
@@ -897,7 +896,7 @@ function Chloex:Window(GuiConfig)
         local Button = Instance.new("TextButton")
         Button.Parent = MainButton
         Button.Size = UDim2.new(1, 0, 1, 0)
-        Button.BackgroundTransparency = 1
+        Button.BackgroundTransparency = 0.4
         Button.Text = ""
 
         Button.MouseButton1Click:Connect(function()
