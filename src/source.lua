@@ -755,7 +755,7 @@ end)
 	UICorner36.Parent = DropdownSelect
 
 	UIStroke14.Color = Color3.fromRGB(138, 43, 226)
-	UIStroke14.Thickness = 1
+	UIStroke14.Thickness = 1.5
 	UIStroke14.Transparency = 0.5
 	UIStroke14.Parent = DropdownSelect
 
