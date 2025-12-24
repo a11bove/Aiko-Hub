@@ -2019,9 +2019,6 @@ function Items:AddDropdown(DropdownConfig)
 	SearchContainer.Name = "SearchContainer"
 	SearchContainer.Parent = DropdownSelectReal
 	
-	SearchCorner.CornerRadius = UDim.new(0, 6)
-	SearchCorner.Parent = SearchContainer
-	
 	SearchBar.Font = Enum.Font.GothamBold
 	SearchBar.PlaceholderText = "Search..."
 	SearchBar.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
