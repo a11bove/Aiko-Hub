@@ -755,8 +755,8 @@ end)
 	UICorner36.Parent = DropdownSelect
 
 	UIStroke14.Color = Color3.fromRGB(138, 43, 226)
-	UIStroke14.Thickness = 1.5
-	UIStroke14.Transparency = 1
+	UIStroke14.Thickness = 1
+	UIStroke14.Transparency = 0.5
 	UIStroke14.Parent = DropdownSelect
 
 	DropdownSelectReal.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -2056,6 +2056,7 @@ function Items:AddDropdown(DropdownConfig)
 	ScrollSelect.BackgroundTransparency = 0.9990000128746033
 	ScrollSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	ScrollSelect.BorderSizePixel = 0
+	ScrollSelect.ClipDescendants = true
 	ScrollSelect.Size = UDim2.new(1, 0, 1, 0)  -- CHANGED: Back to full height
 	ScrollSelect.Name = "ScrollSelect"
 	ScrollSelect.ScrollBarImageTransparency = 1  -- ADDED: Hide scrollbar completely
