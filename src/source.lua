@@ -6,6 +6,33 @@ local CoreGui = game:GetService("CoreGui")
 local HttpService = game:GetService("HttpService")
 
 local LucideIcons = {}
+local iconsLoaded = false
+
+pcall(function()
+    LucideIcons = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/icons.lua"))()
+    if LucideIcons and type(LucideIcons) == "table" then
+        iconsLoaded = true
+    end
+end)
+
+local function GetIcon(iconName)
+    if not iconName or iconName == "" then
+        return "rbxassetid://16932740082" -- default icon
+    end
+
+    if string.match(iconName, "rbxassetid://") then
+        return iconName
+    end
+
+    if not iconsLoaded then
+        return "rbxassetid://16932740082"
+    end
+
+    local lowerName = string.lower(iconName)
+    return LucideIcons[lowerName] or "rbxassetid://16932740082"
+end
+
+--[[local LucideIcons = {}
 pcall(function()
     LucideIcons = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/icons.lua"))()
 end)
@@ -22,7 +49,7 @@ local function GetIcon(iconName)
     local lowerName = string.lower(iconName)
 
     return LucideIcons[lowerName] or iconName
-end
+end]]
 
 if not isfolder("aikoware") then
     makefolder("aikoware")
