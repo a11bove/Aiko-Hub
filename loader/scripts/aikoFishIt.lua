@@ -1985,8 +1985,7 @@ autotrade:AddButton({
     end
 })
 
--- Load the Misc Module
-local MiscModule = loadstring(game:HttpGet("YOUR_URL_HERE"))()
+local MiscModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/fishit/miscmdl.lua"))()
 MiscModule:Initialize()
 
 local idn = Misc:AddSection("Hide Identity")
