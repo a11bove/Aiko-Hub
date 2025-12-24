@@ -1993,14 +1993,32 @@ function Items:AddDropdown(DropdownConfig)
 	OptionImg.Name = "OptionImg"
 	OptionImg.Parent = SelectOptionsFrame
 
-local DropdownContainer = Instance.new("Frame")
-DropdownContainer.BackgroundTransparency = 1
-DropdownContainer.BorderSizePixel = 0
-DropdownContainer.Size = UDim2.new(1, 0, 1, 0)
-DropdownContainer.Name = "DropdownContainer"
-DropdownContainer.LayoutOrder = CountDropdown
-DropdownContainer.Parent = DropdownFolder
+-- Replace the search bar and ScrollSelect section in your AddDropdown function with this:
 
+-- First create the ScrollSelect that will hold the options
+local ScrollSelect = Instance.new("ScrollingFrame");
+local UIListLayout4 = Instance.new("UIListLayout");
+
+ScrollSelect.CanvasSize = UDim2.new(0, 0, 0, 0)
+ScrollSelect.VerticalScrollBarInset = Enum.ScrollBarInset.None
+ScrollSelect.ScrollBarImageTransparency = 1
+ScrollSelect.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
+ScrollSelect.ScrollBarThickness = 0
+ScrollSelect.Active = true
+ScrollSelect.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ScrollSelect.BackgroundTransparency = 0.9990000128746033
+ScrollSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
+ScrollSelect.BorderSizePixel = 0
+ScrollSelect.Size = UDim2.new(1, 0, 1, 0)
+ScrollSelect.LayoutOrder = CountDropdown
+ScrollSelect.Name = "ScrollSelect"
+ScrollSelect.Parent = DropdownFolder
+
+UIListLayout4.Padding = UDim.new(0, 3)
+UIListLayout4.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout4.Parent = ScrollSelect
+
+-- Create search bar as FIRST CHILD of ScrollSelect with LayoutOrder -1
 local SearchContainer = Instance.new("Frame")
 local SearchBar = Instance.new("TextBox")
 local SearchTopCorner = Instance.new("UICorner")
@@ -2008,11 +2026,10 @@ local SearchTopCorner = Instance.new("UICorner")
 SearchContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 SearchContainer.BackgroundTransparency = 0
 SearchContainer.BorderSizePixel = 0
-SearchContainer.Position = UDim2.new(0, 0, 0, 0)
 SearchContainer.Size = UDim2.new(1, 0, 0, 35)
 SearchContainer.Name = "SearchContainer"
-SearchContainer.ZIndex = 10
-SearchContainer.Parent = DropdownContainer
+SearchContainer.LayoutOrder = -1  -- This keeps it at the top
+SearchContainer.Parent = ScrollSelect
 
 SearchTopCorner.CornerRadius = UDim.new(0, 6)
 SearchTopCorner.Parent = SearchContainer
@@ -2028,35 +2045,7 @@ SearchBar.TextXAlignment = Enum.TextXAlignment.Center
 SearchBar.Position = UDim2.new(0, 0, 0, 0)
 SearchBar.Size = UDim2.new(1, 0, 1, 0)
 SearchBar.ClearTextOnFocus = false
-SearchBar.ZIndex = 11
 SearchBar.Parent = SearchContainer
-
-local ScrollSelect = Instance.new("ScrollingFrame");
-local UIListLayout4 = Instance.new("UIListLayout");
-
-ScrollSelect.CanvasSize = UDim2.new(0, 0, 0, 0)
-ScrollSelect.VerticalScrollBarInset = Enum.ScrollBarInset.None
-ScrollSelect.ScrollBarImageTransparency = 1
-ScrollSelect.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
-ScrollSelect.ScrollBarThickness = 0
-ScrollSelect.Active = true
-ScrollSelect.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-ScrollSelect.BackgroundTransparency = 0.9990000128746033
-ScrollSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
-ScrollSelect.BorderSizePixel = 0
-ScrollSelect.Position = UDim2.new(0, 0, 0, 40)
-ScrollSelect.Size = UDim2.new(1, 0, 1, -40)
-ScrollSelect.Name = "ScrollSelect"
-ScrollSelect.Parent = DropdownContainer
-
-UIListLayout4.Padding = UDim.new(0, 3)
-UIListLayout4.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout4.Parent = ScrollSelect
-
-local ScrollPadding = Instance.new("UIPadding")
-ScrollPadding.PaddingTop = UDim.new(0, 5)
-ScrollPadding.PaddingBottom = UDim.new(0, 8)
-ScrollPadding.Parent = ScrollSelect
 
 -- SEARCH FUNCTIONALITY
 SearchBar:GetPropertyChangedSignal("Text"):Connect(function()
@@ -2072,9 +2061,9 @@ SearchBar:GetPropertyChangedSignal("Text"):Connect(function()
 		end
 	end
 	-- Update canvas size after filtering
-	local OffsetY = 0
+	local OffsetY = 38  -- Start with search container height
 	for _, child in ScrollSelect:GetChildren() do
-		if child.Name ~= "UIListLayout" and child.Name ~= "UIPadding" and child.Visible then
+		if child.Name == "Option" and child.Visible then
 			OffsetY = OffsetY + 3 + child.Size.Y.Offset
 		end
 	end
