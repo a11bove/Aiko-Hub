@@ -1993,6 +1993,36 @@ function Items:AddDropdown(DropdownConfig)
 	OptionImg.Name = "OptionImg"
 	OptionImg.Parent = SelectOptionsFrame
 
+-- Replace the search bar and ScrollSelect section in your AddDropdown function with this:
+
+local ScrollSelect = Instance.new("ScrollingFrame");
+local UIListLayout4 = Instance.new("UIListLayout");
+
+ScrollSelect.CanvasSize = UDim2.new(0, 0, 0, 0)
+ScrollSelect.VerticalScrollBarInset = Enum.ScrollBarInset.None
+ScrollSelect.ScrollBarImageTransparency = 1
+ScrollSelect.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
+ScrollSelect.ScrollBarThickness = 0
+ScrollSelect.Active = true
+ScrollSelect.LayoutOrder = CountDropdown
+ScrollSelect.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ScrollSelect.BackgroundTransparency = 0.9990000128746033
+ScrollSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
+ScrollSelect.BorderSizePixel = 0
+ScrollSelect.Position = UDim2.new(0, 0, 0, 40)
+ScrollSelect.Size = UDim2.new(1, 0, 1, -40)
+ScrollSelect.Name = "ScrollSelect"
+ScrollSelect.Parent = DropdownFolder
+
+UIListLayout4.Padding = UDim.new(0, 3)
+UIListLayout4.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout4.Parent = ScrollSelect
+
+local ScrollPadding = Instance.new("UIPadding")
+ScrollPadding.PaddingTop = UDim.new(0, 5)
+ScrollPadding.PaddingBottom = UDim.new(0, 8)
+ScrollPadding.Parent = ScrollSelect
+
 local SearchContainer = Instance.new("Frame")
 local SearchBar = Instance.new("TextBox")
 local SearchTopCorner = Instance.new("UICorner")
@@ -2004,7 +2034,7 @@ SearchContainer.Position = UDim2.new(0, 0, 0, 0)
 SearchContainer.Size = UDim2.new(1, 0, 0, 35)
 SearchContainer.Name = "SearchContainer"
 SearchContainer.ZIndex = 10
-SearchContainer.Parent = DropdownSelectReal
+SearchContainer.Parent = DropdownFolder
 
 SearchTopCorner.CornerRadius = UDim.new(0, 6)
 SearchTopCorner.Parent = SearchContainer
@@ -2023,33 +2053,6 @@ SearchBar.ClearTextOnFocus = false
 SearchBar.ZIndex = 11
 SearchBar.Parent = SearchContainer
 
-local ScrollSelect = Instance.new("ScrollingFrame");
-local UIListLayout4 = Instance.new("UIListLayout");
-
-ScrollSelect.CanvasSize = UDim2.new(0, 0, 0, 0)
-ScrollSelect.VerticalScrollBarInset = Enum.ScrollBarInset.None
-ScrollSelect.ScrollBarImageTransparency = 1
-ScrollSelect.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
-ScrollSelect.ScrollBarThickness = 0
-ScrollSelect.Active = true
-ScrollSelect.LayoutOrder = CountDropdown
-ScrollSelect.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-ScrollSelect.BackgroundTransparency = 0.9990000128746033
-ScrollSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
-ScrollSelect.BorderSizePixel = 0
-ScrollSelect.Position = UDim2.new(0, 0, 0, 35)  -- Position right below search bar
-ScrollSelect.Size = UDim2.new(1, 0, 1, -35)  -- Full width and height minus search bar
-ScrollSelect.Name = "ScrollSelect"
-ScrollSelect.Parent = DropdownFolder
-
-UIListLayout4.Padding = UDim.new(0, 3)
-UIListLayout4.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout4.Parent = ScrollSelect
-
-local ScrollPadding = Instance.new("UIPadding")
-ScrollPadding.PaddingBottom = UDim.new(0, 8)  -- Space for bottom rounded corner
-ScrollPadding.Parent = ScrollSelect
-
 -- SEARCH FUNCTIONALITY
 SearchBar:GetPropertyChangedSignal("Text"):Connect(function()
 	local searchText = string.lower(SearchBar.Text)
@@ -2066,7 +2069,7 @@ SearchBar:GetPropertyChangedSignal("Text"):Connect(function()
 	-- Update canvas size after filtering
 	local OffsetY = 0
 	for _, child in ScrollSelect:GetChildren() do
-		if child.Name ~= "UIListLayout" and child.Visible then
+		if child.Name ~= "UIListLayout" and child.Name ~= "UIPadding" and child.Visible then
 			OffsetY = OffsetY + 3 + child.Size.Y.Offset
 		end
 	end
