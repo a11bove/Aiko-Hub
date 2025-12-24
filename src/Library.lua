@@ -876,67 +876,86 @@ function Chloex:Window(GuiConfig)
     end)
 
     function GuiFunc:ToggleUI()
-        local ScreenGui = Instance.new("ScreenGui")
-        ScreenGui.Parent = game:GetService("CoreGui")
-        ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-        ScreenGui.Name = "ToggleUIButton"
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Parent = game:GetService("CoreGui")
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ScreenGui.Name = "ToggleUIButton"
+    ScreenGui.IgnoreGuiInset = true
+    ScreenGui.ResetOnSpawn = false
 
-        local MainButton = Instance.new("ImageLabel")
-        MainButton.Parent = ScreenGui
-        MainButton.Size = UDim2.new(0, 47, 0, 47)
-        MainButton.Position = UDim2.new(0, 20, 0, 100)
-        MainButton.BackgroundTransparency = 0.4
-        MainButton.Image = "rbxassetid://140356301069419"
-        MainButton.ScaleType = Enum.ScaleType.Fit
+    local MainButton = Instance.new("ImageButton")
+    MainButton.Parent = ScreenGui
+    MainButton.Size = UDim2.new(0, 47, 0, 47)
+    MainButton.Position = UDim2.new(0, 60, 0, 60)
+    MainButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    MainButton.BackgroundTransparency = 0.5
+    MainButton.Image = "rbxassetid://140356301069419"
+    MainButton.Name = "aikowaretoggle"
+    MainButton.AutoButtonColor = true
+    MainButton.ScaleType = Enum.ScaleType.Fit
 
-        local UICorner = Instance.new("UICorner")
-        UICorner.CornerRadius = UDim.new(0, 6)
-        UICorner.Parent = MainButton
+    local UICorner = Instance.new("UICorner")
+    UICorner.CornerRadius = UDim.new(0, 12)
+    UICorner.Parent = MainButton
 
-        local Button = Instance.new("TextButton")
-        Button.Parent = MainButton
-        Button.Size = UDim2.new(1, 0, 1, 0)
-        Button.BackgroundTransparency = 0.4
-        Button.Text = ""
+    local UIStroke = Instance.new("UIStroke")
+    UIStroke.Thickness = 1.5
+    UIStroke.Color = Color3.fromRGB(45, 45, 45)
+    UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    UIStroke.Parent = MainButton
 
-        Button.MouseButton1Click:Connect(function()
-            if DropShadowHolder then
-                DropShadowHolder.Visible = not DropShadowHolder.Visible
-            end
-        end)
+    local Gradient = Instance.new("UIGradient")
+    Gradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 100)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 0, 0))
+    })
+    Gradient.Rotation = 45
+    Gradient.Parent = UIStroke
 
-        local dragging = false
-        local dragStart, startPos
-
-        local function update(input)
-            local delta = input.Position - dragStart
-            MainButton.Position = UDim2.new(
-                startPos.X.Scale,
-                startPos.X.Offset + delta.X,
-                startPos.Y.Scale,
-                startPos.Y.Offset + delta.Y
-            )
+    MainButton.MouseButton1Click:Connect(function()
+        if DropShadowHolder then
+            DropShadowHolder.Visible = not DropShadowHolder.Visible
         end
+    end)
 
-        Button.InputBegan:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-                dragging = true
-                dragStart = input.Position
-                startPos = MainButton.Position
-                input.Changed:Connect(function()
-                    if input.UserInputState == Enum.UserInputState.End then
-                        dragging = false
-                    end
-                end)
-            end
-        end)
+    local dragging = false
+    local dragInput, dragStart, startPos
 
-        game:GetService("UserInputService").InputChanged:Connect(function(input)
-            if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-                update(input)
-            end
-        end)
+    local function update(input)
+        local delta = input.Position - dragStart
+        MainButton.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
     end
+
+    MainButton.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = MainButton.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    MainButton.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            update(input)
+        end
+    end)
+end
 
     GuiFunc:ToggleUI()
 
