@@ -2017,8 +2017,7 @@ function Items:AddDropdown(DropdownConfig)
     SearchContainer.Position = UDim2.new(0, 0, 0, 5)
     SearchContainer.Size = UDim2.new(1, 0, 0, 30)
 	SearchContainer.Name = "SearchContainer"
-	SearchContainer.LayoutOrder = -1
-	SearchContainer.Parent = ScrollSelect
+	SearchContainer.Parent = DropdownSelectReal
 	
 	SearchCorner.CornerRadius = UDim.new(0, 6)
 	SearchCorner.Parent = SearchContainer
@@ -2047,11 +2046,12 @@ function Items:AddDropdown(DropdownConfig)
 		end
 	end)
 
-	ScrollSelect.CanvasSize = UDim2.new(0, 0, 0, 0)
+	local ScrollSelect = Instance.new("ScrollingFrame");
+	local UIListLayout4 = Instance.new("UIListLayout");
 
+	ScrollSelect.CanvasSize = UDim2.new(0, 0, 0, 0)
     ScrollSelect.VerticalScrollBarInset = Enum.ScrollBarInset.None
     ScrollSelect.ScrollBarImageTransparency = 1
-
 	ScrollSelect.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
 	ScrollSelect.ScrollBarThickness = 0
 	ScrollSelect.Active = true
@@ -2060,10 +2060,9 @@ function Items:AddDropdown(DropdownConfig)
 	ScrollSelect.BackgroundTransparency = 0.9990000128746033
 	ScrollSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	ScrollSelect.BorderSizePixel = 0
-	ScrollSelect.Position = UDim2.new(0, 0, 0, 0)  -- ADD THIS LINE
-    ScrollSelect.Size = UDim2.new(1, 0, 1, 0)
+	ScrollSelect.Position = UDim2.new(0, 0, 0, 35)
+    ScrollSelect.Size = UDim2.new(1, 0, 1, -35)
 	ScrollSelect.Name = "ScrollSelect"
-	ScrollSelect.ScrollBarImageTransparency = 1  -- ADDED: Hide scrollbar completely
 	ScrollSelect.Parent = DropdownFolder
 
 	UIListLayout4.Padding = UDim.new(0, 3)
@@ -2086,6 +2085,14 @@ function Items:AddDropdown(DropdownConfig)
 				end
 			end
 		end
+
+		local OffsetY = 0
+			for _, child in ScrollSelect:GetChildren() do
+				if child.Name ~= "UIListLayout" and child.Visible then
+					OffsetY = OffsetY + 3 + child.Size.Y.Offset
+				end
+			end
+			ScrollSelect.CanvasSize = UDim.new(0,0,0, OffsetY)
 	end)
 
 	local DropCount = 0
