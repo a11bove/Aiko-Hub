@@ -1993,10 +1993,92 @@ function Items:AddDropdown(DropdownConfig)
 	OptionImg.Name = "OptionImg"
 	OptionImg.Parent = SelectOptionsFrame
 
-	local ScrollSelect = Instance.new("ScrollingFrame");
-	local UIListLayout4 = Instance.new("UIListLayout");
+local SearchContainer = Instance.new("Frame")
+local SearchBar = Instance.new("TextBox")
 
-	-- SEARCH BAR ADDITION
+SearchContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+SearchContainer.BackgroundTransparency = 0  -- Fully opaque to block scrolling content
+SearchContainer.BorderSizePixel = 0
+SearchContainer.Position = UDim2.new(0, 0, 0, 0)  -- Absolutely stick to top
+SearchContainer.Size = UDim2.new(1, 0, 0, 35)  -- Full width
+SearchContainer.Name = "SearchContainer"
+SearchContainer.ZIndex = 10  -- Higher ZIndex to stay on top of scrolling content
+SearchContainer.Parent = DropdownSelectReal  -- Parent to DropdownSelectReal, NOT ScrollSelect
+
+SearchBar.Font = Enum.Font.GothamBold
+SearchBar.PlaceholderText = "Search..."
+SearchBar.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+SearchBar.Text = ""
+SearchBar.TextColor3 = Color3.fromRGB(255, 255, 255)
+SearchBar.TextSize = 12
+SearchBar.BackgroundTransparency = 1
+SearchBar.TextXAlignment = Enum.TextXAlignment.Center
+SearchBar.Position = UDim2.new(0, 0, 0, 0)
+SearchBar.Size = UDim2.new(1, 0, 1, 0)
+SearchBar.ClearTextOnFocus = false
+SearchBar.ZIndex = 11  -- Higher than container
+SearchBar.Parent = SearchContainer
+
+-- Create ScrollingFrame BELOW search bar
+local ScrollSelect = Instance.new("ScrollingFrame");
+local UIListLayout4 = Instance.new("UIListLayout");
+
+
+ScrollSelect.CanvasSize = UDim2.new(0, 0, 0, 0)
+ScrollSelect.VerticalScrollBarInset = Enum.ScrollBarInset.None
+ScrollSelect.ScrollBarImageTransparency = 1
+ScrollSelect.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
+ScrollSelect.ScrollBarThickness = 0
+ScrollSelect.Active = true
+ScrollSelect.LayoutOrder = CountDropdown
+ScrollSelect.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ScrollSelect.BackgroundTransparency = 0.9990000128746033
+ScrollSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
+ScrollSelect.BorderSizePixel = 0
+ScrollSelect.Position = UDim2.new(0, 0, 0, 35)  -- Position right below search bar
+ScrollSelect.Size = UDim2.new(1, 0, 1, -35)  -- Full width and height minus search bar
+ScrollSelect.Name = "ScrollSelect"
+ScrollSelect.Parent = DropdownFolder
+
+UIListLayout4.Padding = UDim.new(0, 3)
+UIListLayout4.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout4.Parent = ScrollSelect
+
+-- SEARCH FUNCTIONALITY
+SearchBar:GetPropertyChangedSignal("Text"):Connect(function()
+	local searchText = string.lower(SearchBar.Text)
+	for _, option in pairs(ScrollSelect:GetChildren()) do
+		if option:IsA("Frame") and option.Name == "Option" then
+			local optionText = string.lower(option.OptionText.Text)
+			if searchText == "" or string.find(optionText, searchText, 1, true) then
+				option.Visible = true
+			else
+				option.Visible = false
+			end
+		end
+	end
+	-- Update canvas size after filtering
+	local OffsetY = 0
+	for _, child in ScrollSelect:GetChildren() do
+		if child.Name ~= "UIListLayout" and child.Visible then
+			OffsetY = OffsetY + 3 + child.Size.Y.Offset
+		end
+	end
+	ScrollSelect.CanvasSize = UDim2.new(0, 0, 0, OffsetY)
+end)
+
+DropdownButton.MouseButton1Click:Connect(function()
+	CircleClick(DropdownButton, Mouse.X, Mouse.Y)
+	if not MoreBlur.Visible then
+		MoreBlur.Visible = true 
+		DropPageLayout:JumpToIndex(SelectOptionsFrame.LayoutOrder)
+		MoreBlur.BackgroundTransparency = 1
+		TweenService:Create(DropdownSelect, TweenInfo.new(0.3), {Position = UDim2.new(1, -8, 0.5, 0)}):Play()
+		SearchBar.Text = ""  -- Clear search when opening
+	end
+end)
+				
+	--[[ SEARCH BAR ADDITION
 	local SearchContainer = Instance.new("Frame")
 	local SearchBar = Instance.new("TextBox")
 	local SearchCorner = Instance.new("UICorner")
@@ -2086,7 +2168,7 @@ function Items:AddDropdown(DropdownConfig)
 				end
 			end
 		end
-	end)
+	end)]]
 
 	local DropCount = 0
 	function DropdownFunc:Clear()
