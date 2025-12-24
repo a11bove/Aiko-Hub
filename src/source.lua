@@ -1995,36 +1995,16 @@ function Items:AddDropdown(DropdownConfig)
 
 -- Replace the search bar and ScrollSelect section in your AddDropdown function with this:
 
--- First create the ScrollSelect that will hold the options
-local ScrollSelect = Instance.new("ScrollingFrame");
-local UIListLayout4 = Instance.new("UIListLayout");
+-- Create a wrapper frame that will be managed by UIPageLayout
+local DropdownPage = Instance.new("Frame")
+DropdownPage.BackgroundTransparency = 1
+DropdownPage.BorderSizePixel = 0
+DropdownPage.Size = UDim2.new(1, 0, 1, 0)
+DropdownPage.LayoutOrder = CountDropdown
+DropdownPage.Name = "DropdownPage"
+DropdownPage.Parent = DropdownFolder
 
-ScrollSelect.CanvasSize = UDim2.new(0, 0, 0, 0)
-ScrollSelect.VerticalScrollBarInset = Enum.ScrollBarInset.None
-ScrollSelect.ScrollBarImageTransparency = 1
-ScrollSelect.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
-ScrollSelect.ScrollBarThickness = 0
-ScrollSelect.Active = true
-ScrollSelect.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-ScrollSelect.BackgroundTransparency = 0.9990000128746033
-ScrollSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
-ScrollSelect.BorderSizePixel = 0
-ScrollSelect.Position = UDim2.new(0, 0, 0, 40)  -- Start below search bar
-ScrollSelect.Size = UDim2.new(1, 0, 1, -40)  -- Take remaining space
-ScrollSelect.LayoutOrder = CountDropdown
-ScrollSelect.Name = "ScrollSelect"
-ScrollSelect.Parent = DropdownFolder
-
-UIListLayout4.Padding = UDim.new(0, 3)
-UIListLayout4.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout4.Parent = ScrollSelect
-
-local ScrollPadding = Instance.new("UIPadding")
-ScrollPadding.PaddingTop = UDim.new(0, 5)
-ScrollPadding.PaddingBottom = UDim.new(0, 8)
-ScrollPadding.Parent = ScrollSelect
-
--- Create search bar positioned absolutely at the top
+-- Create search bar at the top (fixed position)
 local SearchContainer = Instance.new("Frame")
 local SearchBar = Instance.new("TextBox")
 local SearchTopCorner = Instance.new("UICorner")
@@ -2032,11 +2012,10 @@ local SearchTopCorner = Instance.new("UICorner")
 SearchContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 SearchContainer.BackgroundTransparency = 0
 SearchContainer.BorderSizePixel = 0
-SearchContainer.Position = UDim2.new(0, 0, 0, 0)  -- Absolute position at top
+SearchContainer.Position = UDim2.new(0, 0, 0, 0)
 SearchContainer.Size = UDim2.new(1, 0, 0, 35)
 SearchContainer.Name = "SearchContainer"
-SearchContainer.ZIndex = 10  -- Higher ZIndex to appear on top
-SearchContainer.Parent = DropdownSelectReal  -- Parent to the main dropdown container
+SearchContainer.Parent = DropdownPage
 
 SearchTopCorner.CornerRadius = UDim.new(0, 6)
 SearchTopCorner.Parent = SearchContainer
@@ -2052,8 +2031,35 @@ SearchBar.TextXAlignment = Enum.TextXAlignment.Center
 SearchBar.Position = UDim2.new(0, 0, 0, 0)
 SearchBar.Size = UDim2.new(1, 0, 1, 0)
 SearchBar.ClearTextOnFocus = false
-SearchBar.ZIndex = 11
 SearchBar.Parent = SearchContainer
+
+-- Create ScrollSelect below the search bar
+local ScrollSelect = Instance.new("ScrollingFrame");
+local UIListLayout4 = Instance.new("UIListLayout");
+
+ScrollSelect.CanvasSize = UDim2.new(0, 0, 0, 0)
+ScrollSelect.VerticalScrollBarInset = Enum.ScrollBarInset.None
+ScrollSelect.ScrollBarImageTransparency = 1
+ScrollSelect.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
+ScrollSelect.ScrollBarThickness = 0
+ScrollSelect.Active = true
+ScrollSelect.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ScrollSelect.BackgroundTransparency = 0.9990000128746033
+ScrollSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
+ScrollSelect.BorderSizePixel = 0
+ScrollSelect.Position = UDim2.new(0, 0, 0, 40)
+ScrollSelect.Size = UDim2.new(1, 0, 1, -40)
+ScrollSelect.Name = "ScrollSelect"
+ScrollSelect.Parent = DropdownPage
+
+UIListLayout4.Padding = UDim.new(0, 3)
+UIListLayout4.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout4.Parent = ScrollSelect
+
+local ScrollPadding = Instance.new("UIPadding")
+ScrollPadding.PaddingTop = UDim.new(0, 5)
+ScrollPadding.PaddingBottom = UDim.new(0, 8)
+ScrollPadding.Parent = ScrollSelect
 
 -- SEARCH FUNCTIONALITY
 SearchBar:GetPropertyChangedSignal("Text"):Connect(function()
