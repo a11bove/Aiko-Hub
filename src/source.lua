@@ -2001,11 +2001,21 @@ function Items:AddDropdown(DropdownConfig)
 	local SearchBar = Instance.new("TextBox")
 	local SearchCorner = Instance.new("UICorner")
 	
-	SearchContainer.BackgroundColor3 = GuiConfig.Color  -- CHANGED: Use GuiConfig color
-	SearchContainer.BackgroundTransparency = 0.7
+	-- Calculate darker version of GuiConfig.Color
+	local function DarkenColor(color, factor)
+		factor = factor or 0.7  -- Default darkening factor
+		return Color3.new(
+			math.max(0, color.R * factor),
+			math.max(0, color.G * factor),
+			math.max(0, color.B * factor)
+		)
+	end
+	
+	SearchContainer.BackgroundColor3 = DarkenColor(GuiConfig.Color, 0.6)  -- CHANGED: 40% darker
+	SearchContainer.BackgroundTransparency = 0.3  -- CHANGED: Less transparent to show color better
 	SearchContainer.BorderSizePixel = 0
-	SearchContainer.Position = UDim2.new(0, 0, 0, 0)
-	SearchContainer.Size = UDim2.new(1, 0, 0, 28)  -- CHANGED: Reduced from 35 to 28
+	SearchContainer.Position = UDim2.new(0, 5, 0, 0)  -- CHANGED: 5px margin from left
+	SearchContainer.Size = UDim2.new(1, -10, 0, 28)  -- CHANGED: -10 for 5px margin on each side
 	SearchContainer.Name = "SearchContainer"
 	SearchContainer.LayoutOrder = -1
 	SearchContainer.Parent = ScrollSelect  -- CHANGED: Parent to ScrollSelect instead
