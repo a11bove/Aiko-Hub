@@ -1852,7 +1852,7 @@ end
 				CountItem = CountItem + 1
 				return InputFunc
 			end
-			-- Find the AddDropdown function (around line 1800+) and replace it with this enhanced version:
+-- Find the AddDropdown function (around line 1800+) and replace it with this enhanced version:
 
 function Items:AddDropdown(DropdownConfig)
 	local DropdownConfig = DropdownConfig or {}
@@ -1993,6 +1993,9 @@ function Items:AddDropdown(DropdownConfig)
 	OptionImg.Name = "OptionImg"
 	OptionImg.Parent = SelectOptionsFrame
 
+	local ScrollSelect = Instance.new("ScrollingFrame");
+	local UIListLayout4 = Instance.new("UIListLayout");
+
 	-- SEARCH BAR ADDITION
 	local SearchContainer = Instance.new("Frame")
 	local SearchBar = Instance.new("TextBox")
@@ -2002,12 +2005,12 @@ function Items:AddDropdown(DropdownConfig)
 	SearchContainer.BackgroundTransparency = 0.7
 	SearchContainer.BorderSizePixel = 0
 	SearchContainer.Position = UDim2.new(0, 0, 0, 0)
-	SearchContainer.Size = UDim2.new(1, 0, 0, 35)
+	SearchContainer.Size = UDim2.new(1, 0, 0, 28)  -- CHANGED: Reduced from 35 to 28
 	SearchContainer.Name = "SearchContainer"
 	SearchContainer.LayoutOrder = -1
-	SearchContainer.Parent = DropdownFolder
+	SearchContainer.Parent = ScrollSelect  -- CHANGED: Parent to ScrollSelect instead
 	
-	SearchCorner.CornerRadius = UDim.new(0, 6)
+	SearchCorner.CornerRadius = UDim.new(0, 4)  -- CHANGED: Smaller corner radius
 	SearchCorner.Parent = SearchContainer
 	
 	SearchBar.Font = Enum.Font.GothamBold
@@ -2015,16 +2018,13 @@ function Items:AddDropdown(DropdownConfig)
 	SearchBar.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
 	SearchBar.Text = ""
 	SearchBar.TextColor3 = Color3.fromRGB(255, 255, 255)
-	SearchBar.TextSize = 13
+	SearchBar.TextSize = 12  -- CHANGED: Reduced from 13 to 12
 	SearchBar.TextXAlignment = Enum.TextXAlignment.Left
 	SearchBar.BackgroundTransparency = 1
-	SearchBar.Position = UDim2.new(0, 10, 0, 0)
-	SearchBar.Size = UDim2.new(1, -20, 1, 0)
+	SearchBar.Position = UDim2.new(0, 8, 0, 0)  -- CHANGED: Reduced padding
+	SearchBar.Size = UDim2.new(1, -16, 1, 0)
 	SearchBar.ClearTextOnFocus = false
 	SearchBar.Parent = SearchContainer
-
-	local ScrollSelect = Instance.new("ScrollingFrame");
-	local UIListLayout4 = Instance.new("UIListLayout");
 
 	DropdownButton.MouseButton1Click:Connect(function()
 		CircleClick(DropdownButton, Mouse.X, Mouse.Y)
@@ -2046,14 +2046,16 @@ function Items:AddDropdown(DropdownConfig)
 	ScrollSelect.BackgroundTransparency = 0.9990000128746033
 	ScrollSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
 	ScrollSelect.BorderSizePixel = 0
-	ScrollSelect.Position = UDim2.new(0, 0, 0, 35)  -- CHANGED: Offset for search bar
-	ScrollSelect.Size = UDim2.new(1, 0, 1, -35)  -- CHANGED: Reduce height for search bar
+	ScrollSelect.Size = UDim2.new(1, 0, 1, 0)  -- CHANGED: Back to full height
 	ScrollSelect.Name = "ScrollSelect"
 	ScrollSelect.Parent = DropdownFolder
 
 	UIListLayout4.Padding = UDim.new(0, 3)
 	UIListLayout4.SortOrder = Enum.SortOrder.LayoutOrder
 	UIListLayout4.Parent = ScrollSelect
+	
+	-- Make search bar stay at top
+	SearchContainer.LayoutOrder = -999
 
 	-- SEARCH FUNCTIONALITY
 	SearchBar:GetPropertyChangedSignal("Text"):Connect(function()
