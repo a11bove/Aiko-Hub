@@ -280,7 +280,7 @@ dcsec:Open()
 
 local srv = Home:AddSection("Server")
 
-srv:AddToggle({
+local antiIDLE = srv:AddToggle({
     Title = "Anti Afk",
     Content = "Anti kick when idle for 20 mins.",
     Default = false,
@@ -300,7 +300,7 @@ srv:AddToggle({
     end
 })
 
-srv:AddToggle({
+local autoRECON = srv:AddToggle({
     Title = "Auto Reconnect",
     Content = "",
     Default = false,
@@ -414,7 +414,7 @@ fsh:AddParagraph({
     Content = "If you do not have perfection enchant, all you can get is good, but if you have perfection enchant, you can always get a perfect timing. So much better if you have perfection enchantment."
 })
 
-fsh:AddInput({
+local legitDELAY = fsh:AddInput({
     Title = "Legit Fishing Delay",
     Content = "",
     Placeholder = "0.05",
@@ -426,7 +426,7 @@ fsh:AddInput({
     end
 })
 
-fsh:AddToggle({
+local legitFISHING = fsh:AddToggle({
     Title = "Auto Legit Fishing",
     Content = "",
     Default = false,
@@ -469,7 +469,7 @@ task.spawn(function()
     end
 end)
 
-fsh:AddInput({
+local stuckDELAY = fsh:AddInput({
     Title = "Anti Stuck Delay",
     Content = "Enter delay in seconds.",
     Placeholder = "5",
@@ -478,7 +478,7 @@ fsh:AddInput({
     end
 })
 
-fsh:AddToggle({
+local antiSTUCK = fsh:AddToggle({
     Title = "Anti Stuck",
     Content = "Auto restart if fishing gets stuck.",
     Default = false,
@@ -568,7 +568,7 @@ local function StopInstantFish()
     InstantFishEnabled = false
 end
 
-fin:AddToggle({
+local insFish = fin:AddToggle({
     Title = "Auto Instant Fishing",
     Content = "",
     Default = false,
@@ -648,7 +648,7 @@ local function StopSuperInstantV2()
     SuperInstantV2Enabled = false
 end
 
-bts:AddToggle({
+local blatTog = bts:AddToggle({
     Title = "Blatant",
     Content = "",
     Default = false,
@@ -742,7 +742,7 @@ local function ToggleCaughtNotifications(visible)
     end
 end
 
-ntf:AddToggle({
+local noNOTIF = ntf:AddToggle({
     Title = "Disable Fish Notification",
     Content = "",
     Default = false,
@@ -780,7 +780,7 @@ local function setGameAnimationsEnabled(state)
     end
 end
 
-ntf:AddToggle({
+local noANIMS = ntf:AddToggle({
     Title = "Disable Animations",
     Content = "",
     Default = false,
@@ -792,7 +792,7 @@ ntf:AddToggle({
 local originalCFrame = nil
 local freezeConnection = nil
 
-ntf:AddToggle({
+local freezeCHAR = ntf:AddToggle({
     Title = "Freeze Character",
     Content = "",
     Default = false,
@@ -885,7 +885,7 @@ local rodKeyMap = {
 
 local selectedRod = rodNames[1]
 
-rds:AddDropdown({
+local selectROS = rds:AddDropdown({
     Title = "Select Rod",
     Content = "",
     Options = rodNames,
@@ -975,7 +975,7 @@ local baitKeyMap = {
 
 local selectedBait = baitNames[1]
 
-bs:AddDropdown({
+local selectBAIT = bs:AddDropdown({
     Title = "Select Bait",
     Content = "",
     Options = baitNames,
@@ -1081,7 +1081,7 @@ end
 
 local selectedBoat = boatNames[1]
 
-bos:AddDropdown({
+local selectBOAT = bos:AddDropdown({
     Title = "Select Boat",
     Content = "",
     Options = boatNames,
@@ -1162,7 +1162,7 @@ local weatherKeyMap = {
 
 local selectedWeathers = {}
 
-ws:AddDropdown({
+local selectWEATHER = ws:AddDropdown({
     Title = "Select Weather(s)",
     Content = "",
     Options = weatherNames,
@@ -1233,7 +1233,7 @@ local sell = Shop:AddSection("Sell")
 local sellThreshold = 30
 local autoSellEnabled = false
 
-sell:AddInput({
+local sellDELAY = sell:AddInput({
     Title = "Auto Sell Delay",
     Content = "",
     Placeholder = "30",
@@ -1245,7 +1245,7 @@ sell:AddInput({
     end
 })
 
-sell:AddToggle({
+local autoSELL = sell:AddToggle({
     Title = "Auto Sell",
     Content = "Sell when threshold reached.",
     Default = false,
@@ -1343,7 +1343,7 @@ end
 table.sort(GlobalFav.FishNames)
 table.sort(GlobalFav.Variants)
 
-fav:AddToggle({
+local autoFAV = fav:AddToggle({
     Title = "Enable Auto Favorite",
     Content = "",
     Default = false,
@@ -1367,7 +1367,7 @@ fav:AddToggle({
     end
 })
 
-fav:AddDropdown({
+local selectFishes = fav:AddDropdown({
     Title = "Select Fish",
     Content = "",
     Options = GlobalFav.FishNames,
@@ -1385,7 +1385,7 @@ fav:AddDropdown({
     end
 })
 
-fav:AddDropdown({
+local selectMutations = fav:AddDropdown({
     Title = "Select Mutation",
     Content = "",
     Options = GlobalFav.Variants,
@@ -1760,7 +1760,7 @@ local function findEventModel(eventName)
     return nil
 end
 
-evt:AddDropdown({
+local chooseEvent = evt:AddDropdown({
     Title = "Select Event",
     Content = "Choose event to teleport",
     Options = {"Shark Hunt", "Ghost Shark Hunt", "Megalodon Hunt", "Black Hole", "Meteor Rain", "Worm Hunt", "Ghost Worm", "Shocked"},
@@ -1961,7 +1961,7 @@ autotrade:AddButton({
     end
 })
 
-autotrade:AddToggle({
+local autoAccept = autotrade:AddToggle({
     Title = "Auto Accept Trade",
     Content = "",
     Default = false,
@@ -2056,7 +2056,7 @@ LocalPlayer.CharacterAdded:Connect(function(character)
     end
 end)
 
-idn:AddToggle({
+local antiSolace = idn:AddToggle({
     Title = "Enable Hide Identity",
     Content = "",
     Default = true,
@@ -2118,7 +2118,7 @@ end)()]]
 
 local uset = Misc:AddSection("User Settings")
 
-uset:AddSlider({
+local WALKSPEED = uset:AddSlider({
     Title = "Walkspeed",
     Content = "",
     Min = 18,
@@ -2153,7 +2153,7 @@ uset:AddButton({
     end
 })
 
-uset:AddToggle({
+local INFJUMP = uset:AddToggle({
     Title = "Inf Jump",
     Content = "",
     Default = false,
@@ -2349,7 +2349,7 @@ end)
 
 local xpb = Misc:AddSection("Level Progress")
 
-xpb:AddToggle({
+local xpProgress = xpb:AddToggle({
     Title = "Show Level Progress Bar",
     Content = "",
     Default = true,
@@ -2381,7 +2381,7 @@ end)
 
 local DrownBN = true
 
-oxy:AddToggle({
+local antiDrown = oxy:AddToggle({
     Title = "Anti Drown",
     Content = "",
     Default = false,
@@ -2415,6 +2415,11 @@ Library:MakeNotify({
     Content = "Game: Fish It",
     Delay = 5
 })
+
+task.spawn(function()
+    task.wait(2)
+    LoadConfigElements()
+end)
 
 local radsr = Misc:AddSection("Fishing Radar")
 
