@@ -1,5 +1,5 @@
 -- [[ Load UI ]]
-local Library = loadstring(game:HttpGet("RAW"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/source.lua"))()
 
 -- [[ Load Window ]]
 local Window = Library:Window({
