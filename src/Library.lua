@@ -1,17 +1,17 @@
 local HttpService = game:GetService("HttpService")
 
-if not isfolder("Chloe X") then
-    makefolder("Chloe X")
+if not isfolder("aikoware") then
+    makefolder("aikoware")
 end
-if not isfolder("Chloe X/Config") then
-    makefolder("Chloe X/Config")
+if not isfolder("aikoware/cfg") then
+    makefolder("aikoware/cfg")
 end
 
 local gameName   = tostring(game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name)
 gameName         = gameName:gsub("[^%w_ ]", "")
 gameName         = gameName:gsub("%s+", "_")
 
-local ConfigFile = "Chloe X/Config/Chloe_" .. gameName .. ".json"
+local ConfigFile = "aikoware/cfg/aiko" .. gameName .. ".json"
 
 ConfigData       = {}
 Elements         = {}
@@ -52,49 +52,31 @@ function LoadConfigElements()
     end
 end
 
-local Icons = {
-    player    = "rbxassetid://12120698352",
-    web       = "rbxassetid://137601480983962",
-    bag       = "rbxassetid://8601111810",
-    shop      = "rbxassetid://4985385964",
-    cart      = "rbxassetid://128874923961846",
-    plug      = "rbxassetid://137601480983962",
-    settings  = "rbxassetid://70386228443175",
-    loop      = "rbxassetid://122032243989747",
-    gps       = "rbxassetid://17824309485",
-    compas    = "rbxassetid://125300760963399",
-    gamepad   = "rbxassetid://84173963561612",
-    boss      = "rbxassetid://13132186360",
-    scroll    = "rbxassetid://114127804740858",
-    menu      = "rbxassetid://6340513838",
-    crosshair = "rbxassetid://12614416478",
-    user      = "rbxassetid://108483430622128",
-    stat      = "rbxassetid://12094445329",
-    eyes      = "rbxassetid://14321059114",
-    sword     = "rbxassetid://82472368671405",
-    discord   = "rbxassetid://94434236999817",
-    star      = "rbxassetid://107005941750079",
-    skeleton  = "rbxassetid://17313330026",
-    payment   = "rbxassetid://18747025078",
-    scan      = "rbxassetid://109869955247116",
-    alert     = "rbxassetid://73186275216515",
-    question  = "rbxassetid://17510196486",
-    idea      = "rbxassetid://16833255748",
-    strom     = "rbxassetid://13321880293",
-    water     = "rbxassetid://100076212630732",
-    dcs       = "rbxassetid://15310731934",
-    start     = "rbxassetid://108886429866687",
-    next      = "rbxassetid://12662718374",
-    rod       = "rbxassetid://103247953194129",
-    fish      = "rbxassetid://97167558235554",
-}
-
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local LocalPlayer = game:GetService("Players").LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 local CoreGui = game:GetService("CoreGui")
 local viewport = workspace.CurrentCamera.ViewportSize
+
+local LucideIcons = {}
+pcall(function()
+    LucideIcons = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/icons.lua"))()
+end)
+
+local function GetIcon(iconName)
+    if not iconName or iconName == "" then
+        return "rbxassetid://16932740082" -- default icon
+    end
+    
+    if string.match(iconName, "rbxassetid://") then
+        return iconName
+    end
+    
+    local lowerName = string.lower(iconName)
+    
+    return LucideIcons[lowerName] or iconName
+end
 
 local function isMobileDevice()
     return UserInputService.TouchEnabled
@@ -260,10 +242,10 @@ function CircleClick(Button, X, Y)
     end)
 end
 
-local Chloex = {}
-function Chloex:MakeNotify(NotifyConfig)
+local Library = {}
+function Library:MakeNotify(NotifyConfig)
     local NotifyConfig = NotifyConfig or {}
-    NotifyConfig.Title = NotifyConfig.Title or "Chloe X"
+    NotifyConfig.Title = NotifyConfig.Title or "@aikoware"
     NotifyConfig.Description = NotifyConfig.Description or "Notification"
     NotifyConfig.Content = NotifyConfig.Content or "Content"
     NotifyConfig.Color = NotifyConfig.Color or Color3.fromRGB(255, 0, 255)
@@ -459,8 +441,8 @@ function Chloex:MakeNotify(NotifyConfig)
     return NotifyFunction
 end
 
-function chloex(msg, delay, color, title, desc)
-    return Chloex:MakeNotify({
+function library(msg, delay, color, title, desc)
+    return Library:MakeNotify({
         Title = title or "Chloe X",
         Description = desc or "Notification",
         Content = msg or "Content",
@@ -469,11 +451,11 @@ function chloex(msg, delay, color, title, desc)
     })
 end
 
-function Chloex:Window(GuiConfig)
+function Library:Window(GuiConfig)
     GuiConfig              = GuiConfig or {}
-    GuiConfig.Title        = GuiConfig.Title or "Chloe X"
-    GuiConfig.Footer       = GuiConfig.Footer or "Chloee :3"
-    GuiConfig.Color        = GuiConfig.Color or Color3.fromRGB(255, 0, 255)
+    GuiConfig.Title        = GuiConfig.Title or "@aikoware"
+    GuiConfig.Footer       = GuiConfig.Footer or "made by untog!"
+    GuiConfig.Color        = GuiConfig.Color or Color3.fromRGB(138, 43, 226)
     GuiConfig["Tab Width"] = GuiConfig["Tab Width"] or 120
     GuiConfig.Version      = GuiConfig.Version or 1
 
@@ -482,7 +464,7 @@ function Chloex:Window(GuiConfig)
 
     local GuiFunc = {}
 
-    local Chloeex = Instance.new("ScreenGui");
+    local Library = Instance.new("ScreenGui");
     local DropShadowHolder = Instance.new("Frame");
     local DropShadow = Instance.new("ImageLabel");
     local Main = Instance.new("Frame");
@@ -505,10 +487,10 @@ function Chloex:Window(GuiConfig)
     local LayersFolder = Instance.new("Folder");
     local LayersPageLayout = Instance.new("UIPageLayout");
 
-    Chloeex.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    Chloeex.Name = "Chloeex"
-    Chloeex.ResetOnSpawn = false
-    Chloeex.Parent = game:GetService("CoreGui")
+    Library.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    Library.Name = "Library"
+    Library.ResetOnSpawn = false
+    Library.Parent = game:GetService("CoreGui")
 
     DropShadowHolder.BackgroundTransparency = 1
     DropShadowHolder.BorderSizePixel = 0
@@ -521,10 +503,10 @@ function Chloex:Window(GuiConfig)
     end
     DropShadowHolder.ZIndex = 0
     DropShadowHolder.Name = "DropShadowHolder"
-    DropShadowHolder.Parent = Chloeex
+    DropShadowHolder.Parent = Library
 
-    DropShadowHolder.Position = UDim2.new(0, (Chloeex.AbsoluteSize.X // 2 - DropShadowHolder.Size.X.Offset // 2), 0,
-        (Chloeex.AbsoluteSize.Y // 2 - DropShadowHolder.Size.Y.Offset // 2))
+    DropShadowHolder.Position = UDim2.new(0, (Library.AbsoluteSize.X // 2 - DropShadowHolder.Size.X.Offset // 2), 0,
+        (Library.AbsoluteSize.Y // 2 - DropShadowHolder.Size.Y.Offset // 2))
     DropShadow.Image = "rbxassetid://6015897843"
     DropShadow.ImageColor3 = Color3.fromRGB(15, 15, 15)
     DropShadow.ImageTransparency = 1
@@ -547,7 +529,7 @@ function Chloex:Window(GuiConfig)
         Main.BackgroundTransparency = 1
         Main.ImageTransparency = GuiConfig.ThemeTransparency or 0.15
     else
-        Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        Main.BackgroundColor3 = Color3.fromRGB(20, 8, 35)
         Main.BackgroundTransparency = 0
     end
 
@@ -748,7 +730,7 @@ function Chloex:Window(GuiConfig)
 
     function GuiFunc:DestroyGui()
         if CoreGui:FindFirstChild("Chloeex") then
-            Chloeex:Destroy()
+            Library:Destroy()
         end
     end
 
@@ -805,7 +787,7 @@ function Chloex:Window(GuiConfig)
         Title.Position = UDim2.new(0, 0, 0, 4)
         Title.BackgroundTransparency = 1
         Title.Font = Enum.Font.GothamBold
-        Title.Text = "Chloe X Window"
+        Title.Text = "@aikoware Window"
         Title.TextSize = 22
         Title.TextColor3 = Color3.fromRGB(255, 255, 255)
         Title.ZIndex = 52
@@ -816,7 +798,7 @@ function Chloex:Window(GuiConfig)
         Message.Position = UDim2.new(0, 10, 0, 30)
         Message.BackgroundTransparency = 1
         Message.Font = Enum.Font.Gotham
-        Message.Text = "Do you want to close this window?\nYou will not be able to open it again"
+        Message.Text = "Are you sure you want to close this window?\nYou will not be able to open it again"
         Message.TextSize = 14
         Message.TextColor3 = Color3.fromRGB(200, 200, 200)
         Message.TextWrapped = true
@@ -1025,13 +1007,13 @@ function Chloex:Window(GuiConfig)
     UICorner36.CornerRadius = UDim.new(0, 3)
     UICorner36.Parent = DropdownSelect
 
-    UIStroke14.Color = Color3.fromRGB(12, 159, 255)
+    UIStroke14.Color = Color3.fromRGB(138, 43, 226)
     UIStroke14.Thickness = 2.5
     UIStroke14.Transparency = 0.8
     UIStroke14.Parent = DropdownSelect
 
     DropdownSelectReal.AnchorPoint = Vector2.new(0.5, 0.5)
-    DropdownSelectReal.BackgroundColor3 = Color3.fromRGB(0, 27, 98)
+    DropdownSelectReal.BackgroundColor3 = Color3.fromRGB(40, 20, 60)
     DropdownSelectReal.BackgroundTransparency = 0.7
     DropdownSelectReal.BorderColor3 = Color3.fromRGB(0, 0, 0)
     DropdownSelectReal.BorderSizePixel = 0
@@ -2706,4 +2688,4 @@ function Chloex:Window(GuiConfig)
     return Tabs
 end
 
-return Chloex
+return Library
