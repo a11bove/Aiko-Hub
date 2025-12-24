@@ -2059,18 +2059,13 @@ function Items:AddDropdown(DropdownConfig)
 	ScrollSelect.BorderSizePixel = 0
 	ScrollSelect.Position = UDim2.new(0, 0, 0, 35)
     ScrollSelect.Size = UDim2.new(1, 0, 1, -35)
-	ScrollSelect.ClipDescendants = false
 	ScrollSelect.Name = "ScrollSelect"
 	ScrollSelect.Parent = DropdownFolder
 
 	UIListLayout4.Padding = UDim.new(0, 3)
 	UIListLayout4.SortOrder = Enum.SortOrder.LayoutOrder
 	UIListLayout4.Parent = ScrollSelect
-
-	local BottomPadding = Instance.new("UIPadding")
-	BottomPadding.PaddingBottom = UDim.new(0,10)
-	BottomPadding.Parent = ScrollSelect
-	
+				
 	-- Make search bar stay at top
 	SearchContainer.LayoutOrder = -999
 
