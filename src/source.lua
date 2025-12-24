@@ -766,7 +766,7 @@ end)
 	DropdownSelectReal.BorderSizePixel = 0
 	DropdownSelectReal.LayoutOrder = 1
 	DropdownSelectReal.Position = UDim2.new(0.5, 0, 0.5, 0)
-	DropdownSelectReal.Size = UDim2.new(1, -20, 1, -10)
+	DropdownSelectReal.Size = UDim2.new(1, -10, 1, -10)
 	DropdownSelectReal.Name = "DropdownSelectReal"
 	DropdownSelectReal.Parent = DropdownSelect
 
@@ -2048,6 +2048,10 @@ function Items:AddDropdown(DropdownConfig)
 	end)
 
 	ScrollSelect.CanvasSize = UDim2.new(0, 0, 0, 0)
+
+    ScrollSelect.VerticalScrollBarInset = Enum.ScrollBarInset.None
+    ScrollSelect.ScrollBarImageTransparency = 1
+
 	ScrollSelect.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
 	ScrollSelect.ScrollBarThickness = 0
 	ScrollSelect.Active = true
