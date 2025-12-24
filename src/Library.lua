@@ -1,17 +1,17 @@
 local HttpService = game:GetService("HttpService")
 
-if not isfolder("Chloe X") then
-    makefolder("Chloe X")
+if not isfolder("aikoware") then
+    makefolder("aikoware")
 end
-if not isfolder("Chloe X/Config") then
-    makefolder("Chloe X/Config")
+if not isfolder("aikoware/cfg") then
+    makefolder("aikoware/cfg")
 end
 
 local gameName   = tostring(game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name)
 gameName         = gameName:gsub("[^%w_ ]", "")
 gameName         = gameName:gsub("%s+", "_")
 
-local ConfigFile = "Chloe X/Config/Chloe_" .. gameName .. ".json"
+local ConfigFile = "aikoware/cfg/aiko_" .. gameName .. ".json"
 
 ConfigData       = {}
 Elements         = {}
@@ -473,7 +473,7 @@ function Chloex:Window(GuiConfig)
     GuiConfig              = GuiConfig or {}
     GuiConfig.Title        = GuiConfig.Title or "Chloe X"
     GuiConfig.Footer       = GuiConfig.Footer or "Chloee :3"
-    GuiConfig.Color        = GuiConfig.Color or Color3.fromRGB(255, 0, 255)
+    GuiConfig.Color        = GuiConfig.Color or Color3.fromRGB(138, 43, 226)
     GuiConfig["Tab Width"] = GuiConfig["Tab Width"] or 120
     GuiConfig.Version      = GuiConfig.Version or 1
 
@@ -883,11 +883,12 @@ function Chloex:Window(GuiConfig)
 
         local MainButton = Instance.new("ImageLabel")
         MainButton.Parent = ScreenGui
-        MainButton.Size = UDim2.new(0, 40, 0, 40)
+        MainButton.Size = UDim2.new(0, 47, 0, 47)
         MainButton.Position = UDim2.new(0, 20, 0, 100)
-        MainButton.BackgroundTransparency = 1
-        MainButton.Image = "rbxassetid://" .. GuiConfig.Image
+        MainButton.BackgroundTransparency = 0.4
+        MainButton.Image = "rbxassetid://140356301069419"
         MainButton.ScaleType = Enum.ScaleType.Fit
+        MainButton.BackgroundColor3 = Color3.RGB(0,0,0)
 
         local UICorner = Instance.new("UICorner")
         UICorner.CornerRadius = UDim.new(0, 6)
