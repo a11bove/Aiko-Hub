@@ -1510,13 +1510,13 @@ end
                 if ParagraphConfig.Icon then
                     local IconImg = Instance.new("ImageLabel")
                     IconImg.Size = UDim2.new(0, 20, 0, 20)
-                    IconImg.Position = UDim2.new(0, 8, 10, 10)
+                    IconImg.Position = UDim2.new(0, 8, 0, 10)
                     IconImg.BackgroundTransparency = 1
                     IconImg.Name = "ParagraphIcon"
                     IconImg.Parent = Paragraph
 
                     IconImg.Image = GetIcon(ParagraphConfig.Icon)
-                    iconOffset = 38
+                    iconOffset = 35
                 end
 
                 ParagraphTitle.Font = Enum.Font.GothamBold
