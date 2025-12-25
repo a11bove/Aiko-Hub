@@ -11,56 +11,10 @@ local LocalPlayer = Players.LocalPlayer
 local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local hum = character:FindFirstChildOfClass("Humanoid")
 
--- Public state variables
-FunModule.deleteSettings = {
-    Owl = false,
-    Deer = false,
-    Ram = false
-}
-
 FunModule.GodModeEnabled = false
 FunModule.GodModeToggle = false
 FunModule.GodModeHumConnection = nil
 FunModule.GodModeHeartbeat = nil
-
--- Auto Delete Function
-local function autoDelete()
-    for name, enabled in pairs(FunModule.deleteSettings) do
-        if enabled then
-            for _, obj in pairs(Workspace.Characters:GetChildren()) do
-                if obj.Name == name then
-                    obj:Destroy()
-                end
-            end
-        end
-    end
-end
-
--- Auto Delete Heartbeat Connection
-local autoDeleteConnection
-function FunModule.StartAutoDelete()
-    if autoDeleteConnection then return end
-    autoDeleteConnection = RunService.Heartbeat:Connect(autoDelete)
-end
-
-function FunModule.StopAutoDelete()
-    if autoDeleteConnection then
-        autoDeleteConnection:Disconnect()
-        autoDeleteConnection = nil
-    end
-end
-
--- Toggle Auto Delete for specific entity
-function FunModule.ToggleAutoDelete(entityName, state)
-    if FunModule.deleteSettings[entityName] ~= nil then
-        FunModule.deleteSettings[entityName] = state
-    end
-end
-
--- Set Game Gravity
-function FunModule.SetGravity(value)
-    Workspace.Gravity = value
-end
 
 -- Apply God Mode (No Health Bar)
 function FunModule.ApplyGodMode(state)
@@ -178,7 +132,6 @@ end
 
 -- Cleanup Function
 function FunModule.Cleanup()
-    FunModule.StopAutoDelete()
     FunModule.ToggleNoHealthBar(false)
     FunModule.ToggleGodMode(false)
     
@@ -197,7 +150,6 @@ function FunModule.Cleanup()
 end
 
 -- Initialize
-FunModule.StartAutoDelete()
 FunModule.SetupCharacterConnection()
 
 return FunModule
