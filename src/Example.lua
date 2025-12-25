@@ -25,6 +25,12 @@ local Tabs = {
     Main = Window:AddTab({ Name = "Main", Icon = "user" }),
 }
 
+--[[ Create Tab
+ local Tab = Window:AddTab({
+    Name = "Tab",
+    Icon = "home"
+}) ]]
+
 -- Create Section
 X1 = Tabs.Info:AddSection("@aikoware | Section")
 -- X1 = Tabs.Info:AddSection("Section Name", false) -- Default closed
