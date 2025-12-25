@@ -52,6 +52,33 @@ function LoadConfigElements()
     end
 end
 
+local LucideIcons = {}
+pcall(function()
+    LucideIcons = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/icons.lua"))()
+end)
+
+local function GetIcon(iconName)
+    if not iconName or iconName == "" then
+        return "rbxassetid://16932740082" -- default icon
+    end
+    
+    if string.match(iconName, "rbxassetid://") then
+        return iconName
+    end
+    
+    local lowerName = string.lower(iconName)
+    
+    if LucideIcons[lowerName] then
+        return LucideIcons[lowerName]
+    end
+    
+    if Icons[lowerName] then
+        return Icons[lowerName]
+    end
+    
+    return iconName
+end
+
 local Icons = {
     player    = "rbxassetid://12120698352",
     web       = "rbxassetid://137601480983962",
@@ -1497,11 +1524,7 @@ end
                     IconImg.Name = "ParagraphIcon"
                     IconImg.Parent = Paragraph
 
-                    if Icons and Icons[ParagraphConfig.Icon] then
-                        IconImg.Image = Icons[ParagraphConfig.Icon]
-                    else
-                        IconImg.Image = ParagraphConfig.Icon
-                    end
+                    IconImg.Image = GetIcon(ParagraphConfig.Icon)
 
                     iconOffset = 30
                 end
