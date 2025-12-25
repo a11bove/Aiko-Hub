@@ -1213,11 +1213,7 @@ end
         end
 
         if TabConfig.Icon ~= "" then
-            if Icons[TabConfig.Icon] then
-                FeatureImg.Image = Icons[TabConfig.Icon]
-            else
-                FeatureImg.Image = TabConfig.Icon
-            end
+            FeatureImg.Image = GetIcon(TabConfig.Icon)
         end
 
         TabButton.Activated:Connect(function()
