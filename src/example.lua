@@ -1,6 +1,3 @@
--- Load Lucide Icons
-local LucideIcons = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/icons.lua"))()
-
 -- Load UI Library
 local AIKO = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/Library.lua"))()
 
