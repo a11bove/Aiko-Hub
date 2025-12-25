@@ -1182,7 +1182,6 @@ end
         TabName.Name = "TabName"
         TabName.Parent = Tab
 
-        FeatureImg.Image = GetIcon(TabConfig.Icon)
         FeatureImg.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         FeatureImg.BackgroundTransparency = 0.9990000128746033
         FeatureImg.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -1210,9 +1209,9 @@ end
             UICorner4.Parent = ChooseFrame
         end
 
-        --[[if TabConfig.Icon ~= "" then
+        if TabConfig.Icon ~= "" then
             FeatureImg.Image = GetIcon(TabConfig.Icon)
-        end]]
+        end
 
         TabButton.Activated:Connect(function()
             CircleClick(TabButton, Mouse.X, Mouse.Y)
