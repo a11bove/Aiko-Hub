@@ -4,13 +4,6 @@ end
 
 local AIKO = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/Library.lua"))()
 
-AIKO:MakeNotify({
-    Title = "@aikoware",
-    Description = "Notification",
-    Content = "Wait for the script to be fully loaded.",
-    Delay = 18
-})
-
 local Window = AIKO:Window({
     Title   = "@aikoware |",
     Footer  = " made by untog",              
