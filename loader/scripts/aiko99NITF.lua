@@ -1,152 +1,47 @@
-if not game:IsLoaded() then
-    game.Loaded:Wait()
-end
+local AIKO = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/Library.lua"))()
 
-local existingGui = game.CoreGui:FindFirstChild("aikoware")
-if existingGui then
-    existingGui:Destroy()
-end
-
-local existingHirimi = game.CoreGui:FindFirstChild("HirimiGui")
-if existingHirimi then
-    existingHirimi:Destroy()
-end
-
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/source.lua"))()
-
-Library:MakeNotify({
-    Title = "@aikoware",
-    Description = "",
-    Content = "Wait for the script to be fully loaded.",
-    Delay = 10
+local Window = AIKO:Window({
+    Title   = "@aikoware |",
+    Footer  = " made by untog",
+    Version = 1,
 })
-
-local Window = Library:MakeGui({
-    NameHub = "@aikoware | made by untog!"
-})
-
-local gui = Instance.new("ScreenGui")
-gui.Name = "aikoware"
-gui.IgnoreGuiInset = true
-gui.ResetOnSpawn = false
-gui.Parent = game.CoreGui
-
-local button = Instance.new("ImageButton")
-button.Size = UDim2.new(0, 47, 0, 47)
-button.Position = UDim2.new(0, 60, 0, 60)
-button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-button.BackgroundTransparency = 0.5
-button.Image = "rbxassetid://140356301069419"
-button.Name = "aikowaretoggle"
-button.AutoButtonColor = true
-button.Parent = gui
-
-local corner = Instance.new("UICorner", button)
-corner.CornerRadius = UDim.new(0, 12)
-
-local stroke = Instance.new("UIStroke")
-stroke.Thickness = 1.5
-stroke.Color = Color3.fromRGB(45, 45, 45)
-stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-stroke.Parent = button
-
-local gradient = Instance.new("UIGradient")
-gradient.Color =
-    ColorSequence.new {
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 100)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 0, 0))
-}
-gradient.Rotation = 45
-gradient.Parent = stroke
-
-local dragging, dragInput, dragStart, startPos
-
-button.InputBegan:Connect(
-    function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true
-            dragStart = input.Position
-            startPos = button.Position
-
-            input.Changed:Connect(
-                function()
-                    if input.UserInputState == Enum.UserInputState.End then
-                        dragging = false
-                    end
-                end
-            )
-        end
-    end
-)
-
-button.InputChanged:Connect(
-    function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-            dragInput = input
-        end
-    end
-)
-
-game:GetService("UserInputService").InputChanged:Connect(
-    function(input)
-        if input == dragInput and dragging then
-            local delta = input.Position - dragStart
-            button.Position =
-                UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        end
-    end
-)
-
-button.MouseButton1Click:Connect(
-    function()
-        local HirimiGui = game.CoreGui:FindFirstChild("HirimiGui")
-        if HirimiGui then
-            local DropShadowHolder = HirimiGui:FindFirstChild("DropShadowHolder")
-            if DropShadowHolder then
-                DropShadowHolder.Visible = not DropShadowHolder.Visible
-            end
-        end
-    end
-)
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
 local LocalPlayer = Players.LocalPlayer
 local player = Players.LocalPlayer
-
 local RunService = game:GetService("RunService")
-
 local VirtualUser = game:GetService("VirtualUser")
-
 local Stats = game:GetService("Stats")
 local UserInputService = game:GetService("UserInputService")
 local Camera = workspace.CurrentCamera
-
 local workspace = Workspace
-
 local character = player.Character or player.CharacterAdded:Wait()
 local HumanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
 local Character = character
 local rs = ReplicatedStorage
 
 -- modular yarn
-local FlyModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/flynitf.lua"))()
+local FlyModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/99nitf/flynitf.lua"))()
 
-local ESPModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/espmdl.lua"))()
+local ESPModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/99nitf/espmdl.lua"))()
 
-local AutoPlantModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/autoplantmdl.lua"))()
+local AutoPlantModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/99nitf/autoplantmdl.lua"))()
 
-local AuraModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/auramdl.lua"))()
+local AuraModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/99nitf/auramdl.lua"))()
 
-local VisionModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/envmdl.lua"))()
+local VisionModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/99nitf/envmdl.lua"))()
 
-local FunModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/funmdl.lua"))()
+local FunModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/99nitf/funmdl.lua"))()
 
-local AntiModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/antmdl.lua"))()
+local AntiModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/99nitf/antmdl.lua"))()
 
-local TeleportModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/tpmdl.lua"))()
+local TeleportModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/99nitf/tpmdl.lua"))()
+
+local BringModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/99nitf/bringmdl.lua"))()
+
+local MiscModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/99nitf/miscmdl.lua"))()
 
 -- start
 local currentChests, currentChestNames = TeleportModule.getChests()
@@ -154,24 +49,6 @@ local selectedChest = currentChestNames[1] or nil
 
 local currentMobs, currentMobNames = TeleportModule.getMobs()
 local selectedMob = currentMobNames[1] or nil
-
-local function notifyNoSapling(message)
-    Library:MakeNotify({
-        Title = "@aikoware",
-        Description = "| Auto Plant",
-        Content = message,
-        Delay = 3,
-    })
-end
-
-local function notify(content, description)
-    Library:MakeNotify({
-        Title = "@aokiware",
-        Description = "| " .. description,
-        Content = content,
-        Delay = 2
-    })
-end
 
 local flyToggle = FlyModule.flyToggle
 local flySpeed = FlyModule.flySpeed
@@ -181,10 +58,6 @@ local NOFLY = FlyModule.NOFLY
 local MobileFly = FlyModule.MobileFly
 local UnMobileFly = FlyModule.UnMobileFly
 
-local autoFeedToggle = false
-local selectedFood = {}
-local hungerThreshold = 75
-local alwaysFeedEnabledItems = {}
 local alimentos = {
     "Apple",
     "Berry",
@@ -214,23 +87,6 @@ local ie = {
 
 local me = {"Bunny", "Wolf", "Alpha Wolf", "Bear", "Crossbow Cultist", "Alien", "Alien Elite", "Polar Bear", "Arctic Fox", "Meteor Crab", "Mammoth", "Cultist", "Cultist Melee", "Cultist Crossbow", "Cultist Juggernaut"}
 
-local BlueprintItems = {"Crafting Blueprint", "Defense Blueprint", "Furniture Blueprint"}
-local selectedBlueprintItems = {}
-local PeltsItems = {"Bunny Foot", "Wolf Pelt", "Alpha Wolf Pelt", "Bear Pelt", "Arctic Fox Pelt", "Polar Bear Pelt"}
-local selectedPeltsItems = {}
-local junkItems = {"Bolt", "Sheet Metal", "UFO Junk", "UFO Component", "Broken Fan", "Old Radio", "Broken Microwave", "Tyre", "Metal Chair", "Old Car Engine", "Washing Machine", "Cultist Experiment", "Cultist Prototype", "Meteor Shard", "Gold Shard", "UFO Scrap", "Cultist Gem", "Gem of the Forest Fragment", "Feather", "Old Boot"}
-local selectedJunkItems = {}
-local fuelItems = {"Log", "Chair", "Coal", "Fuel Canister", "Oil Barrel"}
-local selectedFuelItems = {}
-local foodItems = {"Cake", "Cooked Steak", "Cooked Morsel", "Ribs", "Salmon", "Cooked Salmon", "Cooked Ribs", "Mackerel", "Cooked Mackerel", "Steak", "Morsel", "Berry", "Apple", "Carrot", "Chilli", "Stew", "Hearty Stew", "Corn", "Pumpkin", "Meat? Sandwich", "Pumpkin", "Seafood Chowder", "Steak Dinner", "Pumpkin Soup", "BBQ Ribs", "Carrot Cake", "Jar of Jelly", "Mackerel", "Salmon", "Clownfish", "Swordfish", "Jellyfish", "Char", "Eel", "Shark", "Cooked Clownfish", "Cooked Swordfish", "Cooked Jellyfish", "Cooked Char", "Cooked Eel", "Cooked Shark"}
-local selectedFoodItems = {}
-local medicalItems = {"Bandage", "MedKit"}
-local selectedMedicalItems = {}
-local cultistItems = {"Cultist", "Crossbow Cultist", "Cultist Juggernaut", "Bunny", "Wolf", "Alpha Wolf", "Bear", "Snow Bear", "Deer", "Owl", "Ram"}
-local selectedCultistItems = {}
-local equipmentItems = {"Revolver", "Rifle", "Revolver Ammo", "Rifle Ammo", "Infernal Sack", "Giant Sack", "Good Sack", "Strong Axe", "Good Axe", "Frozen Shuriken", "Tactical Shotgun", "Crossbow", "Infernal Crossbow", "Snowball", "Kunai", "Leather Body", "Poison Armour", "Iron Body", "Thorn Body", "Obsidiron Body", "Cultist Staff", "Riot Shield", "Alien Armour", "Axe Trim Kit", "Armour Trim Kit", "Red Key", "Blue Key", "Yellow Key", "Grey Key", "Frog Key", "Chili Seeds", "Flower Seeds", "Berry Seeds", "Firefly Seeds", "Old Rod", "Good Rod", "Strong Rod"}
-local selectedEquipmentItems = {}
-
 local craftableItems = {
     "Map", "Old Bed", "Bunny Trap", "Crafting Bench 2", "Sun Dial",
     "Regular Bed", "Compass", "Freezer", "Farm Plot", "Wood Rain Storage",
@@ -241,114 +97,6 @@ local craftableItems = {
 }
 
 local selectedCraftItems = {}
-
-local craftingBenchItems = {
-    "Crafting Bench 1",
-    "Crafting Bench 2",
-    "Crafting Bench 3",
-    "Crafting Bench 4",
-    "Crafting Bench 5"
-}
-
-local selectedBenchItems = {}
-
-local isCollecting = false
-local originalPosition = nil
-local autoBringEnabled = false
-
-local BlueprintToggleEnabled = false
-local PeltsToggleEnabled = false
-local junkToggleEnabled = false
-local fuelToggleEnabled = false
-local foodToggleEnabled = false
-local medicalToggleEnabled = false
-local cultistToggleEnabled = false
-local equipmentToggleEnabled = false
-
-local BlueprintLoopRunning = false
-local PeltsLoopRunning = false
-local junkLoopRunning = false
-local fuelLoopRunning = false
-local foodLoopRunning = false
-local medicalLoopRunning = false
-local cultistLoopRunning = false
-local equipmentLoopRunning = false
-
-local function bypassBringSystem(items, stopFlag)
-    if isCollecting then 
-        return 
-    end
-
-    isCollecting = true
-    local player = game.Players.LocalPlayer
-
-    if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then 
-        isCollecting = false
-        return 
-    end
-
-    local hrp = player.Character.HumanoidRootPart
-    originalPosition = hrp.CFrame
-
-    for _, itemName in ipairs(items) do
-        if stopFlag and not stopFlag() then
-            break
-        end
-
-        local itemsFound = {}
-
-        for _, item in ipairs(workspace:GetDescendants()) do
-            if item.Name == itemName and (item:IsA("BasePart") or item:IsA("Model")) then
-                local itemPart = item:IsA("Model") and (item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")) or item
-                if itemPart and itemPart.Parent ~= player.Character then
-                    table.insert(itemsFound, {item = item, part = itemPart})
-                end
-            end
-        end
-
-        for _, itemData in ipairs(itemsFound) do
-            if stopFlag and not stopFlag() then
-                break
-            end
-
-            local item = itemData.item
-            local itemPart = itemData.part
-
-            if itemPart and itemPart.Parent then
-                local itemPos = itemPart.CFrame + Vector3.new(0, 5, 0)
-                hrp.CFrame = itemPos
-
-                local playerPos = hrp.Position + Vector3.new(0, -1, 0)
-                pcall(function()
-                    itemPart.CFrame = CFrame.new(playerPos)
-                    itemPart.Velocity = Vector3.new(0, 0, 0)
-                    itemPart.AngularVelocity = Vector3.new(0, 0, 0)
-                end)
-
-                hrp.CFrame = originalPosition
-
-                pcall(function()
-                    local landingPos = originalPosition.Position + Vector3.new(
-                        math.random(-4, 4), 
-                        2, 
-                        math.random(-4, 4)
-                    )
-                    itemPart.CFrame = CFrame.new(landingPos)
-                    itemPart.Velocity = Vector3.new(0, 0, 0)
-                    itemPart.AngularVelocity = Vector3.new(0, 0, 0)
-                end)
-            end
-
-            wait(0.1) 
-        end
-    end
-
-    if originalPosition then
-        hrp.CFrame = originalPosition
-    end
-
-    isCollecting = false
-end
 
 local campfireFuelItems = {"Log", "Coal", "Chair", "Fuel Canister", "Oil Barrel", "Biofuel"}
 local campfireDropPos = Vector3.new(0, 19, 0)
@@ -388,7 +136,7 @@ function feed(nome)
 end
 
 function notifeed(nome)
-    Library:MakeNotify({
+    AIKO:MakeNotify({
         Title = "@aikoware",
         Description = "| Auto Eat Paused",
         Content = "The food is gone!",
@@ -415,58 +163,6 @@ local function moveItemToPos(item, position)
         end
         game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents").StopDraggingItem:FireServer(item)
     end)
-end
-
-
-
-local function bringItemsByPlayerTP(itemNames, originalPosition)
-    if not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then 
-        return 
-    end
-
-    local hrp = LocalPlayer.Character.HumanoidRootPart
-    local itemsFound = {}
-
-    for _, itemName in ipairs(itemNames) do
-        for _, item in ipairs(workspace:GetDescendants()) do
-            if item.Name == itemName and (item:IsA("BasePart") or item:IsA("Model")) then
-                local part = item:IsA("Model") and (item.PrimaryPart or item:FindFirstChildWhichIsA("BasePart")) or item
-                if part and part:IsA("BasePart") then
-                    table.insert(itemsFound, {item = item, part = part})
-                end
-            end
-        end
-    end
-
-    for i, itemData in ipairs(itemsFound) do
-        local item = itemData.item
-        local part = itemData.part
-
-        if item and item.Parent and part then
-            local itemPosition = part.Position + Vector3.new(0, 3, 0)
-            hrp.CFrame = CFrame.new(itemPosition)
-
-            task.wait(0.2)
-
-            pcall(function()
-                ReplicatedStorage:WaitForChild("RemoteEvents").RequestStartDraggingItem:FireServer(item)
-            end)
-
-            task.wait(0.3)
-
-            hrp.CFrame = CFrame.new(originalPosition)
-
-            task.wait(0.2)
-
-            pcall(function()
-                ReplicatedStorage:WaitForChild("RemoteEvents").StopDraggingItem:FireServer(item)
-            end)
-
-            task.wait(0.5)
-        end
-    end
-
-    hrp.CFrame = CFrame.new(originalPosition)
 end
 
 _G.playerBillboards = {}
@@ -829,86 +525,81 @@ TreeFold.ChildAdded:Connect(function(child)
     end
 end)
 
-local Home = Window:CreateTab({
+local Home = Window:AddTab({
     Name = "Home",
     Icon = "rbxassetid://10723407389"
 })
 
-local Combat = Window:CreateTab({
+local Combat = Window:AddTab({
     Name = "Combat",
     Icon = "rbxassetid://10734975692"
 })
 
-local Camp = Window:CreateTab({
+local Camp = Window:AddTab({
     Name = "Auto",
     Icon = "rbxassetid://10734933826"
 })
 
-local br = Window:CreateTab({
+local br = Window:AddTab({
     Name = "Bring",
     Icon = "rbxassetid://10734909540"
 })
 
-local Fly = Window:CreateTab({
+local Fly = Window:AddTab({
     Name = "Player",
     Icon = "rbxassetid://10747373176"
 })
 
-local esp = Window:CreateTab({
+local esp = Window:AddTab({
     Name = "Esp",
     Icon = "rbxassetid://10723346959"
 })
 
-local Tp = Window:CreateTab({
+local Tp = Window:AddTab({
     Name = "Teleport",
     Icon = "rbxassetid://10734886004"
 })
 
-local Vision = Window:CreateTab({
+local Vision = Window:AddTab({
     Name = "Graphics",
     Icon = "rbxassetid://10723425539"
 })
 
-local Fun = Window:CreateTab({
+local Fun = Window:AddTab({
     Name = "Fun",
     Icon = "rbxassetid://10734966248"
 })
 
-local Misc = Window:CreateTab({
+local Misc = Window:AddTab({
     Name = "Others",
     Icon = "rbxassetid://10734954538"
 })
 
-local infosec = Home:AddSection("Information")
+local infosec = Home:AddSection("Information", true)
 
 infosec:AddParagraph({
-    Title = "Warning:",
+    Title = "Warning",
+    Icon = "warning",
     Content = "I made this script for testing purposes only, I am not responsible for any bans or any other consequences."
 })
 
 infosec:AddParagraph({
-    Title = "Discord:",
-    Content = "Join to our discord server for more updates and information."
-})
-
-infosec:AddButton({
-    Title = "Copy Server Invite",
-    Content = "",
-    Callback = function()
-            setclipboard("https://discord.gg/JccfFGpDNV")
-        Library:MakeNotify({
-            Title = "@aikoware",
-            Description = "",
-            Content = "Link Copied!"
-        })
+    Title = "Discord",
+    Content = "Join to our discord server for more updates and information.",
+    Icon = "discord",
+    ButtonText = "Copy Server Link",
+    ButtonCallback = function()
+        local link = "https://discord.gg/JccfFGpDNV"
+        if setclipboard then
+            setclipboard(link)
+            aiko("Successfully Copied!")
+        end
     end
 })
 
-infosec:Open()
-
 local infO = Home:AddSection("Anti Afk")
 
-infO:AddToggle({
+local antiafk = infO:AddToggle({
     Title = "Enable Anti Afk",
     Content = "Anti kick when idle for 20 mins.",
     Default = false,
@@ -1017,7 +708,7 @@ Grapics:AddButton({
 
 local aur = Combat:AddSection("Aura")
 
-aur:AddToggle({
+local killaura = aur:AddToggle({
     Title = "Kill Aura",
     Content = "",
     Default = false,
@@ -1030,7 +721,7 @@ aur:AddToggle({
     end
 })
 
-aur:AddToggle({
+local chopaura = aur:AddToggle({
     Title = "Chop Aura",
     Content = "",
     Default = false,
@@ -1043,7 +734,7 @@ aur:AddToggle({
     end
 })
 
-aur:AddSlider({
+local auraradius = aur:AddSlider({
     Title = "Aura Radius",
     Content = "",
     Min = 1,
@@ -1056,9 +747,9 @@ aur:AddSlider({
 
 local hbmob = Combat:AddSection("Hitbox Mobs")
 
-local SelectedMobs = {} -- Already correct
+local SelectedMobs = {}
 
-hbmob:AddDropdown({
+local selmob = hbmob:AddDropdown({
     Title = "Select Mobs",
     Content = "Select mobs to add hitbox.",
     Multi = true,
@@ -1074,7 +765,7 @@ hbmob:AddDropdown({
     end
 })
 
-hbmob:AddSlider({
+local hbsze = hbmob:AddSlider({
     Title = "Hitbox Size",
     Content = "",
     Min = 20,
@@ -1095,7 +786,7 @@ hbmob:AddSlider({
             end
 })
 
-hbmob:AddToggle({
+local exphb = hbmob:AddToggle({
     Title = "Expand Hitbox",
     Content = "",
     Default = false,
@@ -1112,7 +803,7 @@ hbmob:AddToggle({
 
 local apln = Camp:AddSection("Auto Plant")
 
-apln:AddToggle({
+local autopl = apln:AddToggle({
     Title = "Auto Plant",
     Content = "Plant saplings around base",
     Default = false,
@@ -1127,7 +818,7 @@ apln:AddToggle({
     end
 })
 
-apln:AddSlider({
+local plradius = apln:AddSlider({
     Title = "Plant Radius",
     Content = "",
     Min = 50,
@@ -1142,7 +833,7 @@ local aucf = Camp:AddSection("Auto Upgrade Campfire")
 
 local selectedCampfireItems = {}
 
-aucf:AddDropdown({
+local selitem = aucf:AddDropdown({
     Title = "Select Item",
     Content = "Select an item to upgrade campfire.",
     Multi = true,
@@ -1157,7 +848,7 @@ aucf:AddDropdown({
     end
 })
 
-aucf:AddToggle({
+local autoupgcf = aucf:AddToggle({
     Title = "Enable Auto Upgrade Campfire",
     Content = "",
     Default = false,
@@ -1191,7 +882,7 @@ aucf:AddToggle({
 
 local acok = Camp:AddSection("Auto Cook")
 
-acok:AddDropdown({
+local selfood = acok:AddDropdown({
     Title = "Select Food",
     Content = "Select a food to cook.",
     Multi = true,
@@ -1201,7 +892,7 @@ acok:AddDropdown({
         for _, itemName in ipairs(autocookItems) do
             autoCookEnabledItems[itemName] = false
         end
-        
+
         if type(options) == "table" then
             for _, itemName in ipairs(options) do
                 autoCookEnabledItems[itemName] = true
@@ -1210,7 +901,7 @@ acok:AddDropdown({
     end
 })
 
-acok:AddToggle({
+local autocook = acok:AddToggle({
     Title = "Enable Auto Cook",
     Content = "",
     Default = false,
@@ -1238,7 +929,7 @@ end)()
 
 local acft = Camp:AddSection("Auto Craft")
 
-acft:AddDropdown({
+local selitem2 = acft:AddDropdown({
     Title = "Select Item",
     Content = "Select an items to craft.",
     Multi = true,
@@ -1253,7 +944,7 @@ acft:AddDropdown({
     end
 })
 
-acft:AddToggle({
+local autocraft = acft:AddToggle({
     Title = "Enable Auto Craft",
     Content = "",
     Default = false,
@@ -1278,449 +969,388 @@ acft:AddToggle({
     end
 })
 
-local bpr =br:AddSection("Blueprint")
+local bpr = br:AddSection("Blueprint")
 
-bpr:AddDropdown({
+local selblueprint = bpr:AddDropdown({
     Title = "Select Blueprint",
     Content = "Select blueprints to bring.",
     Multi = true,
-    Options = BlueprintItems,
+    Options = BringModule.BlueprintItems,
     Default = {},
     Callback = function(options)
         if type(options) == "table" then
-            selectedBlueprintItems = options
+            BringModule.selectedBlueprintItems = options
         else
-            selectedBlueprintItems = {}
+            BringModule.selectedBlueprintItems = {}
         end
     end
 })
 
-bpr:AddToggle({
+local bringbp = bpr:AddToggle({
     Title = "Bring Blueprints",
     Content = "",
     Default = false,
     Callback = function(value)
-        BlueprintToggleEnabled = value
+        BringModule.BlueprintToggleEnabled = value
 
         if value then
-            if #selectedBlueprintItems > 0 then
-                BlueprintLoopRunning = true
+            if #BringModule.selectedBlueprintItems > 0 then
                 spawn(function()
-                    while BlueprintLoopRunning and BlueprintToggleEnabled do
-                        if #selectedBlueprintItems > 0 and BlueprintToggleEnabled then
-                            bypassBringSystem(selectedBlueprintItems, function() return BlueprintToggleEnabled end)
+                    while BringModule.BlueprintToggleEnabled do
+                        if #BringModule.selectedBlueprintItems > 0 and BringModule.BlueprintToggleEnabled then
+                            BringModule.bypassBringSystem(BringModule.selectedBlueprintItems, function() 
+                                return BringModule.BlueprintToggleEnabled 
+                            end)
                         end
 
                         local waitTime = 0
-                        while waitTime < 3 and BlueprintToggleEnabled and BlueprintLoopRunning do
+                        while waitTime < 3 and BringModule.BlueprintToggleEnabled do
                             wait(0.1)
                             waitTime = waitTime + 0.1
                         end
                     end
-                    BlueprintLoopRunning = false
                 end)
-            else
-                BlueprintToggleEnabled = false
             end
-        else
-            BlueprintLoopRunning = false
         end
     end
 })
 
 local plt = br:AddSection("Pelts")
 
-plt:AddDropdown({
+local selpelt = plt:AddDropdown({
     Title = "Select Pelt",
     Content = "Select pelts to bring.",
     Multi = true,
-    Options = PeltsItems,
+    Options = BringModule.PeltsItems,
     Default = {},
     Callback = function(options)
         if type(options) == "table" then
-            selectedPeltsItems = options
+            BringModule.selectedPeltsItems = options
         else
-            selectedPeltsItems = {}
+            BringModule.selectedPeltsItems = {}
         end
     end
 })
 
-plt:AddToggle({
+local bringpelt = plt:AddToggle({
     Title = "Bring Pelts",
     Content = "",
     Default = false,
     Callback = function(value)
-        PeltsToggleEnabled = value
+        BringModule.PeltsToggleEnabled = value
 
         if value then
-            if #selectedPeltsItems > 0 then
-                PeltsLoopRunning = true
+            if #BringModule.selectedPeltsItems > 0 then
                 spawn(function()
-                    while PeltsLoopRunning and PeltsToggleEnabled do
-                        if #selectedPeltsItems > 0 and PeltsToggleEnabled then
-                            bypassBringSystem(selectedPeltsItems, function() return PeltsToggleEnabled end)
+                    while BringModule.PeltsToggleEnabled do
+                        if #BringModule.selectedPeltsItems > 0 and BringModule.PeltsToggleEnabled then
+                            BringModule.bypassBringSystem(BringModule.selectedPeltsItems, function() 
+                                return BringModule.PeltsToggleEnabled 
+                            end)
                         end
 
                         local waitTime = 0
-                        while waitTime < 3 and PeltsToggleEnabled and PeltsLoopRunning do
+                        while waitTime < 3 and BringModule.PeltsToggleEnabled do
                             wait(0.1)
                             waitTime = waitTime + 0.1
                         end
                     end
-                    PeltsLoopRunning = false
                 end)
-            else
-                PeltsToggleEnabled = false
             end
-        else
-            PeltsLoopRunning = false
         end
     end
 })
 
 local scr = br:AddSection("Scrap")
 
-scr:AddDropdown({
+local selscrap = scr:AddDropdown({
     Title = "Select Scrap",
     Content = "Select scraps to bring",
     Multi = true,
-    Options = junkItems,
+    Options = BringModule.junkItems,
     Default = {},
     Callback = function(options)
         if type(options) == "table" then
-            selectedJunkItems = options
+            BringModule.selectedJunkItems = options
         else
-            selectedJunkItems = {}
+            BringModule.selectedJunkItems = {}
         end
     end
 })
 
-scr:AddToggle({
+local bringscrap = scr:AddToggle({
     Title = "Bring Scraps",
     Content = "",
     Default = false,
     Callback = function(value)
-        junkToggleEnabled = value
+        BringModule.junkToggleEnabled = value
 
         if value then
-            if #selectedJunkItems > 0 then
-                junkLoopRunning = true
+            if #BringModule.selectedJunkItems > 0 then
                 spawn(function()
-                    while junkLoopRunning and junkToggleEnabled do
-                        if #selectedJunkItems > 0 and junkToggleEnabled then
-                            bypassBringSystem(selectedJunkItems, function() return junkToggleEnabled end)
+                    while BringModule.junkToggleEnabled do
+                        if #BringModule.selectedJunkItems > 0 and BringModule.junkToggleEnabled then
+                            BringModule.bypassBringSystem(BringModule.selectedJunkItems, function() 
+                                return BringModule.junkToggleEnabled 
+                            end)
                         end
 
                         local waitTime = 0
-                        while waitTime < 3 and junkToggleEnabled and junkLoopRunning do
+                        while waitTime < 3 and BringModule.junkToggleEnabled do
                             wait(0.1)
                             waitTime = waitTime + 0.1
                         end
                     end
-                    junkLoopRunning = false
                 end)
-            else
-                junkToggleEnabled = false
             end
-        else
-            junkLoopRunning = false
         end
     end
 })
 
 local ful = br:AddSection("Fuel")
 
-ful:AddDropdown({
+local selfuel = ful:AddDropdown({
     Title = "Select Fuel",
     Content = "Select fuel to bring.",
     Multi = true,
-    Options = fuelItems,
+    Options = BringModule.fuelItems,
     Default = {},
     Callback = function(options)
         if type(options) == "table" then
-            selectedFuelItems = options
+            BringModule.selectedFuelItems = options
         else
-            selectedFuelItems = {}
+            BringModule.selectedFuelItems = {}
         end
     end
 })
 
-ful:AddToggle({
+local bringfuel = ful:AddToggle({
     Title = "Bring Fuels",
     Content = "",
     Default = false,
     Callback = function(value)
-        fuelToggleEnabled = value
+        BringModule.fuelToggleEnabled = value
 
         if value then
-            if #selectedFuelItems > 0 then
-                fuelLoopRunning = true
+            if #BringModule.selectedFuelItems > 0 then
                 spawn(function()
-                    while fuelLoopRunning and fuelToggleEnabled do
-                        if #selectedFuelItems > 0 and fuelToggleEnabled then
-                            bypassBringSystem(selectedFuelItems, function() return fuelToggleEnabled end)
+                    while BringModule.fuelToggleEnabled do
+                        if #BringModule.selectedFuelItems > 0 and BringModule.fuelToggleEnabled then
+                            BringModule.bypassBringSystem(BringModule.selectedFuelItems, function() 
+                                return BringModule.fuelToggleEnabled 
+                            end)
                         end
 
                         local waitTime = 0
-                        while waitTime < 3 and fuelToggleEnabled and fuelLoopRunning do
+                        while waitTime < 3 and BringModule.fuelToggleEnabled do
                             wait(0.1)
                             waitTime = waitTime + 0.1
                         end
                     end
-                    fuelLoopRunning = false
                 end)
-            else
-                fuelToggleEnabled = false
             end
-        else
-            fuelLoopRunning = false
         end
     end
 })
 
 local fod = br:AddSection("Food")
 
-fod:AddDropdown({
+local selfood = fod:AddDropdown({
     Title = "Select Food",
     Content = "Select food to bring.",
     Multi = true,
-    Options = foodItems,
+    Options = BringModule.foodItems,
     Default = {},
     Callback = function(options)
         if type(options) == "table" then
-            selectedFoodItems = options
+            BringModule.selectedFoodItems = options
         else
-            selectedFoodItems = {}
+            BringModule.selectedFoodItems = {}
         end
     end
 })
 
-fod:AddToggle({
+local bringfood = fod:AddToggle({
     Title = "Bring Foods",
     Content = "",
     Default = false,
     Callback = function(value)
-        foodToggleEnabled = value
+        BringModule.foodToggleEnabled = value
 
         if value then
-            if #selectedFoodItems > 0 then
-                foodLoopRunning = true
+            if #BringModule.selectedFoodItems > 0 then
                 spawn(function()
-                    while foodLoopRunning and foodToggleEnabled do
-                        if #selectedFoodItems > 0 and foodToggleEnabled then
-                            bypassBringSystem(selectedFoodItems, function() return foodToggleEnabled end)
+                    while BringModule.foodToggleEnabled do
+                        if #BringModule.selectedFoodItems > 0 and BringModule.foodToggleEnabled then
+                            BringModule.bypassBringSystem(BringModule.selectedFoodItems, function() 
+                                return BringModule.foodToggleEnabled 
+                            end)
                         end
 
-
                         local waitTime = 0
-                        while waitTime < 3 and foodToggleEnabled and foodLoopRunning do
+                        while waitTime < 3 and BringModule.foodToggleEnabled do
                             wait(0.1)
                             waitTime = waitTime + 0.1
                         end
                     end
-                    foodLoopRunning = false                 
                 end)
-            else                
-                foodToggleEnabled = false
             end
-        else
-            foodLoopRunning = false          
         end
     end
 })
 
 local med = br:AddSection("Medical Items")
 
-med:AddDropdown({
+local selmed = med:AddDropdown({
     Title = "Select Medical Items",
     Content = "Select medical items to bring.",
     Multi = true,
-    Options = medicalItems,
+    Options = BringModule.medicalItems,
     Default = {},
     Callback = function(options)
         if type(options) == "table" then
-            selectedMedicalItems = options
+            BringModule.selectedMedicalItems = options
         else
-            selectedMedicalItems = {}
+            BringModule.selectedMedicalItems = {}
         end
     end
 })
 
-med:AddToggle({
+local bringmed = med:AddToggle({
     Title = "Bring Medical Items",
     Content = "",
     Default = false,
     Callback = function(value)
-        medicalToggleEnabled = value
+        BringModule.medicalToggleEnabled = value
 
         if value then
-            if #selectedMedicalItems > 0 then
-                medicalLoopRunning = true
+            if #BringModule.selectedMedicalItems > 0 then
                 spawn(function()
-                    while medicalLoopRunning and medicalToggleEnabled do
-                        if #selectedMedicalItems > 0 and medicalToggleEnabled then
-                            bypassBringSystem(selectedMedicalItems, function() return medicalToggleEnabled end)
+                    while BringModule.medicalToggleEnabled do
+                        if #BringModule.selectedMedicalItems > 0 and BringModule.medicalToggleEnabled then
+                            BringModule.bypassBringSystem(BringModule.selectedMedicalItems, function() 
+                                return BringModule.medicalToggleEnabled 
+                            end)
                         end
 
-
                         local waitTime = 0
-                        while waitTime < 3 and medicalToggleEnabled and medicalLoopRunning do
+                        while waitTime < 3 and BringModule.medicalToggleEnabled do
                             wait(0.1)
                             waitTime = waitTime + 0.1
                         end
                     end
-                    medicalLoopRunning = false
                 end)
-            else
-                medicalToggleEnabled = false
             end
-        else
-            medicalLoopRunning = false
         end
     end
 })
 
 local mobz = br:AddSection("Mobs")
 
-mobz:AddDropdown({
+local selmobz = mobz:AddDropdown({
     Title = "Select Mobs",
     Content = "Select mobs to bring.",
     Multi = true,
-    Options = cultistItems,
+    Options = BringModule.cultistItems,
     Default = {},
     Callback = function(options)
         if type(options) == "table" then
-            selectedCultistItems = options
+            BringModule.selectedCultistItems = options
         else
-            selectedCultistItems = {}
+            BringModule.selectedCultistItems = {}
         end
     end
 })
 
-mobz:AddToggle({
+local bringmobz = mobz:AddToggle({
     Title = "Bring Mobs",
     Content = "",
     Default = false,
     Callback = function(value)
-        cultistToggleEnabled = value
+        BringModule.cultistToggleEnabled = value
 
         if value then
-            if #selectedCultistItems > 0 then
-                cultistLoopRunning = true
+            if #BringModule.selectedCultistItems > 0 then
                 spawn(function()
-                    while cultistLoopRunning and cultistToggleEnabled do
-                        if #selectedCultistItems > 0 and cultistToggleEnabled then
-                            bypassBringSystem(selectedCultistItems, function() return cultistToggleEnabled end)
+                    while BringModule.cultistToggleEnabled do
+                        if #BringModule.selectedCultistItems > 0 and BringModule.cultistToggleEnabled then
+                            BringModule.bypassBringSystem(BringModule.selectedCultistItems, function() 
+                                return BringModule.cultistToggleEnabled 
+                            end)
                         end
 
-
                         local waitTime = 0
-                        while waitTime < 3 and cultistToggleEnabled and cultistLoopRunning do
+                        while waitTime < 3 and BringModule.cultistToggleEnabled do
                             wait(0.1)
                             waitTime = waitTime + 0.1
                         end
                     end
-                    cultistLoopRunning = false
                 end)
-            else
-                cultistToggleEnabled = false
             end
-        else
-            cultistLoopRunning = false
         end
     end
 })
 
 local eqp = br:AddSection("Equipment")
 
-eqp:AddDropdown({
+local seleqp = eqp:AddDropdown({
     Title = "Select Equipments",
     Content = "Select an equipments to bring.",
     Multi = true,
-    Options = equipmentItems,
+    Options = BringModule.equipmentItems,
     Default = {},
     Callback = function(options)
         if type(options) == "table" then
-            selectedEquipmentItems = options
+            BringModule.selectedEquipmentItems = options
         else
-            selectedEquipmentItems = {}
+            BringModule.selectedEquipmentItems = {}
         end
     end
 })
 
-eqp:AddToggle({
+local bringeqp = eqp:AddToggle({
     Title = "Bring Equipments",
     Content = "",
     Default = false,
     Callback = function(value)
-        equipmentToggleEnabled = value
+        BringModule.equipmentToggleEnabled = value
 
         if value then
-            if #selectedEquipmentItems > 0 then
-                equipmentLoopRunning = true
+            if #BringModule.selectedEquipmentItems > 0 then
                 spawn(function()
-                    while equipmentLoopRunning and equipmentToggleEnabled do
-                        if #selectedEquipmentItems > 0 and equipmentToggleEnabled then
-                            bypassBringSystem(selectedEquipmentItems, function() return equipmentToggleEnabled end)
+                    while BringModule.equipmentToggleEnabled do
+                        if #BringModule.selectedEquipmentItems > 0 and BringModule.equipmentToggleEnabled then
+                            BringModule.bypassBringSystem(BringModule.selectedEquipmentItems, function() 
+                                return BringModule.equipmentToggleEnabled 
+                            end)
                         end
 
-
                         local waitTime = 0
-                        while waitTime < 3 and equipmentToggleEnabled and equipmentLoopRunning do
+                        while waitTime < 3 and BringModule.equipmentToggleEnabled do
                             wait(0.1)
                             waitTime = waitTime + 0.1
                         end
                     end
-                    equipmentLoopRunning = false
                 end)
-            else
-                equipmentToggleEnabled = false
             end
-        else
-            equipmentLoopRunning = false
         end
     end
 })
 
 local saps = br:AddSection("Sapling")
 
-saps:AddToggle({
+local bringsap = saps:AddToggle({
     Title = "Bring Saplings",
     Content = "",
     Default = false,
     Callback = function(value)
-        autoPlantEnabled = value
-
-        if value then
-            autoPlantLoop = true
-            spawn(function()
-                while autoPlantLoop and autoPlantEnabled do
-                    bypassBringSystem({"Sapling"}, function() return autoPlantEnabled end)
-
-                    if not autoPlantEnabled then break end
-
-                    local args = {
-                        Instance.new("Model", nil)
-                    }
-                    game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestPlantItem"):InvokeServer(unpack(args))
-
-                    local waitTime = 0
-                    while waitTime < 3 and autoPlantEnabled and autoPlantLoop do
-                        task.wait(0.1)
-                        waitTime = waitTime + 0.1
-                    end
-                end
-                autoPlantLoop = false
-            end)
-        else
-            autoPlantLoop = false
-        end
+        BringModule.ToggleSaplingBring(value)
     end
 })
 
 local vis = esp:AddSection("Players")
 
-vis:AddToggle({
+local esppl = vis:AddToggle({
     Title = "Enable Esp Players",
     Content = "",
     Default = false,
@@ -1753,8 +1383,8 @@ trevis:AddToggle({
 
 local itemvis = esp:AddSection("Items")
 
-itemvis:AddDropdown({
-    Title = "Esp Items",
+local selitems3 = itemvis:AddDropdown({
+    Title = "Select Items",
     Content = "",
     Multi = true,
     Options = ie,
@@ -1765,7 +1395,7 @@ itemvis:AddDropdown({
     end
 })
 
-itemvis:AddToggle({
+local espitem = itemvis:AddToggle({
     Title = "Enable Esp Items",
     Content = "",
     Default = false,
@@ -1776,8 +1406,8 @@ itemvis:AddToggle({
 
 local envis = esp:AddSection("Entity")
 
-envis:AddDropdown({
-    Title = "Esp Entity",
+local selentity = envis:AddDropdown({
+    Title = "Select Entity",
     Content = "",
     Multi = true,
     Options = me,
@@ -1788,7 +1418,7 @@ envis:AddDropdown({
     end
 })
 
-envis:AddToggle({
+local espentite = envis:AddToggle({
     Title = "Enable Esp Entity",
     Content = "",
     Default = false,
@@ -1948,137 +1578,46 @@ tpch:AddButton({
 
 local chs = Misc:AddSection("Chest")
 
-chs:AddToggle({
+local autoopench = chs:AddToggle({
     Title = "Auto Open Chests",
     Content = "",
     Default = false,
     Callback = function(v)
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-        if not _G.AutoChestData then
-            _G.AutoChestData = {running = false, originalCFrame = nil}
-        end
-
-        local function getChests()
-            local chests = {}
-            for _, obj in ipairs(workspace:GetDescendants()) do
-                if obj:IsA("Model") and string.find(obj.Name, "Item Chest") then
-                    table.insert(chests, obj)
-                end
-            end
-            return chests
-        end
-
-        local function getPrompt(model)
-            local prompts = {}
-            for _, obj in ipairs(model:GetDescendants()) do
-                if obj:IsA("ProximityPrompt") then
-                    table.insert(prompts, obj)
-                end
-            end
-            return prompts
-        end
-
-        if v then
-            if _G.AutoChestData.running then return end
-            _G.AutoChestData.running = true
-            _G.AutoChestData.originalCFrame = humanoidRootPart.CFrame
-            task.spawn(function()
-                while _G.AutoChestData.running do
-                    local chests = getChests()
-                    for _, chest in ipairs(chests) do
-                        if not _G.AutoChestData.running then break end
-                        local part = chest.PrimaryPart or chest:FindFirstChildWhichIsA("BasePart")
-                        if part then
-                            humanoidRootPart.CFrame = part.CFrame + Vector3.new(0, 6, 0)
-                            local prompts = getPrompt(chest)
-                            for _, prompt in ipairs(prompts) do
-                                fireproximityprompt(prompt, math.huge)
-                            end
-                            local t = tick()
-                            while _G.AutoChestData.running and tick() - t < 4 do task.wait() end
-                        end
-                    end
-                    task.wait(0.1)
-                end
-            end)
-        else
-            _G.AutoChestData.running = false
-            if _G.AutoChestData.originalCFrame then
-                humanoidRootPart.CFrame = _G.AutoChestData.originalCFrame
-            end
-        end
+        MiscModule.ToggleAutoOpenChests(v)
     end
 })
 
 local afed = Misc:AddSection("Auto Eat")
 
-afed:AddDropdown({
+local selfoodsz = afed:AddDropdown({
     Title = "Select Food",
     Content = "Select food to eat.",
     Multi = false,
     Options = alimentos,
-    Default = selectedFood,
+    Default = {},
     Callback = function(value)
-        selectedFood = value
+        MiscModule.SetSelectedFood(value)
     end
 })
 
-afed:AddInput({
+local eatamount = afed:AddInput({
     Title = "Eat Amount",
     Content = "Eat when hunger reaches this %",
     Placeholder = "ex: 20 (numbers)",
     Callback = function(value)
-    local n = tonumber(value)
+        local n = tonumber(value)
         if n then
-            hungerThreshold = math.clamp(n, 0, 100)
+            MiscModule.SetHungerThreshold(n)
         end
     end
 })
 
-afed:AddToggle({
+local autoeat = afed:AddToggle({
     Title = "Enable Auto Eat",
     Content = "",
     Default = false,
     Callback = function(state)
-        autoFeedToggle = state
-        if state then
-            task.spawn(function()
-                while autoFeedToggle do
-                    task.wait(0.05)
-
-                    local currentHunger = ghn()
-                    if currentHunger <= hungerThreshold and #selectedFood > 0 then
-                        while currentHunger < 100 and autoFeedToggle do
-                            local ateSomething = false
-
-                            for _, foodName in ipairs(selectedFood) do
-                                for _, item in ipairs(Workspace.Items:GetChildren()) do
-                                    if item.Name == foodName and item.Parent then
-                                        pcall(function()
-                                            ReplicatedStorage.RemoteEvents.RequestConsumeItem:InvokeServer(item)
-                                        end)
-                                        ateSomething = true
-                                        task.wait(0.05)
-                                        currentHunger = ghn()
-                                        if currentHunger >= 100 then
-                                            break
-                                        end
-                                    end
-                                end
-                                if currentHunger >= 100 then
-                                    break
-                                end
-                            end
-
-                            if not ateSomething then
-                                break
-                            end
-                        end
-                    end
-                end
-            end)
-        end
+        MiscModule.ToggleAutoEat(state)
     end
 })
 
@@ -2086,7 +1625,7 @@ local hh = Fly:AddSection("User Settings")
 
 local walkspeedValue = 16
 
-hh:AddSlider({
+local wsvl = hh:AddSlider({
     Title = "Walkspeed",
     Content = "",
     Min = 16,
@@ -2131,7 +1670,7 @@ hh:AddButton({
                 humanoid.WalkSpeed = 16
             end
         end
-        Library:MakeNotify({
+        AIKO:MakeNotify({
             Title = "@aikoware",
             Description = "Walkspeed Reset",
             Content = "Walkspeed back to default.",
@@ -2145,7 +1684,7 @@ if humanoid then
     humanoid.HipHeight = 2
 end
 
-hh:AddSlider({
+local hiph = hh:AddSlider({
     Title = "Hip Height",
     Content = "",
     Min = 1,
@@ -2159,14 +1698,14 @@ hh:AddSlider({
     end
 })
 
-hh:AddToggle({
+local enablehiph = hh:AddToggle({
     Title = "Enable HipHeight",
     Content = "",
     Default = false,
     Callback = function(PH)
         _G.HipHeightOn = PH
         local humanoid = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-        
+
         if PH then
             if humanoid then
                 humanoid.HipHeight = _G.HipHeight or 2
@@ -2179,7 +1718,7 @@ hh:AddToggle({
     end
 })
 
-hh:AddSlider({
+local flypseed = hh:AddSlider({
     Title = "Fly Speed",
     Content = "",
     Min = 1,
@@ -2204,7 +1743,7 @@ hh:AddSlider({
     end
 })
 
-hh:AddToggle({
+local enablefly = hh:AddToggle({
     Title = "Enable Fly",
     Content = "",
     Default = false,
@@ -2224,9 +1763,9 @@ hh:AddToggle({
 })
 
 local infJumpConnection
-hh:AddToggle({
+local infJ = hh:AddToggle({
     Title = "Inf Jump",
-	Content = "",
+    Content = "",
     Default = false,
     Callback = function(state)
         if state then
@@ -2248,95 +1787,27 @@ hh:AddToggle({
 
 local mxc = Misc:AddSection("Misc")
 
-local instantInteractEnabled = false
-local instantInteractConnection
-local originalHoldDurations = {}
-
-mxc:AddToggle({
+local instinte = mxc:AddToggle({
     Title = "Instant Interact",
     Content = "Instantly open chests, gates, etc.",
     Default = false,
     Callback = function(state)
-        instantInteractEnabled = state
-
-        if state then
-            originalHoldDurations = {}
-            instantInteractConnection = task.spawn(function()
-                while instantInteractEnabled do
-                    for _, obj in ipairs(workspace:GetDescendants()) do
-                        if obj:IsA("ProximityPrompt") then
-                            if originalHoldDurations[obj] == nil then
-                                originalHoldDurations[obj] = obj.HoldDuration
-                            end
-                            obj.HoldDuration = 0
-                        end
-                    end
-                    task.wait(5)
-                end
-            end)
-        else
-            if instantInteractConnection then
-                instantInteractEnabled = false
-            end
-            for obj, value in pairs(originalHoldDurations) do
-                if obj and obj:IsA("ProximityPrompt") then
-                    obj.HoldDuration = value
-                end
-            end
-            originalHoldDurations = {}
-        end
+        MiscModule.ToggleInstantInteract(state)
     end
 })
 
-mxc:AddToggle({
+local autocollectocoins = mxc:AddToggle({
     Title = "Auto Collect Coin Stacks",
     Content = "Automatically collects all Coin Stacks",
     Default = false,
     Callback = function(value)
-        if value then
-            _G.AutoCollectCoins = true
-            coroutine.wrap(function()
-                while _G.AutoCollectCoins do
-                    for _, item in pairs(workspace.Items:GetChildren()) do
-                        if item.Name == "Coin Stack" and item:FindFirstChild("HumanoidRootPart") then
-                            local args = {item}
-                            game:GetService("ReplicatedStorage").RemoteEvents.RequestCollectCoints:InvokeServer(unpack(args))
-                            warn("Collected a Coin Stack")
-                        end
-                    end
-                    task.wait(0.2)
-                end
-            end)()
-        else
-            _G.AutoCollectCoins = false
-        end
+        MiscModule.ToggleAutoCollectCoins(value)
     end
 })
 
---[[ mxc:AddToggle({
-    Title = "Auto Build Anvil",
-    Content = "Puts anvil front, back, and base together",
-    Default = false,
-    Callback = function(state)
-        autoBuildAnvil = state
-        task.spawn(function()
-            while autoBuildAnvil do
-                for _, partName in ipairs({"Anvil Base", "Anvil Front", "Anvil Back"}) do
-                    if workspace:WaitForChild("Items"):FindFirstChild(partName) then
-                        game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("RequestBuildAnvilPiece"):InvokeServer(
-                            workspace:WaitForChild("Map"):WaitForChild("Landmarks"):WaitForChild("ToolWorkshop_MeteorShower"),
-                            workspace:WaitForChild("Items")[partName]
-                        )
-                    end
-                end
-            end
-        end)
-    end
-}) ]]
-
 local ant = Misc:AddSection("Anti's")
 
-ant:AddToggle({
+local stundeerr = ant:AddToggle({
     Title = "Auto Stun Deer",
     Content = "Need Flashlight",
     Default = false,
@@ -2345,7 +1816,7 @@ ant:AddToggle({
     end
 })
 
-ant:AddToggle({
+local escapeowl = ant:AddToggle({
     Title = "Auto Escape From Owl",
     Content = "",
     Default = false,
@@ -2354,7 +1825,7 @@ ant:AddToggle({
     end
 })
 
-ant:AddToggle({
+local escapedeer = ant:AddToggle({
     Title = "Auto Escape From Deer",
     Content = "",
     Default = false,
@@ -2363,7 +1834,7 @@ ant:AddToggle({
     end
 })
 
-ant:AddToggle({
+local escaperam = ant:AddToggle({
     Title = "Auto Escape From Ram",
     Content = "",
     Default = false,
@@ -2374,45 +1845,7 @@ ant:AddToggle({
 
 local fun = Fun:AddSection("Fun")
 
-fun:AddToggle({
-    Title = "Auto Delete Owl",
-    Content = "",
-    Default = false,
-    Callback = function(state) 
-        FunModule.ToggleAutoDelete("Owl", state)
-    end
-})
-
-fun:AddToggle({
-    Title = "Auto Delete Deer",
-    Content = "",
-    Default = false,
-    Callback = function(state) 
-        FunModule.ToggleAutoDelete("Deer", state)
-    end
-})
-
-fun:AddToggle({
-    Title = "Auto Delete Ram",
-    Content = "",
-    Default = false,
-    Callback = function(state) 
-        FunModule.ToggleAutoDelete("Ram", state)
-    end
-})
-
-fun:AddSlider({
-    Title = "Game Gravity",
-    Content = "",
-    Min = 0,
-    Max = 500,
-    Default = 196,
-    Callback = function(value)
-        FunModule.SetGravity(value)
-    end
-})
-
-fun:AddToggle({
+local healthbar = fun:AddToggle({
     Title = "No Health Bar",
     Content = "Invisible health bar",
     Default = false,
@@ -2421,7 +1854,7 @@ fun:AddToggle({
     end
 })
 
-fun:AddToggle({
+local godmodez = fun:AddToggle({
     Title = "God Mode",
     Content = "Immune to physical and hunger damage",
     Default = false,
@@ -2438,9 +1871,9 @@ fun:AddButton({
     end
 })
 
-local env = Vision:AddSection("Environment")
+local env = Vision:AddSection("Graphics")
 
-env:AddToggle({
+local disablenight = env:AddToggle({
     Title = "Disable Night Campfire Effect",
     Content = "",
     Default = false,
@@ -2449,7 +1882,7 @@ env:AddToggle({
     end
 })
 
-env:AddToggle({
+local nightvision = env:AddToggle({
     Title = "Full Bright",
     Content = "",
     Default = false,
@@ -2458,7 +1891,7 @@ env:AddToggle({
     end
 })
 
-env:AddToggle({
+local nofogg = env:AddToggle({
     Title = "No Fog",
     Content = "",
     Default = false,
@@ -2467,7 +1900,7 @@ env:AddToggle({
     end
 })
 
-env:AddToggle({
+local brightcolor = env:AddToggle({
     Title = "Vibrant Colors",
     Content = "",
     Default = false,
@@ -2493,7 +1926,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
     end
 end)
 
-Library:MakeNotify({
+AIKO:MakeNotify({
     Title = "@aikoware",
     Description = "Script Loaded",
     Content = "Game: 99 Nights in The Forest",
