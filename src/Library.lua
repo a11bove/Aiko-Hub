@@ -774,8 +774,14 @@ function AIKO:Window(GuiConfig)
         Dialog.BorderSizePixel = 0
         Dialog.ZIndex = 51
         Dialog.Parent = Overlay
+
         local UICorner = Instance.new("UICorner", Dialog)
         UICorner.CornerRadius = UDim.new(0, 8)
+
+        local UIStroke = Instance.new("UIStroke")
+        UIStroke.Color = Color3.fromRGB(100, 50, 150)
+        UIStroke.Thickness = 2
+        UIStroke.Parent = Dialog
 
         local DialogGlow = Instance.new("Frame")
         DialogGlow.Size = UDim2.new(0.5, -152, 0.5, -77)
@@ -791,11 +797,11 @@ function AIKO:Window(GuiConfig)
 
         local Gradient = Instance.new("UIGradient")
         Gradient.Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0.0, Color3.fromRGB(0, 191, 255)),
-            ColorSequenceKeypoint.new(0.25, Color3.fromRGB(255, 255, 255)),
-            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 140, 255)),
-            ColorSequenceKeypoint.new(0.75, Color3.fromRGB(255, 255, 255)),
-            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(0, 191, 255))
+            ColorSequenceKeypoint.new(0.0, Color3.fromRGB(100, 50, 150)),
+            ColorSequenceKeypoint.new(0.25, Color3.fromRGB(150, 100, 200)),
+            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(120, 60, 180)),
+            ColorSequenceKeypoint.new(0.75, Color3.fromRGB(150, 100, 200)),
+            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(100, 50, 150))
         })
         Gradient.Rotation = 90
         Gradient.Parent = DialogGlow
