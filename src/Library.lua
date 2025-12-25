@@ -766,6 +766,10 @@ function AIKO:Window(GuiConfig)
         Overlay.ZIndex = 50
         Overlay.Parent = DropShadowHolder
 
+        local OverlayCorner = Instance.new("UICorner")
+        OverlayCorner.CornerRadius = UDim.new(0, 8)  -- Matches the Main UI's corner radius
+        OverlayCorner.Parent = Overlay
+
         local Dialog = Instance.new("ImageLabel")
         Dialog.Size = UDim2.new(0, 300, 0, 150)
         Dialog.Position = UDim2.new(0.5, -150, 0.5, -75)
