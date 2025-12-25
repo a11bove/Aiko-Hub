@@ -5,9 +5,9 @@ local AIKO = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/
 local Window = AIKO:Window({
     Title   = "@aikoware |",                -- Main title
     Footer  = " made by untog",              -- Text after title
-    Image   = "rbxassetid://140356301069419",            -- Texture ID
-    Color   = Color3.fromRGB(0, 208, 255),  -- UI color
-    Theme   = 9542022979,                   -- Background theme ID
+    -- Image   = "rbxassetid://140356301069419",            -- Texture ID (Optional)
+    -- Color   = Color3.fromRGB(0, 208, 255),  -- UI color (Optional)
+    -- Theme   = 9542022979,                   -- Background theme ID (Optional)
     Version = 1,                            -- Config version (change to reset configs)
 })
 
