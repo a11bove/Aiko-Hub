@@ -69,21 +69,6 @@ local lockPositionState = {
     position = nil
 }
 
-local TierUtility = {
-    GetTierFromRarity = function(_, chance)
-        if chance then
-            if chance >= 0.0001 and chance < 0.001 then
-                return {Name = "SECRET"}
-            elseif chance >= 0.001 and chance < 0.01 then
-                return {Name = "Mythic"}
-            elseif chance >= 0.01 and chance < 0.1 then
-                return {Name = "Legendary"}
-            end
-        end
-        return nil
-    end
-}
-
 local playerAddedConnection
 local characterConnections = {}
 
