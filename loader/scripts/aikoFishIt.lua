@@ -2,151 +2,20 @@ if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
-local existingGui = game.CoreGui:FindFirstChild("aikoware")
-if existingGui then
-    existingGui:Destroy()
-end
+local AIKO = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/Library.lua"))()
 
-local existingHirimi = game.CoreGui:FindFirstChild("HirimiGui")
-if existingHirimi then
-    existingHirimi:Destroy()
-end
-
-local LucideIcons = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/icons.lua"))()
-
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/source.lua"))()
-
-Library:MakeNotify({
+AIKO:MakeNotify({
     Title = "@aikoware",
-    Description = "",
-    Content = "Wait for the script to fully load.",
-    Delay = 15
+    Description = "Notification",
+    Content = "Wait for the script to be fully loaded.",
+    Delay = 18
 })
 
-local Window = Library:MakeGui({
-    NameHub = "@aikoware | made by untog!"
+local Window = AIKO:Window({
+    Title   = "@aikoware |",
+    Footer  = " made by untog",              
+    Version = 1,
 })
-
-local gui = Instance.new("ScreenGui")
-gui.Name = "aikoware"
-gui.IgnoreGuiInset = true
-gui.ResetOnSpawn = false
-gui.Parent = game.CoreGui
-
-local button = Instance.new("ImageButton")
-button.Size = UDim2.new(0, 47, 0, 47)
-button.Position = UDim2.new(0, 60, 0, 60)
-button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-button.BackgroundTransparency = 0.5
-button.Image = "rbxassetid://140356301069419"
-button.Name = "aikowaretoggle"
-button.AutoButtonColor = true
-button.Parent = gui
-
-local corner = Instance.new("UICorner", button)
-corner.CornerRadius = UDim.new(0, 12)
-
-local stroke = Instance.new("UIStroke")
-stroke.Thickness = 1.5
-stroke.Color = Color3.fromRGB(45, 45, 45)
-stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-stroke.Parent = button
-
-local gradient = Instance.new("UIGradient")
-gradient.Color =
-    ColorSequence.new {
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 100)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 0, 0))
-}
-gradient.Rotation = 45
-gradient.Parent = stroke
-
-local dragging, dragInput, dragStart, startPos
-
-button.InputBegan:Connect(
-    function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true
-            dragStart = input.Position
-            startPos = button.Position
-
-            input.Changed:Connect(
-                function()
-                    if input.UserInputState == Enum.UserInputState.End then
-                        dragging = false
-                    end
-                end
-            )
-        end
-    end
-)
-
-button.InputChanged:Connect(
-    function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-            dragInput = input
-        end
-    end
-)
-
-game:GetService("UserInputService").InputChanged:Connect(
-    function(input)
-        if input == dragInput and dragging then
-            local delta = input.Position - dragStart
-            button.Position =
-                UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        end
-    end
-)
-
-button.MouseButton1Click:Connect(
-    function()
-        local HirimiGui = game.CoreGui:FindFirstChild("HirimiGui")
-        if HirimiGui then
-            local DropShadowHolder = HirimiGui:FindFirstChild("DropShadowHolder")
-            if DropShadowHolder then
-                DropShadowHolder.Visible = not DropShadowHolder.Visible
-            end
-        end
-    end
-)
-
---[[local function syncButtonVisibility()
-    local HirimiGui = game.CoreGui:FindFirstChild("HirimiGui")
-    if HirimiGui then
-        local DropShadowHolder = HirimiGui:FindFirstChild("DropShadowHolder")
-        if DropShadowHolder then
-            button.Visible = not DropShadowHolder.Visible
-        end
-    end
-end
-
-button.MouseButton1Click:Connect(
-    function()
-        local HirimiGui = game.CoreGui:FindFirstChild("HirimiGui")
-        if HirimiGui then
-            local DropShadowHolder = HirimiGui:FindFirstChild("DropShadowHolder")
-            if DropShadowHolder then
-                DropShadowHolder.Visible = not DropShadowHolder.Visible
-                syncButtonVisibility()
-            end
-        end
-    end
-)
-
-task.spawn(function()
-    while task.wait(0.1) do
-        local HirimiGui = game.CoreGui:FindFirstChild("HirimiGui")
-        if HirimiGui then
-            local DropShadowHolder = HirimiGui:FindFirstChild("DropShadowHolder")
-            if DropShadowHolder then
-                if not DropShadowHolder.Visible and not button.Visible then
-                    button.Visible = true
-                end
-            end
-        end
-    end
-end)]]
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -225,58 +94,56 @@ local TierUtility = {
 local playerAddedConnection
 local characterConnections = {}
 
-local Home = Window:CreateTab({
+local Home = Window:AddTab({
     Name = "Home",
-    Icon = "home"
+    Icon = "info"
 })
 
-local Fishing = Window:CreateTab({
+local Fishing = Window:AddTab({
     Name = "Fishing",
     Icon = "fish"
 })
 
-local Shop = Window:CreateTab({
+local Shop = Window:AddTab({
     Name = "Shop",
     Icon = "piggy-bank"
 })
 
-local Favo = Window:CreateTab({
+local Favo = Window:AddTab({
     Name = "Auto Favorite",
     Icon = "heart"
 })
 
-local Teleport = Window:CreateTab({
+local Teleport = Window:AddTab({
     Name = "Teleport",
     Icon = "map-pin"
 })
 
-local Trade = Window:CreateTab({
+local Trade = Window:AddTab({
     Name = "Trade",
     Icon = "repeat"
 })
 
-local Misc = Window:CreateTab({
+local Misc = Window:AddTab({
     Name = "Misc",
     Icon = "snowflake"
 })
 
-local dcsec = Home:AddSection("Support")
+local dcsec = Home:AddSection("Support", true)
 
-dcsec:AddButton({
-    Title = "Copy Server Invite",
-    Content = "Join our discord for more info.",
-    Callback = function()
-        setclipboard("https://discord.gg/JccfFGpDNV")
-            Library:MakeNotify({
-                    Title = "@aikoware",
-                    Description = "| Discord",
-                    Content = "Link Copied!",
-                    Delay = 3
-            })
+dcsec:AddParagraph({
+    Title = "Discord",
+    Content = "Join our discord for more info!",
+    Icon = "discord",
+    ButtonText = "Copy Server Link",
+    ButtonCallback = function()
+        local link = "https://discord.gg/JccfFGpDNV"
+        if setclipboard then
+            setclipboard(link)
+            aiko("Successfully Copied!")
         end
+    end
 })
-
-dcsec:Open()
 
 local srv = Home:AddSection("Server")
 
@@ -409,11 +276,6 @@ function _G.ToggleAutoClick(shouldActivate)
     end
 end
 
-fsh:AddParagraph({
-    Title = "Legit Fishing Info:",
-    Content = "If you do not have perfection enchant, all you can get is good, but if you have perfection enchant, you can always get a perfect timing. So much better if you have perfection enchantment."
-})
-
 local legitDELAY = fsh:AddInput({
     Title = "Legit Fishing Delay",
     Content = "",
@@ -427,8 +289,8 @@ local legitDELAY = fsh:AddInput({
 })
 
 local legitFISHING = fsh:AddToggle({
-    Title = "Auto Legit Fishing",
-    Content = "",
+    Title = "Legit Fishing",
+    Content = "Much better if you have perfection enchant.",
     Default = false,
     Callback = function(state)
         equipRemote:FireServer(1)
@@ -507,7 +369,7 @@ fsh:AddButton({
         -- Cancel fishing
         _G.StopFishing()
 
-        Library:MakeNotify({
+        AIKO:MakeNotify({
             Title = "@aikoware",
             Description = "| Manual Fix Stuck",
             Content = "Fishing Stopped",
@@ -569,7 +431,7 @@ local function StopInstantFish()
 end
 
 local insFish = fin:AddToggle({
-    Title = "Auto Instant Fishing",
+    Title = "Instant Fishing",
     Content = "",
     Default = false,
     Callback = function(enabled)
@@ -649,7 +511,7 @@ local function StopSuperInstantV2()
 end
 
 local blatTog = bts:AddToggle({
-    Title = "Blatant",
+    Title = "Blatant Fishing",
     Content = "",
     Default = false,
     Callback = function(enabled)
@@ -819,7 +681,7 @@ local freezeCHAR = ntf:AddToggle({
                     end
                 end)
 
-                Library:MakeNotify({
+                    AIKO:MakeNotify({
                     Title = "@aikoware",
                     Description = "| Freeze Character",
                     Content = "Enabled",
@@ -832,7 +694,7 @@ local freezeCHAR = ntf:AddToggle({
                 freezeConnection = nil
             end
 
-            Library:MakeNotify({
+                AIKO:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Freeze Character",
                 Content = "Disabled",
@@ -914,14 +776,14 @@ rds:AddButton({
             end)
 
             if success then
-                Library:MakeNotify({
+                    AIKO:MakeNotify({
                     Title = "@aikoware",
                     Description = "| Rod Purchase", 
                     Content = "Purchased " .. selectedRod, 
                     Delay = 3
                 })
             else
-                Library:MakeNotify({
+                    AIKO:MakeNotify({
                     Title = "@aikoware",
                     Description = "| Rod Purchase Error", 
                     Content = tostring(err), 
@@ -929,7 +791,7 @@ rds:AddButton({
                 })
             end
         else
-            Library:MakeNotify({
+                AIKO:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Error", 
                 Content = "Invalid rod selection", 
@@ -1004,14 +866,14 @@ bs:AddButton({
             end)
 
             if success then
-                Library:MakeNotify({
+                    AIKO:MakeNotify({
                     Title = "@aikoware",
                     Description = "| Bait Purchase",
                     Content = "Purchased " .. selectedBait,
                     Delay = 3
                 })
             else
-                Library:MakeNotify({
+                    AIKO:MakeNotify({
                     Title = "@aikoware",
                     Description = "| Bait Purchase Error",
                     Content = tostring(err),
@@ -1019,7 +881,7 @@ bs:AddButton({
                 })
             end
         else
-            Library:MakeNotify({
+                AIKO:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Error",
                 Content = "Invalid bait selection",
@@ -1110,14 +972,14 @@ bos:AddButton({
             end)
 
             if success then
-                Library:MakeNotify({
+                    AIKO:MakeNotify({
                     Title = "@aikoware",
                     Description = "| Boat Purchase",
                     Content = "Purchased " .. selectedBoat,
                     Delay = 3
                 })
             else
-                Library:MakeNotify({
+                    AIKO:MakeNotify({
                     Title = "@aikoware",
                     Description = "| Boat Purchase Error",
                     Content = tostring(err),
@@ -1125,7 +987,7 @@ bos:AddButton({
                 })
             end
         else
-            Library:MakeNotify({
+                AIKO:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Error",
                 Content = "Invalid boat selection",
@@ -1186,14 +1048,14 @@ local function startAutoBuy()
                         RFPurchaseWeatherEvent:InvokeServer(key)
                     end)
                     if success then
-                        Library:MakeNotify({
+                            AIKO:MakeNotify({
                             Title = "@aikoware",
                             Description="| Auto Buy",
                             Content="Purchased "..displayName,
                             Delay=1
                         })
                     else
-                        warn("Error buying weather:", err)
+                        aiko("Error buying weather:", err)
                     end
                     task.wait(buyDelay)
                 end
@@ -1210,7 +1072,7 @@ local autobuyweather = ws:AddToggle({
     Callback = function(state)
         autoBuyEnabled = state
         if state then
-            Library:MakeNotify({
+                AIKO:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Auto Buy",
                 Content = "Enabled",
@@ -1218,7 +1080,7 @@ local autobuyweather = ws:AddToggle({
             })
             startAutoBuy()
         else
-            Library:MakeNotify({
+                AIKO:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Auto Buy",
                 Content = "Disabled",
@@ -1287,7 +1149,7 @@ sell:AddButton({
             RFSellAllItems:InvokeServer()
         end)
 
-        Library:MakeNotify({
+            AIKO:MakeNotify({
             Title = "@aikoware",
             Description = "| Auto Sell",
             Content = "All items sold!",
@@ -1350,14 +1212,14 @@ local autoFAV = fav:AddToggle({
     Callback = function(state)
         GlobalFav.AutoFavoriteEnabled = state
         if state then
-            Library:MakeNotify({
+                AIKO:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Auto Favorite",
                 Content = "Enabled",
                 Delay = 2
             })
         else
-            Library:MakeNotify({
+                AIKO:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Auto Favorite",
                 Content = "Disabled",
@@ -1442,7 +1304,7 @@ GlobalFav.REObtainedNewFishNotification.OnClientEvent:Connect(function(itemId, _
             GlobalFav.REFavoriteItem:FireServer(uuid)
         end)
 
-        Library:MakeNotify({
+            AIKO:MakeNotify({
             Title = "@aikoware",
             Description = "| Auto Favorited",
             Content = fishName .. "\n" .. reason,
@@ -1456,7 +1318,7 @@ fav:AddButton({
     Content = "Clear all selected fish",
     Callback = function()
         GlobalFav.SelectedFishIds = {}
-        Library:MakeNotify({
+            AIKO:MakeNotify({
             Title = "@aikoware",
             Description = "| Cleared",
             Content = "Fish selection cleared",
@@ -1470,7 +1332,7 @@ fav:AddButton({
     Content = "Clear all selected variants",
     Callback = function()
         GlobalFav.SelectedVariants = {}
-        Library:MakeNotify({
+            AIKO:MakeNotify({
             Title = "@aikoware",
             Description = "| Cleared",
             Content = "Variant selection cleared",
@@ -1489,7 +1351,7 @@ fav:AddButton({
         local variantCount = 0
         for _ in pairs(GlobalFav.SelectedVariants) do variantCount = variantCount + 1 end
 
-        Library:MakeNotify({
+            AIKO:MakeNotify({
             Title = "@aikoware",
             Description = "| Current Selection",
             Content = string.format(
@@ -1536,7 +1398,7 @@ loc:AddButton({
         if selectedLocation and TeleportData.Locations[selectedLocation] then
             if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
                 LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(TeleportData.Locations[selectedLocation])
-                Library:MakeNotify({
+                    AIKO:MakeNotify({
                     Title = "@aikoware",
                     Description = "| Teleported",
                     Content = "Teleported to " .. selectedLocation,
@@ -1544,7 +1406,7 @@ loc:AddButton({
                 })
             end
         else
-            Library:MakeNotify({
+                AIKO:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Error",
                 Content = "No location selected",
@@ -1590,7 +1452,7 @@ npcl:AddButton({
             local character = LocalPlayer.Character
             if character and character:FindFirstChild("HumanoidRootPart") then
                 character:PivotTo(targetCFrame)
-                Library:MakeNotify({
+                    AIKO:MakeNotify({
                     Title = "@aikoware",
                     Description = "| Teleported",
                     Content = "Teleported to " .. selectedNPC,
@@ -1598,7 +1460,7 @@ npcl:AddButton({
                 })
             end
         else
-            Library:MakeNotify({
+                AIKO:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Error",
                 Content = "No NPC selected",
@@ -1644,7 +1506,7 @@ mach:AddButton({
             local character = LocalPlayer.Character
             if character and character:FindFirstChild("HumanoidRootPart") then
                 character:PivotTo(targetCFrame)
-                Library:MakeNotify({
+                    AIKO:MakeNotify({
                     Title = "@aikoware",
                     Description = "| Teleported",
                     Content = "Teleported to " .. selectedMachine,
@@ -1652,7 +1514,7 @@ mach:AddButton({
                 })
             end
         else
-            Library:MakeNotify({
+                AIKO:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Error",
                 Content = "No machine selected",
@@ -1774,9 +1636,9 @@ local chooseEvent = evt:AddDropdown({
         else
             selectedEvent = nil
         end
-        
+
         if selectedEvent then
-            Library:MakeNotify({
+                AIKO:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Event Selected",
                 Content = selectedEvent,
@@ -1791,7 +1653,7 @@ evt:AddButton({
     Content = "Teleport to selected event.",
     Callback = function()
         if not selectedEvent then
-            Library:MakeNotify({
+                AIKO:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Error",
                 Content = "Select an event first!",
@@ -1816,10 +1678,10 @@ evt:AddButton({
 
                 if targetPos then
                     hrp.CFrame = CFrame.new(targetPos + Vector3.new(0, 20, 0))
-                    
+
                     createEventPlatform(hrp.Position)
 
-                    Library:MakeNotify({
+                        AIKO:MakeNotify({
                         Title = "@aikoware",
                         Description = "| Teleported",
                         Content = "Teleported to " .. selectedEvent,
@@ -1828,7 +1690,7 @@ evt:AddButton({
                 end
             end
         else
-            Library:MakeNotify({
+                AIKO:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Error",
                 Content = "Event not found or not active",
@@ -1872,14 +1734,14 @@ ply:AddButton({
 
             if hrp and targetHRP then
                 hrp.CFrame = targetHRP.CFrame + Vector3.new(0,5,0)
-                Library:MakeNotify({
+                    AIKO:MakeNotify({
                     Title = "@aikoware",
                     Description = "| Teleported", 
                     Content = "Teleported to " .. selectedPlayer, 
                     Delay = 3
                 })
             else
-                Library:MakeNotify({
+                    AIKO:MakeNotify({
                     Title = "@aikoware",
                     Description = "| Error", 
                     Content = "Player not found or not loaded", 
@@ -1887,7 +1749,7 @@ ply:AddButton({
                 })
             end
         else
-            Library:MakeNotify({
+                AIKO:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Error", 
                 Content = "No player selected", 
@@ -1902,7 +1764,7 @@ ply:AddButton({
     Content = "",
     Callback = function()
         playerDropdown:Refresh(TeleportData.GetPlayerNames(Players, LocalPlayer))
-        Library:MakeNotify({
+            AIKO:MakeNotify({
             Title = "@aikoware",
             Description = "Refreshed", 
             Content = "Player list updated", 
@@ -1934,7 +1796,7 @@ local tradePlayerDropdown = autotrade:AddDropdown({
         end
 
         if selectedTradePlayer then
-            Library:MakeNotify({
+                AIKO:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Player Selected", 
                 Content = selectedTradePlayer, 
@@ -1951,7 +1813,7 @@ autotrade:AddButton({
         if selectedTradePlayer then
             Trade.SendTradeRequest(selectedTradePlayer)
         else
-            Library:MakeNotify({
+                AIKO:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Error",
                 Content = "No player selected",
@@ -1976,7 +1838,7 @@ autotrade:AddButton({
     Content = "",
     Callback = function()
         tradePlayerDropdown:Refresh(Trade.GetPlayerNames())
-        Library:MakeNotify({
+            AIKO:MakeNotify({
             Title = "@aikoware",
             Description = "| Refreshed", 
             Content = "Player list updated", 
@@ -2017,7 +1879,7 @@ uset:AddButton({
     Content = "Returns to default speed.",
     Callback = function()
         MiscModule.Walkspeed:Reset()
-        Library:MakeNotify({
+            AIKO:MakeNotify({
             Title = "@aikoware",
             Description = "Walkspeed Reset",
             Content = "Walkspeed back to default.",
@@ -2032,7 +1894,7 @@ local INFJUMP = uset:AddToggle({
     Default = false,
     Callback = function(enabled)
         MiscModule.InfiniteJump:Toggle(enabled)
-        Library:MakeNotify({
+            AIKO:MakeNotify({
             Title = "@aikoware",
             Description = "| Infinite Jump",
             Content = enabled and "Enabled" or "Disabled",
@@ -2099,24 +1961,6 @@ perf:AddToggle({
     end
 })
 
-local ntf = Fishing:AddSection("Auto Fish Misc")
-
-local freezeCHAR = ntf:AddToggle({
-    Title = "Freeze Character",
-    Content = "",
-    Default = false,
-    Callback = function(enabled)
-        MiscModule.FreezeCharacter:Toggle(enabled)
-        
-        Library:MakeNotify({
-            Title = "@aikoware",
-            Description = "| Freeze Character",
-            Content = enabled and "Enabled" or "Disabled",
-            Delay = 2
-        })
-    end
-})
-
 local xpb = Misc:AddSection("Level Progress")
 
 local xpProgress = xpb:AddToggle({
@@ -2136,7 +1980,7 @@ local antiDrown = oxy:AddToggle({
     Default = false,
     Callback = function(state)
         MiscModule.AntiDrown:Toggle(state)
-        Library:MakeNotify({
+            AIKO:MakeNotify({
             Title = "@aikoware",
             Description = "| Anti Drown",
             Content = state and "Enabled" or "Disabled",
@@ -2145,9 +1989,16 @@ local antiDrown = oxy:AddToggle({
     end,
 })
 
+AIKO:MakeNotify({
+    Title = "@aikoware",
+    Description = "| Script Loaded",
+    Content = "Game: Fish It",
+    Delay = 5
+})
+
 local radsr = Misc:AddSection("Fishing Radar")
 
-radsr:AddToggle({
+local fishrad = radsr:AddToggle({
     Title = "Fishing Radar",
     Content = "",
     Default = false,
@@ -2155,15 +2006,3 @@ radsr:AddToggle({
         MiscModule.FishingRadar:Toggle(state)
     end
 })
-
-Library:MakeNotify({
-    Title = "@aikoware",
-    Description = "| Script Loaded",
-    Content = "Game: Fish It",
-    Delay = 5
-})
-
-task.spawn(function()
-    task.wait(2)
-    LoadConfigElements()
-end)
