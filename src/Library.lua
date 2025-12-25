@@ -1064,7 +1064,7 @@ end
     local DropPageLayout = Instance.new("UIPageLayout");
 
     DropdownSelect.AnchorPoint = Vector2.new(1, 0.5)
-    DropdownSelect.BackgroundColor3 = Color3.fromRGB(30.00000011175871, 30.00000011175871, 30.00000011175871)
+    DropdownSelect.BackgroundColor3 = Color3.fromRGB(20, 10, 30)
     DropdownSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
     DropdownSelect.BorderSizePixel = 0
     DropdownSelect.LayoutOrder = 1
@@ -1085,8 +1085,8 @@ end
     UICorner36.CornerRadius = UDim.new(0, 3)
     UICorner36.Parent = DropdownSelect
 
-    UIStroke14.Color = Color3.fromRGB(12, 159, 255)
-    UIStroke14.Thickness = 2.5
+    UIStroke14.Color = Color3.fromRGB(255, 0, 255)
+    UIStroke14.Thickness = 2
     UIStroke14.Transparency = 0.8
     UIStroke14.Parent = DropdownSelect
 
