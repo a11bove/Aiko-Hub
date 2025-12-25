@@ -4,7 +4,7 @@ local AIKO = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/
 -- Create Window
 local Window = AIKO:Window({
     Title   = "@aikoware |",                -- Main title
-    Footer  = "made by untog",              -- Text after title
+    Footer  = " made by untog",              -- Text after title
     Image   = "136505615779937",            -- Texture ID
     Color   = Color3.fromRGB(0, 208, 255),  -- UI color
     Theme   = 9542022979,                   -- Background theme ID
@@ -59,6 +59,9 @@ X1:AddDivider()
 -- Sub Section
 X1:AddSubSection("SUB SECTION")
 
+-- Opened Section
+OpenedSection = Tabs.Main:AddSection("@aikoware | Opened Section", true)
+
 -- Panel Section
 PanelSection = Tabs.Main:AddSection("@aikoware | Panel")
 
@@ -69,7 +72,7 @@ PanelSection:AddPanel({
     ButtonText = "Copy Discord Link",
     ButtonCallback = function()
         if setclipboard then
-            setclipboard("https://discord.gg/chloex")
+            setclipboard("https://discord.gg/JccfFGpDNV")
             aiko("Discord link copied to clipboard.")
         else
             aiko("Executor doesn't support setclipboard.")
@@ -106,21 +109,21 @@ PanelSection:AddPanel({
             aiko("Please enter webhook URL first.")
             return
         end
-        _G.Webhook = url
+        _G.ChloeWebhook = url
         ConfigData.WebhookURL = url
         SaveConfig()
         aiko("Webhook saved.")
     end,
     SubButtonText = "Test Webhook",
     SubButtonCallback = function()
-        if not _G.Webhook or _G.Webhook == "" then
+        if not _G.ChloeWebhook or _G.ChloeWebhook == "" then
             aiko("Webhook not set.")
             return
         end
         aiko("Sending test webhook...")
         task.spawn(function()
             local HttpService = game:GetService("HttpService")
-            local data = { content = "Test webhook from Chloe X." }
+            local data = { content = "Test webhook from @aikoware." }
             pcall(function()
                 HttpService:PostAsync(_G.ChloeWebhook, HttpService:JSONEncode(data))
             end)
@@ -212,7 +215,7 @@ local InputSection = Tabs.Main:AddSection("@aikoware | Input")
 
 -- Text Input
 InputSection:AddInput({
-    Title = "Inpt",
+    Title = "Input",
     Content = "Content",
     Default = "",
     Callback = function(value)
