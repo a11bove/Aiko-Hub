@@ -778,7 +778,7 @@ function AIKO:Window(GuiConfig)
         UICorner.CornerRadius = UDim.new(0, 8)
 
         local DialogGlow = Instance.new("Frame")
-        DialogGlow.Size = UDim2.new(0, 310, 0, 160)
+        DialogGlow.Size = UDim2.new(0.5, -152, 0.5, -77)
         DialogGlow.Position = UDim2.new(0.5, -155, 0.5, -80)
         DialogGlow.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         DialogGlow.BackgroundTransparency = 0.75
