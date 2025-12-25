@@ -266,9 +266,15 @@ local legitDELAY = fsh:AddInput({
     end
 })
 
+fsh:AddParagraph({
+    Title = "Legit Fishing Info",
+    Content = "Much better if you have a perfection enchant so when you're using this, the timing is always perfect.",
+    Icon = "info",
+})
+
 local legitFISHING = fsh:AddToggle({
     Title = "Legit Fishing",
-    Content = "Much better if you have perfection enchant.",
+    Content = "",
     Default = false,
     Callback = function(state)
         equipRemote:FireServer(1)
