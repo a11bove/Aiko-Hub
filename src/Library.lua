@@ -2055,7 +2055,7 @@ end
                 SliderInput.AnchorPoint = Vector2.new(0, 0.5)
                 SliderInput.BackgroundColor3 = GuiConfig.Color
                 SliderInput.BorderColor3 = Color3.fromRGB(0, 0, 0)
-                SliderInput.BackgroundTransparency = 1
+                SliderInput.BackgroundTransparency = 0.5
                 SliderInput.BorderSizePixel = 0
                 SliderInput.Position = UDim2.new(1, -155, 0.5, 0)
                 SliderInput.Size = UDim2.new(0, 28, 0, 20)
