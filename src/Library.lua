@@ -1517,7 +1517,7 @@ end
 
                     IconImg.Image = GetIcon(ParagraphConfig.Icon)
 
-                    iconOffset = 30
+                    --iconOffset = 30
                 end
 
                 ParagraphTitle.Font = Enum.Font.GothamBold
