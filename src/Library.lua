@@ -570,7 +570,7 @@ function AIKO:Window(GuiConfig)
         Main.ImageTransparency = GuiConfig.ThemeTransparency or 0.15
     else
         Main.BackgroundColor3 = Color3.fromRGB(20, 10, 30)
-        Main.BackgroundTransparency = 0.2
+        Main.BackgroundTransparency = 0.3
     end
 
     Main.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -1510,13 +1510,13 @@ end
                 if ParagraphConfig.Icon then
                     local IconImg = Instance.new("ImageLabel")
                     IconImg.Size = UDim2.new(0, 20, 0, 20)
-                    IconImg.Position = UDim2.new(0, 8, 0, 10)
+                    IconImg.Position = UDim2.new(0, 10, 0, 10)
                     IconImg.BackgroundTransparency = 1
                     IconImg.Name = "ParagraphIcon"
                     IconImg.Parent = Paragraph
 
                     IconImg.Image = GetIcon(ParagraphConfig.Icon)
-                    iconOffset = 35
+                    iconOffset = 38
                 end
 
                 ParagraphTitle.Font = Enum.Font.GothamBold
