@@ -1,8 +1,8 @@
 -- Load UI Library
-local Chloex = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/Library.lua"))()
+local AIKO = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/Library.lua"))()
 
 -- Create Window
-local Window = Chloex:Window({
+local Window = AIKO:window({
     Title   = "@aikoware |",                -- Main title
     Footer  = "made by untog",              -- Text after title
     Image   = "136505615779937",            -- Texture ID
@@ -12,7 +12,7 @@ local Window = Chloex:Window({
 })
 
 -- Notification Example
-Chloex:MakeNotify({
+AIKO:MakeNotify({
     Title = "@aikoware",
     Description = "Notification",
     Content = "Example notification",
@@ -48,7 +48,7 @@ X1:AddParagraph({
         local link = "https://discord.gg/chloex"
         if setclipboard then
             setclipboard(link)
-            chloex("Successfully Copied!")
+            aiko("Successfully Copied!")
         end
     end
 })
@@ -70,14 +70,14 @@ PanelSection:AddPanel({
     ButtonCallback = function()
         if setclipboard then
             setclipboard("https://discord.gg/chloex")
-            chloex("Discord link copied to clipboard.")
+            aiko("Discord link copied to clipboard.")
         else
-            chloex("Executor doesn't support setclipboard.")
+            aiko("Executor doesn't support setclipboard.")
         end
     end,
     SubButtonText = "Open Discord",
     SubButtonCallback = function()
-        chloex("Opening Discord link...")
+        aiko("Opening Discord link...")
         task.spawn(function()
             game:GetService("GuiService"):OpenBrowserWindow("https://discord.gg/chloex")
         end)
@@ -90,7 +90,7 @@ PanelSection:AddPanel({
     Placeholder = "https://discord.com/api/webhooks/...",
     ButtonText = "Rejoin Server",
     ButtonCallback = function()
-        chloex("Rejoining server...")
+        aiko("Rejoining server...")
         task.wait(1)
         game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
     end
@@ -103,21 +103,21 @@ PanelSection:AddPanel({
     ButtonText = "Save Webhook",
     ButtonCallback = function(url)
         if url == "" then
-            chloex("Please enter webhook URL first.")
+            aiko("Please enter webhook URL first.")
             return
         end
-        _G.ChloeWebhook = url
+        _G.Webhook = url
         ConfigData.WebhookURL = url
         SaveConfig()
-        chloex("Webhook saved.")
+        aiko("Webhook saved.")
     end,
     SubButtonText = "Test Webhook",
     SubButtonCallback = function()
-        if not _G.ChloeWebhook or _G.ChloeWebhook == "" then
-            chloex("Webhook not set.")
+        if not _G.Webhook or _G.Webhook == "" then
+            aiko("Webhook not set.")
             return
         end
-        chloex("Sending test webhook...")
+        aiko("Sending test webhook...")
         task.spawn(function()
             local HttpService = game:GetService("HttpService")
             local data = { content = "Test webhook from Chloe X." }
@@ -135,7 +135,7 @@ local BtnSection = Tabs.Main:AddSection("@aikoware | Button")
 BtnSection:AddButton({
     Title = "Open Discord",
     Callback = function()
-        chloex("Opening Discord...")
+        aiko("Opening Discord...")
         task.spawn(function()
             game:GetService("GuiService"):OpenBrowserWindow("https://discord.gg/chloex")
         end)
@@ -147,12 +147,12 @@ BtnSection:AddButton({
     Title = "Rejoin",
     SubTitle = "Server Hop",
     Callback = function()
-        chloex("Rejoining server...")
+        aiko("Rejoining server...")
         task.wait(1)
         game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
     end,
     SubCallback = function()
-        chloex("Finding new server...")
+        aiko("Finding new server...")
         local Http = game:GetService("HttpService")
         local TPS = game:GetService("TeleportService")
         local Servers = Http:JSONDecode(game:HttpGetAsync("https://games.roblox.com/v1/games/" ..
@@ -163,7 +163,7 @@ BtnSection:AddButton({
                 return
             end
         end
-        chloex("No available servers found.")
+        aiko("No available servers found.")
     end
 })
 
@@ -176,7 +176,7 @@ ToggleSection:AddToggle({
     Content = "Content",
     Default = false,
     Callback = function(value)
-        print("Toggle set to: " .. value)
+        aiko("Toggle set to: " .. value)
     end
 })
 
@@ -187,7 +187,7 @@ ToggleSection:AddToggle({
     Content = "Content",
     Default = false,
     Callback = function(v)
-        print("Toggle set to: " .. v)
+        aiko("Toggle set to: " .. v)
     end
 })
 
@@ -203,7 +203,7 @@ SliderSection:AddSlider({
     Increment = 1,
     Default = 1,
     Callback = function(value)
-        print("Delay set to: " .. tostring(value) .. " seconds.")
+        aiko("Delay set to: " .. tostring(value) .. " seconds.")
     end
 })
 
@@ -216,7 +216,7 @@ InputSection:AddInput({
     Content = "Content",
     Default = "",
     Callback = function(value)
-        print("Username set to: " .. value)
+        aiko("Username set to: " .. value)
     end
 })
 
@@ -230,19 +230,19 @@ DropdownSection:AddDropdown({
     Options = { "Hi", "Hello", "Sup", "Banana" },
     Default = "Hi",
     Callback = function(value)
-        print("Basic Dropdown set to: " .. value)
+        aiko("Basic Dropdown set to: " .. value)
     end
 })
 
 -- Multi-Select Dropdown
 DropdownSection:AddDropdown({
     Title = "Multi Dropdown",
-    Content = "",
+    Content = "Content",
     Multi = true,
     Options = { "Banana", "Apple", "Papaya", "Mango" },
     Default = { "Banana" },
     Callback = function(selected)
-        print("Multi Dropdown set to: " .. table.concat(selected, ", "))
+        aiko("Multi Dropdown set to: " .. table.concat(selected, ", "))
     end
 })
 
@@ -253,7 +253,7 @@ local DynamicDropdown = DropdownSection:AddDropdown({
     Options = {},
     Default = nil,
     Callback = function(value)
-        print("Dynamic Dropdown set to: " .. value)
+        aiko("Dynamic Dropdown set to: " .. value)
     end
 })
 
