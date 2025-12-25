@@ -2433,10 +2433,17 @@ end
     DropdownTitle.TextSize = 13
     DropdownTitle.TextXAlignment = Enum.TextXAlignment.Left
     DropdownTitle.BackgroundTransparency = 1
-    DropdownTitle.Position = UDim2.new(0, 10, 0, 10)
     DropdownTitle.Size = UDim2.new(1, -180, 0, 13)
     DropdownTitle.Name = "DropdownTitle"
     DropdownTitle.Parent = Dropdown
+
+    if DropdownConfig.Content == "" or DropdownConfig.Content == nil then
+        DropdownTitle.Position = UDim2.new(0, 10, 0.5, -6)
+        DropdownTitle.TextYAlignment = Enum.TextYAlignment.Center
+    else
+        DropdownTitle.Position = UDim2.new(0, 10, 0, 10)
+        DropdownTitle.TextYAlignment = Enum.TextYAlignment.Top
+    end
 
     DropdownContent.Font = Enum.Font.GothamBold
     DropdownContent.Text = DropdownConfig.Content
