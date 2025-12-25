@@ -464,7 +464,7 @@ function aiko(msg, delay, color, title, desc)
         Title = title or "@aikoware",
         Description = desc or "Notification",
         Content = msg or "Content",
-        Color = color or NotifyConfig.Color,
+        Color = color or Color3.fromRGB(134, 43, 226),
         Delay = delay or 4
     })
 end
