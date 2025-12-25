@@ -26,7 +26,7 @@ return {
         ["Tropical Grove Highground"] = Vector3.new(-2139, 53, 3624),
         ["Fisherman Island Underground"] = Vector3.new(-62, 3, 2846),
         ["Fisherman Island"] = Vector3.new(95, 10, 2684),
-        ["Ancient Jungle"] = Vector3.new(1478, 131, -613),
+        ["Ancient Jungle"] = Vector3.new(1488, 8, - 392),
         ["Temple Guardian"] = Vector3.new(1481.58691, 127.624985, -596.321777),
         ["Underground Cellar"] = Vector3.new(2113.85693, -91.1985855, -699.206787),
         ["Sacred Temple"] = Vector3.new(1478.45508, -21.8498955, -630.773315)
