@@ -16,7 +16,6 @@ AIKO:MakeNotify({
     Title = "@aikoware",
     Description = "Notification",
     Content = "Example notification",
-    Color = Color3.fromRGB(0, 208, 255),
     Delay = 4
 })
 
