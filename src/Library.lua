@@ -375,7 +375,7 @@ function AIKO:MakeNotify(NotifyConfig)
         TextLabel1.TextColor3 = NotifyConfig.Color
         TextLabel1.TextSize = 14
         TextLabel1.TextXAlignment = Enum.TextXAlignment.Left
-        TextLabel1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        TextLabel1.BackgroundColor3 = Color3.fromRGB(134, 43, 226)
         TextLabel1.BackgroundTransparency = 0.9990000128746033
         TextLabel1.BorderColor3 = Color3.fromRGB(0, 0, 0)
         TextLabel1.BorderSizePixel = 0
@@ -548,7 +548,7 @@ function AIKO:Window(GuiConfig)
         Main.ImageTransparency = GuiConfig.ThemeTransparency or 0.15
     else
         Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        Main.BackgroundTransparency = 0.7
+        Main.BackgroundTransparency = 0.2
     end
 
     Main.AnchorPoint = Vector2.new(0.5, 0.5)
