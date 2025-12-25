@@ -33,8 +33,8 @@ X1 = Tabs.Info:AddSection("@aikoware | Section")
 
 -- Paragraph
 X1:AddParagraph({
-    Title = "@aikoware | UI",
-    Content = "Chloe X UI Modified by @untog",
+    Title = "@aikoware | Paragraph With Icon",
+    Content = "Content",
     Icon = "star",
 })
 
