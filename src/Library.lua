@@ -570,7 +570,7 @@ function AIKO:Window(GuiConfig)
         Main.ImageTransparency = GuiConfig.ThemeTransparency or 0.15
     else
         Main.BackgroundColor3 = Color3.fromRGB(20, 10, 30)
-        Main.BackgroundTransparency = 0.3
+        Main.BackgroundTransparency = 0.25
     end
 
     Main.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -789,7 +789,7 @@ function AIKO:Window(GuiConfig)
         Overlay.Parent = DropShadowHolder
 
         local OverlayCorner = Instance.new("UICorner")
-        OverlayCorner.CornerRadius = UDim.new(0, 8)  -- Matches the Main UI's corner radius
+        OverlayCorner.CornerRadius = UDim.new(0, 8)
         OverlayCorner.Parent = Overlay
 
         local Dialog = Instance.new("ImageLabel")
@@ -803,6 +803,15 @@ function AIKO:Window(GuiConfig)
 
         local UICorner = Instance.new("UICorner", Dialog)
         UICorner.CornerRadius = UDim.new(0, 8)
+
+        local Gradient = Instance.new("UIGradient")
+        Gradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0.0, Color3.fromRGB(60, 30, 90)),
+            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(40, 20, 70)),
+            ColorSequenceKeypoint.new(1.0, Color3.fromRGB(30, 15, 60)),
+        })
+        Gradient.Rotation = 90
+        Gradient.Parent = Dialog
 
         local UIStroke = Instance.new("UIStroke")
         UIStroke.Color = Color3.fromRGB(100, 50, 150)
