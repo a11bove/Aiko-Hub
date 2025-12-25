@@ -86,10 +86,7 @@ local Icons = {
 
 local LucideIcons = {}
 pcall(function()
-    local result = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/icons.lua"))()
-    if result and type(result) == "table" then
-        LucideIcons = result
-    end
+    LucideIcons = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/icons.lua"))()
 end)
 
 local function GetIcon(iconName)
@@ -495,14 +492,14 @@ function aiko(msg, delay, color, title, desc)
 end
 
 function AIKO:Window(GuiConfig)
-    GuiConfig              = GuiConfig or {}
-    GuiConfig.Title        = GuiConfig.Title or "@aikoware"
-    GuiConfig.Footer       = GuiConfig.Footer or "made by untog!"
-    GuiConfig.Color        = GuiConfig.Color or Color3.fromRGB(138, 43, 226)
+    GuiConfig = GuiConfig or {}
+    GuiConfig.Title = GuiConfig.Title or "@aikoware"
+    GuiConfig.Footer = GuiConfig.Footer or "made by untog!"
+    GuiConfig.Color = GuiConfig.Color or Color3.fromRGB(138, 43, 226)
     GuiConfig["Tab Width"] = GuiConfig["Tab Width"] or 120
-    GuiConfig.Version      = GuiConfig.Version or 1
+    GuiConfig.Version = GuiConfig.Version or 1
 
-    CURRENT_VERSION        = GuiConfig.Version
+    CURRENT_VERSION = GuiConfig.Version
     LoadConfigFromFile()
 
     local GuiFunc = {}
@@ -1185,6 +1182,7 @@ end
         TabName.Name = "TabName"
         TabName.Parent = Tab
 
+        FeatureImg.Image = GetIcon(TabConfig.Icon)
         FeatureImg.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         FeatureImg.BackgroundTransparency = 0.9990000128746033
         FeatureImg.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -1212,9 +1210,9 @@ end
             UICorner4.Parent = ChooseFrame
         end
 
-        if TabConfig.Icon ~= "" then
+        --[[if TabConfig.Icon ~= "" then
             FeatureImg.Image = GetIcon(TabConfig.Icon)
-        end
+        end]]
 
         TabButton.Activated:Connect(function()
             CircleClick(TabButton, Mouse.X, Mouse.Y)
