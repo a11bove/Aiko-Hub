@@ -21,7 +21,7 @@ AIKO:MakeNotify({
 
 -- Create Tabs
 local Tabs = {
-    Info = Window:AddTab({ Name = "Info", Icon = "player" }),
+    Info = Window:AddTab({ Name = "Info", Icon = "icon" }),
     Main = Window:AddTab({ Name = "Main", Icon = "user" }),
 }
 
