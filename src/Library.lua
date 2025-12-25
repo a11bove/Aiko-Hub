@@ -2507,7 +2507,7 @@ end
     DropdownContainer.Parent = DropdownFolder
 
     local SearchBox = Instance.new("TextBox")
-    SearchBox.PlaceholderText = "Search"
+    SearchBox.PlaceholderText = "Search..."
     SearchBox.Font = Enum.Font.Gotham
     SearchBox.Text = ""
     SearchBox.TextSize = 12
@@ -2573,7 +2573,6 @@ end
     end
 
     function DropdownFunc:AddOption(option)
-        -- Convert any format to string
         local optionStr = tostring(option)
         
         local Option = Instance.new("Frame")
