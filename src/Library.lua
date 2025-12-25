@@ -464,7 +464,7 @@ function aiko(msg, delay, color, title, desc)
         Title = title or "@aikoware",
         Description = desc or "Notification",
         Content = msg or "Content",
-        Color = color or Color3.fromRGB(255, 255, 255),
+        Color = color or NotifyConfig.Color,
         Delay = delay or 4
     })
 end
@@ -547,7 +547,7 @@ function AIKO:Window(GuiConfig)
         Main.BackgroundTransparency = 1
         Main.ImageTransparency = GuiConfig.ThemeTransparency or 0.15
     else
-        Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        Main.BackgroundColor3 = Color3.fromRGB(15, 10, 20)
         Main.BackgroundTransparency = 0.2
     end
 
