@@ -250,6 +250,14 @@ function _G.ToggleAutoClick(shouldActivate)
     end
 end
 
+fsh:AddParagraph({
+    Title = "Legit Fishing Info",
+    Content = "Much better if you have a perfection enchant so when you're using this, the timing is always perfect.",
+    Icon = "info",
+})
+
+fsh:AddDivider()
+
 local legitDELAY = fsh:AddInput({
     Title = "Legit Fishing Delay",
     Content = "",
@@ -260,12 +268,6 @@ local legitDELAY = fsh:AddInput({
             _G.SPEED_LEGIT = delay
         end
     end
-})
-
-fsh:AddParagraph({
-    Title = "Legit Fishing Info",
-    Content = "Much better if you have a perfection enchant so when you're using this, the timing is always perfect.",
-    Icon = "info",
 })
 
 local legitFISHING = fsh:AddToggle({
