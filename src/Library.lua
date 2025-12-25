@@ -548,7 +548,7 @@ function AIKO:Window(GuiConfig)
         Main.ImageTransparency = GuiConfig.ThemeTransparency or 0.15
     else
         Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        Main.BackgroundTransparency = 0
+        Main.BackgroundTransparency = 0.4
     end
 
     Main.AnchorPoint = Vector2.new(0.5, 0.5)
