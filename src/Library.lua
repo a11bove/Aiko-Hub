@@ -2512,7 +2512,7 @@ end
     SearchBox.Text = ""
     SearchBox.TextSize = 12
     SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-    SearchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    SearchBox.BackgroundColor3 = Color3.fromRGB(20, 10, 30)
     SearchBox.BackgroundTransparency = 0.9
     SearchBox.BorderSizePixel = 0
     SearchBox.Size = UDim2.new(1, 0, 0, 25)
