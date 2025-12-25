@@ -2,7 +2,7 @@
 local AIKO = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/Library.lua"))()
 
 -- Create Window
-local Window = AIKO:window({
+local Window = AIKO:Window({
     Title   = "@aikoware |",                -- Main title
     Footer  = "made by untog",              -- Text after title
     Image   = "136505615779937",            -- Texture ID
