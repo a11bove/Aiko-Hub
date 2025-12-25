@@ -1064,7 +1064,7 @@ end
     local DropPageLayout = Instance.new("UIPageLayout");
 
     DropdownSelect.AnchorPoint = Vector2.new(1, 0.5)
-    DropdownSelect.BackgroundColor3 = Color3.fromRGB(138, 43, 226)
+    DropdownSelect.BackgroundColor3 = Color3.fromRGB(20, 10, 30)
     DropdownSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
     DropdownSelect.BorderSizePixel = 0
     DropdownSelect.LayoutOrder = 1
@@ -2510,7 +2510,7 @@ end
     SearchBox.PlaceholderText = "Search..."
     SearchBox.Font = Enum.Font.Gotham
     SearchBox.Text = ""
-    SearchBox.TextSize = 12
+    SearchBox.TextSize = 13
     SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
     SearchBox.BackgroundColor3 = Color3.fromRGB(20, 10, 30)
     SearchBox.BackgroundTransparency = 0.9
