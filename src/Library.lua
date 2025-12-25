@@ -1064,7 +1064,7 @@ end
     local DropPageLayout = Instance.new("UIPageLayout");
 
     DropdownSelect.AnchorPoint = Vector2.new(1, 0.5)
-    DropdownSelect.BackgroundColor3 = Color3.fromRGB(20, 10, 30)
+    DropdownSelect.BackgroundColor3 = Color3.fromRGB(138, 43, 226)
     DropdownSelect.BorderColor3 = Color3.fromRGB(0, 0, 0)
     DropdownSelect.BorderSizePixel = 0
     DropdownSelect.LayoutOrder = 1
@@ -2520,6 +2520,12 @@ end
     SearchBox.ClearTextOnFocus = false
     SearchBox.Name = "SearchBox"
     SearchBox.Parent = DropdownContainer
+
+    local SearchBoxStroke = Instance.new("UIStroke")
+    SearchBoxStroke.Color = Color3.fromRGB(255, 0, 255)
+    SearchBoxStroke.Thickness = 2
+    SearchBoxStroke.Transparency = 0.8
+    SearchBoxStroke.Parent = SearchBox
 
     local ScrollSelect = Instance.new("ScrollingFrame")
     ScrollSelect.Size = UDim2.new(1, 0, 1, -30)
