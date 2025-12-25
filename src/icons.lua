@@ -255,7 +255,7 @@ local LucideIcons = {
         ["dices"] = "rbxassetid://10723343321",
         ["diff"] = "rbxassetid://10723343416",
         ["disc"] = "rbxassetid://10723343537",
-        ["discord"] "rbxassetid://94434236999817",
+        ["discord"] = "rbxassetid://94434236999817",
         ["divide"] = "rbxassetid://10723343805",
         ["divide-circle"] = "rbxassetid://10723343636",
         ["divide-square"] = "rbxassetid://10723343737",
