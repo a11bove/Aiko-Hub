@@ -1,113 +1,17 @@
-if not game:IsLoaded() then
-    game.Loaded:Wait()
-end
+local AIKO = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/Library.lua"))()
 
-local existingGui = game.CoreGui:FindFirstChild("aikoware")
-if existingGui then
-    existingGui:Destroy()
-end
-
-local existingHirimi = game.CoreGui:FindFirstChild("HirimiGui")
-if existingHirimi then
-    existingHirimi:Destroy()
-end
-
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/source.lua"))()
-
-Library:MakeNotify({
+AIKO:MakeNotify({
     Title = "@aikoware",
     Description = "| Script Loaded",
     Content = "Game: Diesel 'N Steel",
     Delay = 5
 })
 
-local Window = Library:MakeGui({
-    NameHub = "@aikoware | made by untog!"
+local Window = AIKO:MakeGui({
+    Title = "@aikoware |",
+    Footer = " made by untog!",
+    Version = 1
 })
-
-local gui = Instance.new("ScreenGui")
-gui.Name = "aikoware"
-gui.IgnoreGuiInset = true
-gui.ResetOnSpawn = false
-gui.Parent = game.CoreGui
-
-local button = Instance.new("ImageButton")
-button.Size = UDim2.new(0, 47, 0, 47)
-button.Position = UDim2.new(0, 60, 0, 60)
-button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-button.BackgroundTransparency = 0.5
-button.Image = "rbxassetid://140356301069419"
-button.Name = "aikowaretoggle"
-button.AutoButtonColor = true
-button.Parent = gui
-
-local corner = Instance.new("UICorner", button)
-corner.CornerRadius = UDim.new(0, 12)
-
-local stroke = Instance.new("UIStroke")
-stroke.Thickness = 1.5
-stroke.Color = Color3.fromRGB(45, 45, 45)
-stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-stroke.Parent = button
-
-local gradient = Instance.new("UIGradient")
-gradient.Color =
-    ColorSequence.new {
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 100)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 0, 0))
-}
-gradient.Rotation = 45
-gradient.Parent = stroke
-
-local dragging, dragInput, dragStart, startPos
-
-button.InputBegan:Connect(
-    function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true
-            dragStart = input.Position
-            startPos = button.Position
-
-            input.Changed:Connect(
-                function()
-                    if input.UserInputState == Enum.UserInputState.End then
-                        dragging = false
-                    end
-                end
-            )
-        end
-    end
-)
-
-button.InputChanged:Connect(
-    function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-            dragInput = input
-        end
-    end
-)
-
-game:GetService("UserInputService").InputChanged:Connect(
-    function(input)
-        if input == dragInput and dragging then
-            local delta = input.Position - dragStart
-            button.Position =
-                UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        end
-    end
-)
-
-button.MouseButton1Click:Connect(
-    function()
-        local HirimiGui = game.CoreGui:FindFirstChild("HirimiGui")
-        if HirimiGui then
-            local DropShadowHolder = HirimiGui:FindFirstChild("DropShadowHolder")
-            if DropShadowHolder then
-                DropShadowHolder.Visible = not DropShadowHolder.Visible
-            end
-        end
-    end
-)
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
@@ -338,7 +242,7 @@ local info = Window:CreateTab({
     Icon = "rbxassetid://10723415903"
 })
 
-local infosec = info:AddSection("Info")
+local infosec = info:AddSection("Info", true")
 
 infosec:AddParagraph({
     Title = "Warning:",
@@ -346,19 +250,15 @@ infosec:AddParagraph({
 })
 
 infosec:AddParagraph({
-    Title = "Discord:",
-    Content = "Join to our discord server for more updates and information."
-})
-
-infosec:AddButton({
-    Title = "Copy Server Invite",
-    Content = "",
-    Callback = function()
-            setclipboard("https://discord.gg/JccfFGpDNV")
-        Library:MakeNotify({
-            Title = "@aikoware",
-            Description = "",
-            Content = "Link Copied!"
-        })
+    Title = "Discord",
+    Content = "Join to our discord server for more updates and information.",
+    Icon = "discord",
+    ButtonText = "Copy Discord Link",
+    ButtonCallback = function()
+        local link = "https://discord.gg/JccfFGpDNV"
+        if setclipboard then
+            setclipboard(link)
+            aiko("Successfully Copied!")
+        end
     end
 })
