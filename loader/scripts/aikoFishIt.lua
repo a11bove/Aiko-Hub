@@ -1949,6 +1949,11 @@ autotrade:AddButton({
     end
 })
 
+-- ============================================================================
+-- COMPLETE WEBHOOK TAB - FIXED VERSION
+-- Replace your entire webhook section with this code
+-- ============================================================================
+
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -1979,6 +1984,10 @@ _G.DiscordPingID = _G.DiscordPingID or ""
 _G.DisconnectCustomName = _G.DisconnectCustomName or ""
 _G.WebhookRarities = _G.WebhookRarities or {}
 _G.WebhookNames = _G.WebhookNames or {}
+
+-- ============================================================================
+-- WEBHOOK SEND FUNCTION
+-- ============================================================================
 
 local function SendWebhook(url, data)
     if not _G.httpRequest then
@@ -2021,6 +2030,10 @@ local function SendWebhook(url, data)
     return true
 end
 
+-- ============================================================================
+-- FISH DATABASE
+-- ============================================================================
+
 local FishDatabase = {}
 
 local function BuildFishDatabase()
@@ -2057,8 +2070,18 @@ end
 -- Build fish database immediately
 task.spawn(BuildFishDatabase)
 
--- Tier Names
+-- Tier Names (Updated mapping)
 local TierNames = {
+    ["Common"] = "Common",
+    ["Uncommon"] = "Uncommon", 
+    ["Rare"] = "Rare",
+    ["Epic"] = "Epic",
+    ["Legendary"] = "Legendary",
+    ["Mythic"] = "Mythic",
+    ["Secret"] = "Secret",
+    ["Exotic"] = "Exotic",
+    ["Limited"] = "Limited",
+    -- Numeric fallbacks
     [0] = "Common",
     [1] = "Uncommon",
     [2] = "Rare",
@@ -2068,6 +2091,10 @@ local TierNames = {
     [6] = "Secret"
 }
 
+-- ============================================================================
+-- THUMBNAIL FUNCTION
+-- ============================================================================
+
 local function GetThumbnailURL(assetId)
     if not assetId or assetId == "" then return nil end
     
@@ -2076,6 +2103,10 @@ local function GetThumbnailURL(assetId)
     
     return string.format("https://assetdelivery.roblox.com/v1/asset/?id=%s", id)
 end
+
+-- ============================================================================
+-- FISH WEBHOOK FUNCTION
+-- ============================================================================
 
 local function SendFishWebhook(fishId, metadata)
     if not _G.WebhookFlags.FishCaught.Enabled then return end
@@ -2092,7 +2123,21 @@ local function SendFishWebhook(fishId, metadata)
         return 
     end
     
-    local tierName = TierNames[fishData.Tier] or "Unknown"
+    -- DEBUG: Print the actual tier value
+    print("[Webhook DEBUG] Fish:", fishData.Name)
+    print("[Webhook DEBUG] Tier Value:", fishData.Tier, "Type:", type(fishData.Tier))
+    
+    -- Handle both string and numeric tier values
+    local tierName
+    if type(fishData.Tier) == "string" then
+        tierName = TierNames[fishData.Tier] or fishData.Tier
+    elseif type(fishData.Tier) == "number" then
+        tierName = TierNames[fishData.Tier] or "Unknown"
+    else
+        tierName = "Unknown"
+    end
+    
+    print("[Webhook DEBUG] Tier Name:", tierName)
     
     -- Check rarity filter
     if _G.WebhookRarities and #_G.WebhookRarities > 0 then
@@ -2153,9 +2198,13 @@ local function SendFishWebhook(fishId, metadata)
     }
     
     if SendWebhook(webhookUrl, payload) then
-        print("[Webhook] Fish webhook sent:", fishData.Name)
+        print("[Webhook] Fish webhook sent:", fishData.Name, "- Tier:", tierName)
     end
 end
+
+-- ============================================================================
+-- CONNECT FISH NOTIFICATION
+-- ============================================================================
 
 if not _G.FishWebhookConnected then
     _G.FishWebhookConnected = true
@@ -2183,6 +2232,10 @@ if not _G.FishWebhookConnected then
     
     print("[Webhook] Fish notification listener connected!")
 end
+
+-- ============================================================================
+-- DISCONNECT WEBHOOK HANDLER
+-- ============================================================================
 
 local disconnectHandled = false
 
@@ -2227,6 +2280,10 @@ local function SendDisconnectWebhook(reason)
     game:GetService("TeleportService"):Teleport(game.PlaceId, Player)
 end
 
+-- ============================================================================
+-- SETUP DISCONNECT DETECTION
+-- ============================================================================
+
 local function SetupDisconnectDetection()
     if _G.DisconnectDetectionSetup then return end
     _G.DisconnectDetectionSetup = true
@@ -2270,6 +2327,10 @@ end
 
 -- Auto-setup disconnect detection
 SetupDisconnectDetection()
+
+-- ============================================================================
+-- WEBHOOK TAB UI
+-- ============================================================================
 
 local Webhook = Window:AddTab({
     Name = "Webhook",
@@ -2380,6 +2441,10 @@ webhookSection:AddInput({
         })
     end
 })
+
+-- ============================================================================
+-- DISCONNECT SECTION
+-- ============================================================================
 
 local disconnectSection = Webhook:AddSection("Disconnect Alert")
 
@@ -2500,11 +2565,17 @@ disconnectSection:AddButton({
     end
 })
 
+-- ============================================================================
+-- INITIALIZATION LOG
+-- ============================================================================
+
+print("============================================")
 print("[Webhook System] Initialized successfully!")
 print("[Webhook] Fish Database: " .. #FishDatabase .. " entries")
 print("[Webhook] HTTP Request: " .. (_G.httpRequest and "✅ Available" or "❌ NOT AVAILABLE"))
 print("[Webhook] Fish Listener: ✅ Connected")
 print("[Webhook] Disconnect Detection: ✅ Setup")
+print("============================================")
 
 local MiscModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/fishit/miscmdl.lua"))()
 MiscModule:Initialize()
