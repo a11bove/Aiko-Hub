@@ -1148,6 +1148,7 @@ end
 
 ShopParagraph = merch:AddParagraph({
     Title = "MERCHANT STOCK PANEL",
+    Icon = "shop",
     Content = "Loading..."
 })
 
@@ -1263,6 +1264,7 @@ local GlobalFav = {
 
     FishIdToName = {},
     FishNameToId = {},
+    FishIdToTier = {},
     FishNames = {},
     Variants = {},
     VariantIdToName = {},
@@ -1270,6 +1272,7 @@ local GlobalFav = {
 
     SelectedFishIds = {},
     SelectedVariants = {},
+    SelectedRarities = {},
     AutoFavoriteEnabled = false
 }
 
@@ -1278,8 +1281,10 @@ for _, item in pairs(ReplicatedStorage.Items:GetChildren()) do
     if ok and data.Data and data.Data.Type == "Fish" then
         local id = data.Data.Id
         local name = data.Data.Name
+        local tier = data.Data.Tier
         GlobalFav.FishIdToName[id] = name
         GlobalFav.FishNameToId[name] = id
+        GlobalFav.FishIdToTier[id] = tier
         table.insert(GlobalFav.FishNames, name)
     end
 end
@@ -1300,6 +1305,34 @@ end
 table.sort(GlobalFav.FishNames)
 table.sort(GlobalFav.Variants)
 
+local TierNames = {
+    ["Common"] = "Common",
+    ["Uncommon"] = "Uncommon", 
+    ["Rare"] = "Rare",
+    ["Epic"] = "Epic",
+    ["Legendary"] = "Legendary",
+    ["Mythic"] = "Mythic",
+    ["Secret"] = "Secret",
+    [1] = "Common",
+    [2] = "Uncommon",
+    [3] = "Rare",
+    [4] = "Epic",
+    [5] = "Legendary",
+    [6] = "Mythic",
+    [7] = "Secret",
+    [0] = "Common"
+}
+
+local function GetTierName(tier)
+    if type(tier) == "string" then
+        return TierNames[tier] or tier
+    elseif type(tier) == "number" then
+        return TierNames[tier] or "Unknown"
+    else
+        return "Unknown"
+    end
+end
+
 local autoFAV = fav:AddToggle({
     Title = "Enable Auto Favorite",
     Content = "",
@@ -1307,14 +1340,14 @@ local autoFAV = fav:AddToggle({
     Callback = function(state)
         GlobalFav.AutoFavoriteEnabled = state
         if state then
-                AIKO:MakeNotify({
+            AIKO:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Auto Favorite",
                 Content = "Enabled",
                 Delay = 2
             })
         else
-                AIKO:MakeNotify({
+            AIKO:MakeNotify({
                 Title = "@aikoware",
                 Description = "| Auto Favorite",
                 Content = "Disabled",
@@ -1332,12 +1365,25 @@ local selectFishes = fav:AddDropdown({
     Default = {},
     Callback = function(selectedNames)
         GlobalFav.SelectedFishIds = {}
-
         for _, name in ipairs(selectedNames) do
             local id = GlobalFav.FishNameToId[name]
             if id then
                 GlobalFav.SelectedFishIds[id] = true
             end
+        end
+    end
+})
+
+local selectRarities = fav:AddDropdown({
+    Title = "Select Rarity",
+    Content = "",
+    Options = {"Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Secret"},
+    Multi = true,
+    Default = {},
+    Callback = function(selectedRarities)
+        GlobalFav.SelectedRarities = {}
+        for _, rarity in ipairs(selectedRarities) do
+            GlobalFav.SelectedRarities[rarity] = true
         end
     end
 })
@@ -1350,7 +1396,6 @@ local selectMutations = fav:AddDropdown({
     Default = {},
     Callback = function(selectedNames)
         GlobalFav.SelectedVariants = {}
-
         for _, name in ipairs(selectedNames) do
             local id = GlobalFav.VariantNameToId[name]
             if id then
@@ -1360,31 +1405,32 @@ local selectMutations = fav:AddDropdown({
     end
 })
 
--- Main Auto Favorite Logic
 GlobalFav.REObtainedNewFishNotification.OnClientEvent:Connect(function(itemId, _, data)
     if not GlobalFav.AutoFavoriteEnabled then return end
 
     local uuid = data.InventoryItem and data.InventoryItem.UUID
     if not uuid then return end
 
-    -- Get fish info
     local fishName = GlobalFav.FishIdToName[itemId] or "Unknown"
+    local fishTier = GlobalFav.FishIdToTier[itemId]
+    local tierName = GetTierName(fishTier)
     local variantId = data.InventoryItem.Metadata and data.InventoryItem.Metadata.VariantId
 
-    -- Check if should favorite
     local shouldFavorite = false
     local reason = ""
 
-    -- Check Fish Selection
     local isFishSelected = GlobalFav.SelectedFishIds[itemId]
-
-    -- Check Variant Selection
+    local isRaritySelected = GlobalFav.SelectedRarities[tierName]
     local isVariantSelected = variantId and GlobalFav.SelectedVariants[variantId]
 
-    -- Logic: Favorite if ANY condition matches
     if isFishSelected then
         shouldFavorite = true
         reason = "Fish: " .. fishName
+    end
+
+    if isRaritySelected then
+        shouldFavorite = true
+        reason = reason .. (reason ~= "" and " + " or "") .. "Rarity: " .. tierName
     end
 
     if isVariantSelected then
@@ -1393,13 +1439,12 @@ GlobalFav.REObtainedNewFishNotification.OnClientEvent:Connect(function(itemId, _
         reason = reason .. (reason ~= "" and " + " or "") .. "Variant: " .. variantName
     end
 
-    -- Favorite the item
     if shouldFavorite then
         pcall(function()
             GlobalFav.REFavoriteItem:FireServer(uuid)
         end)
 
-            AIKO:MakeNotify({
+        AIKO:MakeNotify({
             Title = "@aikoware",
             Description = "| Auto Favorited",
             Content = fishName .. "\n" .. reason,
@@ -1413,10 +1458,24 @@ fav:AddButton({
     Content = "Clear all selected fish",
     Callback = function()
         GlobalFav.SelectedFishIds = {}
-            AIKO:MakeNotify({
+        AIKO:MakeNotify({
             Title = "@aikoware",
             Description = "| Cleared",
             Content = "Fish selection cleared",
+            Delay = 2
+        })
+    end
+})
+
+fav:AddButton({
+    Title = "Clear Rarity Selection",
+    Content = "Clear all selected rarities",
+    Callback = function()
+        GlobalFav.SelectedRarities = {}
+        AIKO:MakeNotify({
+            Title = "@aikoware",
+            Description = "| Cleared",
+            Content = "Rarity selection cleared",
             Delay = 2
         })
     end
@@ -1427,7 +1486,7 @@ fav:AddButton({
     Content = "Clear all selected variants",
     Callback = function()
         GlobalFav.SelectedVariants = {}
-            AIKO:MakeNotify({
+        AIKO:MakeNotify({
             Title = "@aikoware",
             Description = "| Cleared",
             Content = "Variant selection cleared",
@@ -1443,14 +1502,17 @@ fav:AddButton({
         local fishCount = 0
         for _ in pairs(GlobalFav.SelectedFishIds) do fishCount = fishCount + 1 end
 
+        local rarityCount = 0
+        for _ in pairs(GlobalFav.SelectedRarities) do rarityCount = rarityCount + 1 end
+
         local variantCount = 0
         for _ in pairs(GlobalFav.SelectedVariants) do variantCount = variantCount + 1 end
 
-            AIKO:MakeNotify({
+        AIKO:MakeNotify({
             Title = "@aikoware",
             Description = "| Current Selection",
             Content = string.format(
-                "Fish: %d\nVariants: %d", fishCount, variantCount
+                "Fish: %d\nRarities: %d\nVariants: %d", fishCount, rarityCount, variantCount
             ),
             Delay = 3
         })
