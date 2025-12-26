@@ -1278,7 +1278,6 @@ local GlobalFav = {
     AutoFavoriteEnabled = false
 }
 
--- Load Fish Data
 for _, item in pairs(ReplicatedStorage.Items:GetChildren()) do
     local ok, data = pcall(require, item)
     if ok and data.Data and data.Data.Type == "Fish" then
@@ -1290,7 +1289,6 @@ for _, item in pairs(ReplicatedStorage.Items:GetChildren()) do
     end
 end
 
--- Load Variants
 for _, variantModule in pairs(ReplicatedStorage.Variants:GetChildren()) do
     local ok, variantData = pcall(require, variantModule)
     if ok and variantData.Data then
@@ -2055,8 +2053,6 @@ local TierNames = {
     ["Legendary"] = "Legendary",
     ["Mythic"] = "Mythic",
     ["Secret"] = "Secret",
-    ["Exotic"] = "Exotic",
-    ["Limited"] = "Limited",
     
     [1] = "Common",
     [2] = "Uncommon",
@@ -2065,7 +2061,6 @@ local TierNames = {
     [5] = "Legendary",
     [6] = "Mythic",
     [7] = "Secret",
-    [8] = "Exotic",
     [0] = "Common"
 }
 
@@ -2133,15 +2128,15 @@ local function SendFishWebhook(fishId, metadata)
     
     local payload = {
         embeds = {{
-            title = "🎣 Fish Caught!",
+            title = "🦈 Fish Caught!",
             description = string.format("**%s** caught a **%s** fish!", playerName, tierName),
-            color = 52221,
+            color = 11342935,
             fields = {
-                {name = "Fish Name:", value = "```❯ " .. fishData.Name .. "```", inline = false},
-                {name = "Fish Tier:", value = "```❯ " .. tierName .. "```", inline = false},
-                {name = "Weight:", value = "```❯ " .. weight .. "```", inline = true},
-                {name = "Mutation:", value = "```❯ " .. variant .. "```", inline = true},
-                {name = "Sell Price:", value = "```❯ " .. sellPrice .. "```", inline = true}
+                {name = "**Fish Name:**", value = "❯ " .. fishData.Name .. "", inline = false},
+                {name = "**Rarity:**", value = "❯ " .. tierName .. "", inline = false},
+                {name = "**Weight:**", value = "❯ " .. weight .. "", inline = true},
+                {name = "**Mutation**:", value = "❯ " .. variant .. "", inline = true},
+                {name = "**Selling Price:**", value = "❯ " .. sellPrice .. "", inline = true}
             },
             thumbnail = {
                 url = GetThumbnailURL(fishData.Icon) or "https://i.imgur.com/WltO8IG.png"
@@ -2198,11 +2193,11 @@ local function SendDisconnectWebhook(reason)
         content = pingText .. " Your account disconnected!",
         embeds = {{
             title = "⚠️ Disconnected Alert!",
-            color = 16711680,
+            color = 11342935,
             fields = {
-                {name = "**Username:**", value = "> " .. playerName, inline = false},
-                {name = "**Time:**", value = "> " .. dateTime, inline = false},
-                {name = "**Reason:**", value = "> " .. (reason or "Unknown"), inline = false}
+                {name = "**Username:**", value = "❯ " .. playerName, inline = false},
+                {name = "**Time:**", value = "❯ " .. dateTime, inline = false},
+                {name = "**Reason:**", value = "❯ " .. (reason or "Unknown"), inline = false}
             },
             thumbnail = {
                 url = "https://cdn.discordapp.com/attachments/1387681189502124042/1449753201044750336/banners_pinterest_654429389618926022.jpg"
@@ -2296,7 +2291,7 @@ webhookSection:AddButton({
         if webhookUrl and webhookUrl ~= "" then
             local payload = {
                 embeds = {{
-                    color = 44543,
+                    color = 11342935,
                     author = {
                         name = "✅ Webhook Connection Test!"
                     },
@@ -2442,7 +2437,7 @@ disconnectSection:AddButton({
                 content = "🧪 Test Disconnect - Working!",
                 embeds = {{
                     title = "✅ Test Successful!",
-                    color = 65280,
+                    color = 11342935,
                     fields = {
                         {name = "Status", value = "Webhook is working correctly!", inline = false},
                         {name = "Action", value = "Rejoining server now...", inline = false}
@@ -2467,7 +2462,6 @@ disconnectSection:AddButton({
     end
 })
 
-print("============================================")
 print("[Webhook System] Initialized successfully!")
 print("[Webhook] Fish Database: " .. #FishDatabase .. " entries")
 print("[Webhook] HTTP Request: " .. (_G.httpRequest and "✅ Available" or "❌ NOT AVAILABLE"))
