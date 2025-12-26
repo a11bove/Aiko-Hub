@@ -2121,19 +2121,35 @@ local function SendFishWebhook(fishId, metadata)
     
     local weight = metadata and metadata.Weight and string.format("%.2f Kg", metadata.Weight) or "N/A"
     local variant = "None"
-    
-    if metadata and metadata.VariantId then
-        local variantFolder = ReplicatedStorage:FindFirstChild("Variants")
-        if variantFolder then
-            for _, v in ipairs(variantFolder:GetChildren()) do
+
+if metadata and metadata.VariantId then
+    local variantFolder = ReplicatedStorage:FindFirstChild("Variants")
+    if variantFolder then
+        for _, v in ipairs(variantFolder:GetChildren()) do
+            if v:IsA("ModuleScript") then
                 local ok, vData = pcall(require, v)
-                if ok and vData.Data and vData.Data.Id == metadata.VariantId then
+                if ok and vData and vData.Data and vData.Data.Id == metadata.VariantId then
                     variant = vData.Data.Name or "Unknown"
                     break
                 end
             end
         end
     end
+elseif data and data.InventoryItem and data.InventoryItem.Metadata and data.InventoryItem.Metadata.VariantId then
+    local variantId = data.InventoryItem.Metadata.VariantId
+    local variantFolder = ReplicatedStorage:FindFirstChild("Variants")
+    if variantFolder then
+        for _, v in ipairs(variantFolder:GetChildren()) do
+            if v:IsA("ModuleScript") then
+                local ok, vData = pcall(require, v)
+                if ok and vData and vData.Data and vData.Data.Id == variantId then
+                    variant = vData.Data.Name or "Unknown"
+                    break
+                end
+            end
+        end
+    end
+end
     
     local sellPrice = fishData.SellPrice and ("$" .. tostring(fishData.SellPrice)) or "N/A"
     local playerName = _G.WebhookCustomName ~= "" and _G.WebhookCustomName or Player.Name
@@ -2148,14 +2164,13 @@ local function SendFishWebhook(fishId, metadata)
                 {name = "**Rarity:**", value = "❯ " .. tierName .. "", inline = false},
                 {name = "**Weight:**", value = "❯ " .. weight .. "", inline = true},
                 {name = "**Mutation**:", value = "❯ " .. variant .. "", inline = true},
-                {name = "**Selling Price:**", value = "❯ " .. sellPrice .. "", inline = true}
             },
             thumbnail = {
                 url = GetThumbnailURL(fishData.Icon) or "https://i.imgur.com/WltO8IG.png"
             },
             footer = {
                 text = "@aikoware Webhook",
-                icon_url = "https://i.imgur.com/WltO8IG.png"
+                icon_url = "https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png"
             },
             timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
         }},
