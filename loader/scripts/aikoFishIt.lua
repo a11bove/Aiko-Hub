@@ -1954,10 +1954,8 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Player = Players.LocalPlayer
 
--- Initialize HTTP Request
 _G.httpRequest = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
 
--- Webhook Storage
 _G.WebhookFlags = _G.WebhookFlags or {
     FishCaught = {
         Enabled = false,
@@ -1989,7 +1987,6 @@ local function SendWebhook(url, data)
         return false
     end
     
-    -- Rate limiting
     _G._WebhookLock = _G._WebhookLock or {}
     if _G._WebhookLock[url] then
         return false
@@ -2059,7 +2056,7 @@ local TierNames = {
     ["Mythic"] = "Mythic",
     ["Secret"] = "Secret",
     ["Exotic"] = "Exotic",
-    ["Limited"] = "Limited"
+    ["Limited"] = "Limited",
     
     [1] = "Common",
     [2] = "Uncommon",
@@ -2094,7 +2091,6 @@ local function SendFishWebhook(fishId, metadata)
         return 
     end
     
-    -- Handle both string and numeric tier values
     local tierName
     if type(fishData.Tier) == "string" then
         tierName = TierNames[fishData.Tier] or fishData.Tier
@@ -2104,14 +2100,12 @@ local function SendFishWebhook(fishId, metadata)
         tierName = "Unknown"
     end
     
-    -- Check rarity filter
     if _G.WebhookRarities and #_G.WebhookRarities > 0 then
         if not table.find(_G.WebhookRarities, tierName) then
             return
         end
     end
     
-    -- Check name filter
     if _G.WebhookNames and #_G.WebhookNames > 0 then
         if not table.find(_G.WebhookNames, fishData.Name) then
             return
@@ -2229,7 +2223,6 @@ local function SetupDisconnectDetection()
     if _G.DisconnectDetectionSetup then return end
     _G.DisconnectDetectionSetup = true
     
-    -- Method 1: GUI Error Detection
     pcall(function()
         game:GetService("GuiService").ErrorMessageChanged:Connect(function(msg)
             if msg and msg ~= "" and _G.WebhookFlags.Disconnect.Enabled then
@@ -2238,7 +2231,6 @@ local function SetupDisconnectDetection()
         end)
     end)
     
-    -- Method 2: CoreGui Prompt Detection
     pcall(function()
         local coreGui = game:GetService("CoreGui")
         local promptGui = coreGui:FindFirstChild("RobloxPromptGui")
@@ -2262,7 +2254,6 @@ SetupDisconnectDetection()
 
 local webhookSection = Webhook:AddSection("Webhook Settings")
 
--- Fish Webhook URL Input
 webhookSection:AddInput({
     Title = "Fish Webhook URL",
     Default = _G.WebhookFlags.FishCaught.URL,
@@ -2283,7 +2274,6 @@ webhookSection:AddInput({
     end
 })
 
--- Toggle Fish Webhook
 webhookSection:AddToggle({
     Title = "Send Fish Webhook",
     Default = _G.WebhookFlags.FishCaught.Enabled,
@@ -2298,7 +2288,6 @@ webhookSection:AddToggle({
     end
 })
 
--- Test Fish Webhook Button
 webhookSection:AddButton({
     Title = "Test Fish Webhook",
     Content = "Send test message to webhook",
@@ -2349,7 +2338,6 @@ webhookSection:AddButton({
 
 webhookSection:AddDivider()
 
--- Custom Name Input
 webhookSection:AddInput({
     Title = "Custom Name (Optional)",
     Default = _G.WebhookCustomName or "",
@@ -2367,7 +2355,6 @@ webhookSection:AddInput({
 
 local disconnectSection = Webhook:AddSection("Disconnect Alert")
 
--- Disconnect Webhook URL Input
 disconnectSection:AddInput({
     Title = "Disconnect Webhook URL",
     Default = _G.WebhookFlags.Disconnect.URL,
@@ -2386,7 +2373,6 @@ disconnectSection:AddInput({
     end
 })
 
--- Discord ID Input
 disconnectSection:AddInput({
     Title = "Discord ID (Optional)",
     Default = "",
@@ -2406,7 +2392,6 @@ disconnectSection:AddInput({
     end
 })
 
--- Hide Identity Input
 disconnectSection:AddInput({
     Title = "Hide Identity (Optional)",
     Default = _G.DisconnectCustomName or "",
@@ -2422,7 +2407,6 @@ disconnectSection:AddInput({
     end
 })
 
--- Auto Rejoin Toggle
 disconnectSection:AddToggle({
     Title = "Auto Rejoin On Disconnect",
     Content = "Send webhook and rejoin automatically",
@@ -2439,7 +2423,6 @@ disconnectSection:AddToggle({
     end
 })
 
--- Test Disconnect Webhook Button
 disconnectSection:AddButton({
     Title = "Test Disconnect Webhook",
     Content = "Kick yourself and rejoin",
