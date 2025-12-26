@@ -1,12 +1,5 @@
 local AIKO = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/src/Library.lua"))()
 
-AIKO:MakeNotify({
-    Title = "@aikoware",
-    Description = "| Script Loaded",
-    Content = "Game: Diesel 'N Steel",
-    Delay = 5
-})
-
 local Window = AIKO:Window({
     Title = "@aikoware |",
     Footer = " made by untog!",
@@ -153,9 +146,9 @@ local function ResetBoostPower()
     BoostPower = 0
 end
 
-local main = Window:CreateTab({
+local main = Window:AddTab({
     Name = "Main",
-    Icon = "rbxassetid://10723407389"
+    Icon = "player"
 })
 
 local expsec = main:AddSection("Exploit")
@@ -226,10 +219,9 @@ visec:AddParagraph({
 
 visec:AddButton({
     Title = "Add Exp",
-    Content = "Visual but usable in talyer.",
     Callback = function()
         activateExp()
-        Library:MakeNotify({
+        AIKO:MakeNotify({
             Title = "@aikoware",
             Description = "",
             Content = "Exp Added!"
@@ -237,12 +229,12 @@ visec:AddButton({
     end
 })
 
-local info = Window:CreateTab({
+local info = Window:AddTab({
     Name = "Information",
-    Icon = "rbxassetid://10723415903"
+    Icon = "alert"
 })
 
-local infosec = info:AddSection("Info", true")
+local infosec = info:AddSection("Info", true)
 
 infosec:AddParagraph({
     Title = "Warning:",
@@ -261,4 +253,11 @@ infosec:AddParagraph({
             aiko("Successfully Copied!")
         end
     end
+})
+
+AIKO:MakeNotify({
+    Title = "@aikoware",
+    Description = "| Script Loaded",
+    Content = "Game: Diesel 'N Steel",
+    Delay = 5
 })
