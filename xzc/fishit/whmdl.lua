@@ -1,6 +1,3 @@
--- Webhook Module for Fish It
--- Save this as a separate file and load it via loadstring
-
 local WebhookModule = {}
 
 local HttpService = game:GetService("HttpService")
