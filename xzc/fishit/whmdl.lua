@@ -204,7 +204,7 @@ function WebhookModule.SendFishWebhook(fishId, metadata, data)
         embeds = {{
             title = "🎣 FISH CAUGHT",
             description = string.format("**%s** caught a **%s** fish!", playerName, tierName),
-            color = 7419530,
+            color = 5708687,
             fields = {
                 {name = "**Fish:**", value = "`` ❯ " .. fishData.Name .. " ``", inline = false},
                 {name = "**Tier:**", value = "`` ❯ " .. tierName .. " ``", inline = false},
@@ -248,7 +248,8 @@ function WebhookModule.SendDisconnectWebhook(reason)
         content = pingText ~= "" and (pingText .. " Your account got disconnected!") or "Your account got disconnected!",
         embeds = {{
             title = "⚠️ Disconnected Alert!",
-            color = 7419530,
+            description = string.format("**%s** got disconnected from the server", playerName),
+            color = 5708687,
             fields = {
                 {name = "**Username:**", value = "`` ❯ " .. playerName .. " ``", inline = false},
                 {name = "**Time:**", value = "`` ❯ " .. dateTime .. " ``", inline = false},
@@ -330,7 +331,7 @@ function WebhookModule.SendTestWebhook()
     local payload = {
         embeds = {{
             color = 7419530,
-            title = "✅ Webhook Connection Test!"
+            title = "✅ Webhook Connection Test!",
             description = "If you see this message, it means your webhook is working!"
             },
             image = {
