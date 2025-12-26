@@ -248,7 +248,6 @@ function WebhookModule.SendDisconnectWebhook(reason)
         content = pingText ~= "" and (pingText .. " Your account got disconnected!") or "Your account got disconnected!",
         embeds = {{
             title = "⚠️ Disconnected Alert!",
-            description = string.format("**%s** got disconnected from the server", playerName)
             color = 7419530,
             fields = {
                 {name = "**Username:**", value = "`` ❯ " .. playerName .. " ``", inline = false},
@@ -332,7 +331,7 @@ function WebhookModule.SendTestWebhook()
         embeds = {{
             color = 7419530,
             title = "✅ Webhook Connection Test!"
-            description = "If you see this message, your webhook is working correctly!"
+            description = "If you see this message, it means your webhook is working!"
             },
             image = {
                 url = "https://cdn.discordapp.com/attachments/1387681189502124042/1454161899238457571/New_Project.jpg?ex=6950154d&is=694ec3cd&hm=d3d22f3aa93d26b2f80b0b8a136d61269ece8c665a033947c71ae9fc1a7ddfa6&"
