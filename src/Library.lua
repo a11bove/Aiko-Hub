@@ -1589,22 +1589,16 @@ end
         if updateDebounce then return end
         updateDebounce = true
         
-        -- Wait for rendering to complete
         task.wait(0.05)
         
-        -- Get the available width for text
         local availableWidth = Paragraph.AbsoluteSize.X - iconOffset - 6
         
-        -- Set the content size to allow proper text bounds calculation
         ParagraphContent.Size = UDim2.new(0, availableWidth, 0, 1000)
         
-        -- Wait for text bounds to update
         task.wait(0.05)
         
-        -- Get actual text height
         local textHeight = math.max(ParagraphContent.TextBounds.Y, 12)
         
-        -- Calculate total height
         local totalHeight = 25 + textHeight + 8
         
         if ParagraphButton then
@@ -1612,27 +1606,21 @@ end
             totalHeight = totalHeight + ParagraphButton.Size.Y.Offset + 10
         end
         
-        -- Set final content size
         ParagraphContent.Size = UDim2.new(1, -iconOffset - 6, 0, textHeight)
         
-        -- Update paragraph size
         Paragraph.Size = UDim2.new(1, 0, 0, totalHeight)
         
-        -- Update section
         UpdateSizeSection()
         
         updateDebounce = false
     end
 
-    -- Track size changes
     Paragraph:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
         UpdateSize()
     end)
 
-    -- Initial size
     task.spawn(UpdateSize)
 
-    -- Update on text change
     ParagraphContent:GetPropertyChangedSignal("Text"):Connect(function()
         task.spawn(UpdateSize)
     end)
@@ -2551,12 +2539,6 @@ end
     SearchBox.ClearTextOnFocus = false
     SearchBox.Name = "SearchBox"
     SearchBox.Parent = DropdownContainer
-
-    local SearchBoxStroke = Instance.new("UIStroke")
-    SearchBoxStroke.Color = Color3.fromRGB(255, 0, 255)
-    SearchBoxStroke.Thickness = 2
-    SearchBoxStroke.Transparency = 0.8
-    SearchBoxStroke.Parent = SearchBox
 
     local ScrollSelect = Instance.new("ScrollingFrame")
     ScrollSelect.Size = UDim2.new(1, 0, 1, -30)
