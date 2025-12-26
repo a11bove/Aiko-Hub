@@ -1118,77 +1118,48 @@ local MerchantUI = {
     RefreshLabel = PlayerGui.Merchant.Main.Background.RefreshLabel
 }
 
-local function ToggleMerchant(state)
-    local merchant = PlayerGui:FindFirstChild("Merchant")
-    if merchant then
-        merchant.Enabled = state
-    end
-end
-
-local merchantOpen = false
-
-local MerchantStockPanel = merch:AddPanel({
+ShopParagraph = merch:AddParagraph({
     Title = "Merchant Stock:",
-    Content = "Loading merchant stock...",
-    ButtonText = "Toggle Merchant",
-    ButtonCallback = function()
-        merchantOpen = not merchantOpen
-        ToggleMerchant(merchantOpen)
-        
-        MerchantStockPanel:SetButtonText(merchantOpen and "Close Merchant" or "Open Merchant")
-        
-        if merchantOpen then
-            task.wait(0.5)
-            UpdateMerchantPanel()
+    Icon = "shop",
+    Content = "Loading..."
+})
+
+merch:AddButton({
+    Title = "Toggle Merchant UI",
+    Callback = function()
+        local merchant = PlayerGui:FindFirstChild("Merchant")
+        if merchant then
+            merchant.Enabled = not merchant.Enabled
         end
     end
 })
 
-function UpdateMerchantPanel()
-    pcall(function()
-        local items = {}
-        
-        for _, child in ipairs(MerchantUI.ItemsFrame:GetChildren()) do
-            if child:IsA("ImageLabel") and child.Name ~= "Frame" then
-                local frame = child:FindFirstChild("Frame")
-                if frame and frame:FindFirstChild("ItemName") then
-                    local itemName = frame.ItemName.Text
-                    if not string.find(itemName, "Mystery") then
-                        table.insert(items, "- " .. itemName)
-                    end
+function UPX()
+    local items = {}
+    
+    for _, child in ipairs(MerchantUI.ItemsFrame:GetChildren()) do
+        if child:IsA("ImageLabel") and child.Name ~= "Frame" then
+            local frame = child:FindFirstChild("Frame")
+            if frame and frame:FindFirstChild("ItemName") then
+                local itemName = frame.ItemName.Text
+                if not string.find(itemName, "Mystery") then
+                    table.insert(items, "- " .. itemName)
                 end
             end
         end
-        
-        local content = ""
-        
-        if #items > 0 then
-            content = table.concat(items, "\n")
-            
-            if MerchantUI.RefreshLabel and MerchantUI.RefreshLabel.Text then
-                content = content .. "\n\n" .. MerchantUI.RefreshLabel.Text
-            end
-        else
-            content = "No items available in stock"
-            if MerchantUI.RefreshLabel and MerchantUI.RefreshLabel.Text then
-                content = content .. "\n" .. MerchantUI.RefreshLabel.Text
-            end
-        end
-        
-        MerchantStockPanel:SetContent(content)
-    end)
+    end
+    
+    if #items > 0 then
+        ShopParagraph:SetContent(table.concat(items, "\n") .. "\n\n" .. MerchantUI.RefreshLabel.Text)
+    else
+        ShopParagraph:SetContent("No items found\n" .. MerchantUI.RefreshLabel.Text)
+    end
 end
 
 task.spawn(function()
-    while task.wait(2) do
-        if PlayerGui:FindFirstChild("Merchant") and PlayerGui.Merchant.Enabled then
-            UpdateMerchantPanel()
-        end
+    while task.wait(1) do
+        pcall(UPX)
     end
-end)
-
-task.delay(1, function()
-    UpdateMerchantPanel()
 end)
 
 local sell = Shop:AddSection("Sell")
