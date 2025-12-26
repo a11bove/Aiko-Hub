@@ -18,6 +18,26 @@ local Lighting = game:GetService("Lighting")
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local Workspace = game:GetService("Workspace")
 
+local Services = {
+    Players = game:GetService("Players"),
+    RunService = game:GetService("RunService"),
+    HttpService = game:GetService("HttpService"),
+    RS = game:GetService("ReplicatedStorage"),
+    VIM = game:GetService("VirtualInputManager"),
+    TeleportService = game:GetService("TeleportService")
+}
+
+local Player = Services.Players.LocalPlayer
+local PlayerGui = Player.PlayerGui
+local Camera = workspace.CurrentCamera
+
+local Net = Services.RS.Packages._Index["sleitnick_net@0.2.0"].net
+local NetworkFunctions = {
+    UpdateRadar = Net["RF/UpdateFishingRadar"]
+}
+
+_G.httpRequest = syn and syn.request or (http and http.request or http_request or (fluxus and fluxus.request or request))
+
 local net = ReplicatedStorage:WaitForChild("Packages")
     :WaitForChild("_Index")
     :WaitForChild("sleitnick_net@0.2.0")
@@ -98,6 +118,11 @@ local Trade = Window:AddTab({
     Icon = "repeat"
 })
 
+local Webhook = Window:AddTab({
+    Name = "Webhook",
+    Icon = ""
+})
+
 local Misc = Window:AddTab({
     Name = "Misc",
     Icon = "snowflake"
@@ -162,6 +187,24 @@ local autoRECON = srv:AddToggle({
                 end
             end)
         end
+    end
+})
+
+function RejoinServer()
+    local TeleportService = game:GetService("TeleportService")
+    local Player = game:GetService("Players").LocalPlayer
+    TeleportService:Teleport(game.PlaceId, Player)
+end
+
+srv:AddButton({
+    Title = "Rejoin Server",
+    Content = "Teleport back to the same game",
+    Callback = function()
+        aiko("Rejoining server...")
+        task.wait(0.5)
+        local TeleportService = game:GetService("TeleportService")
+        local Player = game:GetService("Players").LocalPlayer
+        TeleportService:Teleport(game.PlaceId, Player)
     end
 })
 
@@ -1072,6 +1115,83 @@ local autobuyweather = ws:AddToggle({
     end
 })
 
+local merch = Shop:AddSection("Merchant")
+
+local MerchantUI = {
+    Main = PlayerGui.Merchant,
+    ItemsFrame = PlayerGui.Merchant.Main.Background.Items.ScrollingFrame,
+    RefreshLabel = PlayerGui.Merchant.Main.Background.RefreshLabel
+}
+
+local function ToggleMerchant(state)
+    local merchant = PlayerGui:FindFirstChild("Merchant")
+    if merchant then
+        merchant.Enabled = state
+    end
+end
+
+function UpdateMerchantPanel(paragraphElement)
+    local items = {}
+    for _, child in ipairs(MerchantUI.ItemsFrame:GetChildren()) do
+        if child:IsA("ImageLabel") and child.Name ~= "Frame" then
+            local frame = child:FindFirstChild("Frame")
+            if frame and frame:FindFirstChild("ItemName") then
+                local itemName = frame.ItemName.Text
+                if not string.find(itemName, "Mystery") then
+                    table.insert(items, "- " .. itemName)
+                end
+            end
+        end
+    end
+    
+    local content = #items > 0 
+        and table.concat(items, "\n") .. "\n\n" .. MerchantUI.RefreshLabel.Text
+        or "No items found\n" .. MerchantUI.RefreshLabel.Text
+    
+    paragraphElement:SetContent(content)
+end
+
+ShopParagraph = merch:AddParagraph({
+    Title = "MERCHANT STOCK PANEL",
+    Content = "Loading..."
+})
+
+local merchantToggle = merch:AddToggle({
+    Title = "Toggle Merchant",
+    Content = "",
+    Default = false,
+    Callback = function(state)
+        ToggleMerchant(state)
+    end
+})
+
+function UpdateMerchantPanel()
+    local items = {}
+    for _, child in ipairs(MerchantUI.ItemsFrame:GetChildren()) do
+        if child:IsA("ImageLabel") and child.Name ~= "Frame" then
+            local frame = child:FindFirstChild("Frame")
+            if frame and frame:FindFirstChild("ItemName") then
+                local itemName = frame.ItemName.Text
+                if not string.find(itemName, "Mystery") then
+                    table.insert(items, "- " .. itemName)
+                end
+            end
+        end
+    end
+    
+    if #items > 0 then
+        ShopParagraph:SetContent(table.concat(items, "\n") .. "\n\n" .. MerchantUI.RefreshLabel.Text)
+    else
+        ShopParagraph:SetContent("No items found\n" .. MerchantUI.RefreshLabel.Text)
+    end
+end
+
+task.spawn(function()
+    while task.wait(1) do
+        pcall(UpdateMerchantPanel)
+    end
+end)
+
 local sell = Shop:AddSection("Sell")
 
 local sellThreshold = 30
@@ -1829,6 +1949,337 @@ autotrade:AddButton({
     end
 })
 
+_G.WebhookFlags = {
+    FishCaught = {
+        Enabled = false,
+        URL = ""
+    },
+    Stats = {
+        Enabled = false,
+        URL = "",
+        Delay = 5
+    },
+    Disconnect = {
+        Enabled = false,
+        URL = ""
+    }
+}
+
+function SendWebhook(webhookUrl, data)
+    if _G.httpRequest and webhookUrl and webhookUrl ~= "" the
+        if not (_G._WebhookLock and _G._WebhookLock[webhookUrl]) then
+            _G._WebhookLock = _G._WebhookLock or {}
+            _G._WebhookLock[webhookUrl] = true
+            
+            task.delay(0.25, function()
+                _G._WebhookLock[webhookUrl] = nil
+            end)
+            
+            pcall(function()
+                _G.httpRequest({
+                    Url = webhookUrl,
+                    Method = "POST",
+                    Headers = {
+                        ["Content-Type"] = "application/json"
+                    },
+                    Body = Services.HttpService:JSONEncode(data)
+                })
+            end)
+        end
+    end
+end
+
+function TestWebhook(webhookUrl)
+    local payload = {
+        embeds = {{
+            color = 44543,
+            author = {
+                name = "Webhook Connected!"
+            },
+            image = {
+                url = "https://cdn.discordapp.com/attachments/1387681189502124042/1449753201044750336/banners_pinterest_654429389618926022.jpg?ex=694e8be2&is=694d3a62&hm=0132945a6bdb1c503a580b4c4a6fbbc55c292301655d3720c1011a50939cdded&"
+            }
+        }},
+        username = "AIKO",
+        avatar_url = "https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png?ex=694f2c2e&is=694ddaae&hm=49285870da8c33345d3a1d592fa0f7d0799b7b592214be2ec53a513751b93ef9&"
+    }
+    
+    SendWebhook(webhookUrl, payload)
+end
+
+function SendDisconnectWebhook(reason)
+    local webhookUrl = _G.WebhookFlags.Disconnect.URL
+    if webhookUrl == "" then return end
+    
+    local playerName = Player.Name
+    local dateTime = os.date("%m/%d/%Y %I:%M %p")
+    
+    local payload = {
+        content = "Account Disconnected!",
+        embeds = {{
+            title = "DISCONNECT ALERT",
+            color = 36863,
+            fields = {
+                {name = "Username", value = "> " .. playerName},
+                {name = "Time", value = "> " .. dateTime},
+                {name = "Reason", value = "> " .. (reason or "Unknown")}
+            }
+        }},
+        username = "AIKO",
+        avatar_url = "https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png?ex=694f2c2e&is=694ddaae&hm=49285870da8c33345d3a1d592fa0f7d0799b7b592214be2ec53a513751b93ef9&"
+    }
+    
+    SendWebhook(webhookUrl, payload)
+    task.wait(2)
+    RejoinServer()
+end
+
+function EnableAutoRejoin(enabled)
+    if enabled then
+        game:GetService("GuiService").ErrorMessageChanged:Connect(function(errorMsg)
+            if errorMsg and errorMsg ~= "" then
+                SendDisconnectWebhook(errorMsg)
+            end
+        end)
+        
+        game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(prompt)
+            if prompt.Name == "ErrorPrompt" then
+                task.wait(1)
+                local textLabel = prompt:FindFirstChildWhichIsA("TextLabel", true)
+                SendDisconnectWebhook(textLabel and textLabel.Text or "Disconnected")
+            end
+        end)
+    end
+end
+
+local webhookSection = Webhook:AddSection("Webhook Settings")
+
+webhookSection:AddInput({
+    Title = "Fish Webhook URL",
+    Default = _G.WebhookFlags.FishCaught.URL,
+    Placeholder = "Paste discord webhook...",
+    Callback = function(url)
+        if url and url:match("discord.com/api/webhooks") then
+            local cleanUrl = url:gsub("discordapp%.com", "discord.com")
+                               :gsub("canary%.discord%.com", "discord.com")
+                               :gsub("ptb%.discord%.com", "discord.com")
+            _G.WebhookFlags.FishCaught.URL = cleanUrl
+            aiko("Fish webhook URL updated!")
+        end
+    end
+})
+
+webhookSection:AddToggle({
+    Title = "Send Fish Webhook",
+    Default = _G.WebhookFlags.FishCaught.Enabled,
+    Callback = function(enabled)
+        _G.WebhookFlags.FishCaught.Enabled = enabled
+        aiko(enabled and "Fish webhook enabled!" or "Fish webhook disabled!")
+    end
+})
+
+webhookSection:AddButton({
+    Title = "Test Fish Webhook",
+    Content = "Send test message to webhook",
+    Callback = function()
+        local webhookUrl = _G.WebhookFlags.FishCaught.URL
+        if webhookUrl and webhookUrl ~= "" then
+            local payload = {
+                embeds = {{
+                    color = 44543,
+                    author = {
+                        name = "Webhook Connection Test!"
+                    },
+                    image = {
+                        url = "https://cdn.discordapp.com/attachments/1387681189502124042/1449753201044750336/banners_pinterest_654429389618926022.jpg?ex=694e8be2&is=694d3a62&hm=0132945a6bdb1c503a580b4c4a6fbbc55c292301655d3720c1011a50939cdded&"
+                    }
+                }},
+                username = "AIKO",
+                avatar_url = " https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png?ex=694f2c2e&is=694ddaae&hm=49285870da8c33345d3a1d592fa0f7d0799b7b592214be2ec53a513751b93ef9& "
+            }
+            
+            SendWebhook(webhookUrl, payload)
+            aiko("Test Webhook sent!")
+        else
+            aiko("Please set webhook URL first!")
+        end
+    end
+})
+
+webhookSection:AddInput({
+    Title = "Stats Webhook URL",
+    Default = _G.WebhookFlags.Stats.URL,
+    Placeholder = "Paste stats webhook...",
+    Callback = function(url)
+        if url and url:match("discord.com/api/webhooks") then
+            local cleanUrl = url:gsub("discordapp%.com", "discord.com")
+            _G.WebhookFlags.Stats.URL = cleanUrl
+            aiko("Stats webhook URL updated!")
+        end
+    end
+})
+
+webhookSection:AddInput({
+    Title = "Stats Delay (Minutes)",
+    Default = tostring(_G.WebhookFlags.Stats.Delay),
+    Placeholder = "Enter delay in minutes...",
+    Callback = function(value)
+        local delay = tonumber(value)
+        if delay and delay >= 1 then
+            _G.WebhookFlags.Stats.Delay = delay
+            aiko("Stats delay set to " .. delay .. " minutes")
+        end
+    end
+})
+
+webhookSection:AddToggle({
+    Title = "Send Stats Webhook",
+    Content = "Auto-send player statistics",
+    Default = _G.WebhookFlags.Stats.Enabled,
+    Callback = function(enabled)
+        _G.WebhookFlags.Stats.Enabled = enabled
+        -- Add your stats webhook loop here
+        aiko(enabled and "Stats webhook enabled!" or "Stats webhook disabled!")
+    end
+})
+
+local disconnectSection = Webhook:AddSection("Disconnect Alert")
+
+disconnectSection:AddInput({
+    Title = "Disconnect Webhook URL",
+    Default = _G.WebhookFlags.Disconnect.URL,
+    Placeholder = "Paste disconnect webhook...",
+    Callback = function(url)
+        if url and url:match("discord.com/api/webhooks") then
+            local cleanUrl = url:gsub("discordapp%.com", "discord.com")
+            _G.WebhookFlags.Disconnect.URL = cleanUrl
+            aiko("Disconnect webhook URL updated!")
+        end
+    end
+})
+
+disconnectSection:AddInput({
+    Title = "Discord ID",
+    Default = "",
+    Placeholder = "Enter your Discord ID for ping...",
+    Callback = function(id)
+        if id and id ~= "" then
+            _G.DiscordPingID = "<@" .. id:gsub("%D", "") .. ">"
+            aiko("Discord ID set!")
+        else
+            _G.DiscordPingID = ""
+        end
+    end
+})
+
+disconnectSection:AddInput({
+    Title = "Hide Identity",
+    Default = _G.DisconnectCustomName or "",
+    Placeholder = "Custom name (blank = use Roblox name)",
+    Callback = function(name)
+        _G.DisconnectCustomName = name
+        aiko("Custom name updated!")
+    end
+})
+
+disconnectSection:AddToggle({
+    Title = "Auto Rejoin On Disconnect",
+    Content = "Send webhook and rejoin automatically",
+    Default = _G.WebhookFlags.Disconnect.Enabled,
+    Callback = function(enabled)
+        _G.WebhookFlags.Disconnect.Enabled = enabled
+        
+        if enabled then
+            local disconnectDetected = false
+            
+            local function handleDisconnect(reason)
+                if not disconnectDetected then
+                    disconnectDetected = true
+                    
+                    local webhookUrl = _G.WebhookFlags.Disconnect.URL
+                    if webhookUrl ~= "" then
+                        local playerName = _G.DisconnectCustomName or Player.Name
+                        local dateTime = os.date("%m/%d/%Y %I:%M %p")
+                        local pingText = _G.DiscordPingID or ""
+                        
+                        local payload = {
+                            content = pingText .. " Your account disconnected!",
+                            embeds = {{
+                                title = "DISCONNECT ALERT",
+                                color = 36863,
+                                fields = {
+                                    {name = "⦿Username:", value = "> " .. playerName},
+                                    {name = "⦿Time:", value = "> " .. dateTime},
+                                    {name = "⦿Reason:", value = "> " .. (reason or "Unknown")}
+                                },
+                                thumbnail = {
+                                    url = "https://cdn.discordapp.com/attachments/1387681189502124042/1449753201044750336/banners_pinterest_654429389618926022.jpg?ex=694e8be2&is=694d3a62&hm=0132945a6bdb1c503a580b4c4a6fbbc55c292301655d3720c1011a50939cdded&"
+                                }
+                            }},
+                            username = "AIKO",
+                            avatar_url = " https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png?ex=694f2c2e&is=694ddaae&hm=49285870da8c33345d3a1d592fa0f7d0799b7b592214be2ec53a513751b93ef9& "
+                        }
+                        
+                        SendWebhook(webhookUrl, payload)
+                    end
+                    
+                    task.wait(2)
+                    game:GetService("TeleportService"):Teleport(game.PlaceId, Player)
+                end
+            end
+            
+            game:GetService("GuiService").ErrorMessageChanged:Connect(function(msg)
+                if msg and msg ~= "" then
+                    handleDisconnect(msg)
+                end
+            end)
+        
+            game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(prompt)
+                if prompt.Name == "ErrorPrompt" then
+                    task.wait(1)
+                    local label = prompt:FindFirstChildWhichIsA("TextLabel", true)
+                    handleDisconnect(label and label.Text or "Disconnected")
+                end
+            end)
+            
+            aiko("Auto-rejoin enabled!")
+        else
+            aiko("Auto-rejoin disabled!")
+        end
+    end
+})
+
+disconnectSection:AddButton({
+    Title = "Test Disconnect Webhook",
+    Content = "Kick yourself and rejoin",
+    Callback = function()
+        aiko("Testing disconnect webhook...")
+        task.wait(1)
+        
+        local webhookUrl = _G.WebhookFlags.Disconnect.URL
+        if webhookUrl ~= "" then
+            local payload = {
+                content = "Test Disconnect - Working!",
+                embeds = {{
+                    title = "Test Successful!",
+                    color = 65280,
+                    fields = {
+                        {name = "Status", value = "Webhook is working correctly!"},
+                        {name = "Action", value = "Rejoining server now..."}
+                    }
+                }},
+                username = "AIKO",
+                avatar_url = " https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png?ex=694f2c2e&is=694ddaae&hm=49285870da8c33345d3a1d592fa0f7d0799b7b592214be2ec53a513751b93ef9& "
+            }
+            
+            SendWebhook(webhookUrl, payload)
+        end
+        
+        task.wait(2)
+        game:GetService("TeleportService"):Teleport(game.PlaceId, Player)
+    end
+})
+
 local MiscModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/fishit/miscmdl.lua"))()
 MiscModule:Initialize()
 
@@ -1971,6 +2422,31 @@ local antiDrown = oxy:AddToggle({
     end,
 })
 
+local zooom = Misc:AddSection("Max Zoom")
+
+function SetMaxZoom(distance)
+    local player = game:GetService("Players").LocalPlayer
+    if player then
+        player.CameraMaxZoomDistance = distance
+        player.CameraMinZoomDistance = distance
+    end
+end
+
+
+local maxzoom = zooom:AddInput({
+    Title = "Camera Max Zoom",
+    Default = "9999",
+    Placeholder = "Enter zoom distance...",
+    Callback = function(value)
+        local zoomDistance = tonumber(value)
+        if zoomDistance and zoomDistance > 0 then
+            Player.CameraMaxZoomDistance = zoomDistance
+            Player.CameraMinZoomDistance = 0.5
+            aiko("Camera zoom set to: " .. zoomDistance)
+        end
+    end
+})
+
 AIKO:MakeNotify({
     Title = "@aikoware",
     Description = "| Script Loaded",
@@ -1978,13 +2454,29 @@ AIKO:MakeNotify({
     Delay = 5
 })
 
+function BypassRadar(enabled)
+    pcall(function()
+        NetworkFunctions.UpdateRadar:InvokeServer(enabled)
+    end)
+end
+
 local radsr = Misc:AddSection("Fishing Radar")
 
 local fishrad = radsr:AddToggle({
+    Title = "Fishing Radar",
+    Default = false,
+    Callback = function(enabled)
+        pcall(function()
+            NetworkFunctions.UpdateRadar:InvokeServer(enabled)
+        end)
+    end
+})
+
+--[[local fishrad = radsr:AddToggle({
     Title = "Fishing Radar",
     Content = "",
     Default = false,
     Callback = function(state)
         MiscModule.FishingRadar:Toggle(state)
     end
-})
+})]]
