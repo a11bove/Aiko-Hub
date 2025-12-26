@@ -1125,68 +1125,121 @@ local function ToggleMerchant(state)
     end
 end
 
-function UpdateMerchantPanel(paragraphElement)
-    local items = {}
-    for _, child in ipairs(MerchantUI.ItemsFrame:GetChildren()) do
-        if child:IsA("ImageLabel") and child.Name ~= "Frame" then
-            local frame = child:FindFirstChild("Frame")
-            if frame and frame:FindFirstChild("ItemName") then
-                local itemName = frame.ItemName.Text
-                if not string.find(itemName, "Mystery") then
-                    table.insert(items, "- " .. itemName)
+-- Create the paragraph element
+local ShopParagraph = merch:AddParagraph({
+    Title = "MERCHANT STOCK PANEL",
+    Icon = "shop",
+    Content = "Loading merchant data..."
+})
+
+-- Function to update merchant panel with proper formatting
+function UpdateMerchantPanel()
+    pcall(function()
+        local items = {}
+        
+        -- Get all items from the merchant
+        for _, child in ipairs(MerchantUI.ItemsFrame:GetChildren()) do
+            if child:IsA("ImageLabel") and child.Name ~= "Frame" then
+                local frame = child:FindFirstChild("Frame")
+                if frame and frame:FindFirstChild("ItemName") then
+                    local itemName = frame.ItemName.Text
+                    -- Filter out Mystery items
+                    if not string.find(itemName, "Mystery") then
+                        table.insert(items, itemName)
+                    end
                 end
             end
         end
-    end
-    
-    local content = #items > 0 
-        and table.concat(items, "\n") .. "\n\n" .. MerchantUI.RefreshLabel.Text
-        or "No items found\n" .. MerchantUI.RefreshLabel.Text
-    
-    paragraphElement:SetContent(content)
+        
+        -- Build the content string with proper formatting
+        local content = ""
+        
+        if #items > 0 then
+            -- Add each item on a new line
+            for i, itemName in ipairs(items) do
+                content = content .. "- " .. itemName
+                if i < #items then
+                    content = content .. "\n"
+                end
+            end
+            
+            -- Add refresh timer at the bottom
+            if MerchantUI.RefreshLabel and MerchantUI.RefreshLabel.Text then
+                content = content .. "\n\n" .. MerchantUI.RefreshLabel.Text
+            end
+        else
+            content = "No items available"
+            if MerchantUI.RefreshLabel and MerchantUI.RefreshLabel.Text then
+                content = content .. "\n" .. MerchantUI.RefreshLabel.Text
+            end
+        end
+        
+        -- Update the paragraph
+        ShopParagraph:SetContent(content)
+    end)
 end
 
-ShopParagraph = merch:AddParagraph({
-    Title = "MERCHANT STOCK PANEL",
-    Icon = "shop",
-    Content = "Loading..."
-})
-
+-- Toggle to show/hide merchant UI
 local merchantToggle = merch:AddToggle({
-    Title = "Toggle Merchant",
-    Content = "",
+    Title = "Toggle Merchant UI",
+    Content = "Show or hide the merchant window",
     Default = false,
     Callback = function(state)
         ToggleMerchant(state)
+        if state then
+            -- Update immediately when opened
+            task.wait(0.5)
+            UpdateMerchantPanel()
+        end
     end
 })
 
-function UpdateMerchantPanel()
-    local items = {}
-    for _, child in ipairs(MerchantUI.ItemsFrame:GetChildren()) do
-        if child:IsA("ImageLabel") and child.Name ~= "Frame" then
-            local frame = child:FindFirstChild("Frame")
-            if frame and frame:FindFirstChild("ItemName") then
-                local itemName = frame.ItemName.Text
-                if not string.find(itemName, "Mystery") then
-                    table.insert(items, "- " .. itemName)
+-- Auto-update loop (runs every 2 seconds)
+task.spawn(function()
+    while task.wait(1) do
+        if PlayerGui:FindFirstChild("Merchant") and PlayerGui.Merchant.Enabled then
+            UpdateMerchantPanel()
+        end
+    end
+end)
+
+--[[
+-- Use this version if the paragraph still doesn't show line breaks properly:
+
+local merchantItems = {}
+local refreshLabelText = "Next Refresh: Loading..."
+
+function UpdateMerchantPanelAlt()
+    pcall(function()
+        merchantItems = {}
+        
+        for _, child in ipairs(MerchantUI.ItemsFrame:GetChildren()) do
+            if child:IsA("ImageLabel") and child.Name ~= "Frame" then
+                local frame = child:FindFirstChild("Frame")
+                if frame and frame:FindFirstChild("ItemName") then
+                    local itemName = frame.ItemName.Text
+                    if not string.find(itemName, "Mystery") then
+                        table.insert(merchantItems, "• " .. itemName)
+                    end
                 end
             end
         end
-    end
-    
-    if #items > 0 then
-        ShopParagraph:SetContent(table.concat(items, "\n") .. "\n\n" .. MerchantUI.RefreshLabel.Text)
-    else
-        ShopParagraph:SetContent("No items found\n" .. MerchantUI.RefreshLabel.Text)
-    end
+        
+        if MerchantUI.RefreshLabel and MerchantUI.RefreshLabel.Text then
+            refreshLabelText = MerchantUI.RefreshLabel.Text
+        end
+        
+        -- Build content with clear separators
+        local content = table.concat(merchantItems, " | ")
+        if content == "" then
+            content = "No items in stock"
+        end
+        content = content .. " — " .. refreshLabelText
+        
+        ShopParagraph:SetContent(content)
+    end)
 end
-
-task.spawn(function()
-    while task.wait(1) do
-        pcall(UpdateMerchantPanel)
-    end
-end)
+--]]
 
 local sell = Shop:AddSection("Sell")
 
@@ -1377,6 +1430,28 @@ local selectFishes = fav:AddDropdown({
 })
 
 local selectRarities = fav:AddDropdown({
+    Title = "Select Rarity (Auto Fav)",
+    Content = "",
+    Options = {"Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Secret"},
+    Multi = true,
+    Default = {},
+    Callback = function(selectedRarities)
+        _G.AutoFavoriteRarities = {}
+        GlobalFav.SelectedRarities = {}
+        
+        for _, rarity in ipairs(selectedRarities) do
+            _G.AutoFavoriteRarities[rarity] = true
+            GlobalFav.SelectedRarities[rarity] = true
+        end
+        
+        local count = 0
+        for _ in pairs(_G.AutoFavoriteRarities) do
+            count = count + 1
+        end
+    end
+})
+
+local selectRarities = fav:AddDropdown({
     Title = "Select Rarity",
     Content = "",
     Options = {"Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Secret"},
@@ -1424,8 +1499,13 @@ GlobalFav.REObtainedNewFishNotification.OnClientEvent:Connect(function(itemId, _
     local shouldFavorite = false
     local reason = ""
 
+    -- Check fish selection
     local isFishSelected = GlobalFav.SelectedFishIds[itemId]
-    local isRaritySelected = GlobalFav.SelectedRarities[tierName]  -- This now uses _G.AutoFavoriteRarities
+    
+    -- Check rarity selection (using the lookup table)
+    local isRaritySelected = GlobalFav.SelectedRarities[tierName] == true
+    
+    -- Check variant selection
     local isVariantSelected = variantId and GlobalFav.SelectedVariants[variantId]
 
     if isFishSelected then
@@ -1462,6 +1542,7 @@ fav:AddButton({
     Title = "Clear Rarity Selection",
     Content = "Clear all selected rarities",
     Callback = function()
+        _G.AutoFavoriteRarities = {}
         GlobalFav.SelectedRarities = {}
         AIKO:MakeNotify({
             Title = "@aikoware",
@@ -2011,14 +2092,18 @@ local whfish = webhookSection:AddToggle({
 })
 
 local whrarity = webhookSection:AddDropdown({
-    Title = "Select Rarity",
+    Title = "Select Rarity (Webhook)",
     Content = "Only send these rarities (empty = all)",
-    Options = WebhookModule.GetRarityList(),
+    Options = {"Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Secret"},
     Multi = true,
-    Default = _G.WebhookRarities or {},
+    Default = {},
     Callback = function(selected)
-        _G.WebhookRarities = selected
-        local count = #selected
+        _G.WebhookRarities = {}
+        for i, rarity in ipairs(selected) do
+            _G.WebhookRarities[i] = rarity
+        end
+        
+        local count = #_G.WebhookRarities
     end
 })
 
@@ -2263,7 +2348,7 @@ local xpProgress = xpb:AddToggle({
     end
 })
 
-local oxy = Misc:AddSection("Oxygen")
+local oxy = Misc:AddSection("Infinite Oxygen")
 
 local antiDrown = oxy:AddToggle({
     Title = "Anti Drown",
@@ -2293,7 +2378,7 @@ end
 
 local maxzoom = zooom:AddInput({
     Title = "Camera Max Zoom",
-    Default = "9999",
+    Default = "128",
     Placeholder = "Enter zoom distance...",
     Callback = function(value)
         local zoomDistance = tonumber(value)
@@ -2329,12 +2414,3 @@ local fishrad = radsr:AddToggle({
         end)
     end
 })
-
---[[local fishrad = radsr:AddToggle({
-    Title = "Fishing Radar",
-    Content = "",
-    Default = false,
-    Callback = function(state)
-        MiscModule.FishingRadar:Toggle(state)
-    end
-})]]
