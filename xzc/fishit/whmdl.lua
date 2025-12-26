@@ -5,7 +5,6 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Player = Players.LocalPlayer
 
--- Initialize global variables
 _G.httpRequest = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
 
 _G.WebhookFlags = _G.WebhookFlags or {
@@ -30,7 +29,6 @@ _G.DisconnectCustomName = _G.DisconnectCustomName or ""
 _G.WebhookRarities = _G.WebhookRarities or {}
 _G.WebhookNames = _G.WebhookNames or {}
 
--- Tier Names Mapping
 local TierNames = {
     ["Common"] = "Common",
     ["Uncommon"] = "Uncommon", 
@@ -50,7 +48,6 @@ local TierNames = {
     [0] = "Common"
 }
 
--- Tier Colors for Embeds
 local TierColors = {
     Common = 9807270,      
     Uncommon = 3066993,    
@@ -61,10 +58,8 @@ local TierColors = {
     Secret = 16777215      
 }
 
--- Fish Database
 local FishDatabase = {}
 
--- Send Webhook Function
 function WebhookModule.SendWebhook(url, data)
     if not _G.httpRequest then
         return false
@@ -102,7 +97,6 @@ function WebhookModule.SendWebhook(url, data)
     return true
 end
 
--- Build Fish Database
 function WebhookModule.BuildFishDatabase()
     local itemsFolder = ReplicatedStorage:FindFirstChild("Items")
     if not itemsFolder then
@@ -133,7 +127,6 @@ function WebhookModule.BuildFishDatabase()
     return count
 end
 
--- Get Thumbnail URL
 function WebhookModule.GetThumbnailURL(assetId)
     if not assetId or assetId == "" then return nil end
     
@@ -154,29 +147,19 @@ function WebhookModule.GetTierName(tier)
     end
 end
 
--- Get Variant Name
+-- Get Variant Name (Using Auto-Favorite Logic)
 function WebhookModule.GetVariantName(metadata, data)
     local variant = "None"
-    local variantId = nil
+    local variantId = data and data.InventoryItem and data.InventoryItem.Metadata and data.InventoryItem.Metadata.VariantId
     
-    -- Try to get variant ID from metadata first
-    if metadata and metadata.VariantId then
-        variantId = metadata.VariantId
-    elseif data and data.InventoryItem and data.InventoryItem.Metadata and data.InventoryItem.Metadata.VariantId then
-        variantId = data.InventoryItem.Metadata.VariantId
-    end
-    
-    -- If we found a variant ID, look it up
     if variantId then
         local variantFolder = ReplicatedStorage:FindFirstChild("Variants")
         if variantFolder then
             for _, v in ipairs(variantFolder:GetChildren()) do
-                if v:IsA("ModuleScript") then
-                    local ok, vData = pcall(require, v)
-                    if ok and vData and vData.Data and vData.Data.Id == variantId then
-                        variant = vData.Data.Name or "Unknown"
-                        break
-                    end
+                local ok, vData = pcall(require, v)
+                if ok and vData.Data and vData.Data.Id == variantId then
+                    variant = vData.Data.Name or "Unknown"
+                    break
                 end
             end
         end
@@ -185,7 +168,6 @@ function WebhookModule.GetVariantName(metadata, data)
     return variant
 end
 
--- Send Fish Caught Webhook
 function WebhookModule.SendFishWebhook(fishId, metadata, data)
     if not _G.WebhookFlags.FishCaught.Enabled then return end
     
@@ -201,14 +183,12 @@ function WebhookModule.SendFishWebhook(fishId, metadata, data)
     
     local tierName = WebhookModule.GetTierName(fishData.Tier)
     
-    -- Check rarity filter
     if _G.WebhookRarities and #_G.WebhookRarities > 0 then
         if not table.find(_G.WebhookRarities, tierName) then
             return
         end
     end
     
-    -- Check name filter
     if _G.WebhookNames and #_G.WebhookNames > 0 then
         if not table.find(_G.WebhookNames, fishData.Name) then
             return
@@ -216,7 +196,7 @@ function WebhookModule.SendFishWebhook(fishId, metadata, data)
     end
     
     local weight = metadata and metadata.Weight and string.format("%.2f Kg", metadata.Weight) or "N/A"
-    local variant = WebhookModule.GetVariantName(metadata, data)
+    local variant = WebhookModule.GetVariantName(metadata, data)  -- Pass both parameters
     local embedColor = TierColors[tierName] or 52221
     local playerName = _G.WebhookCustomName ~= "" and _G.WebhookCustomName or Player.Name
     
@@ -247,7 +227,6 @@ function WebhookModule.SendFishWebhook(fishId, metadata, data)
     WebhookModule.SendWebhook(webhookUrl, payload)
 end
 
--- Send Disconnect Webhook
 local disconnectHandled = false
 
 function WebhookModule.SendDisconnectWebhook(reason)
@@ -288,7 +267,6 @@ function WebhookModule.SendDisconnectWebhook(reason)
     game:GetService("TeleportService"):Teleport(game.PlaceId, Player)
 end
 
--- Setup Fish Webhook Listener
 function WebhookModule.SetupFishListener()
     if _G.FishWebhookConnected then return end
     _G.FishWebhookConnected = true
@@ -310,7 +288,6 @@ function WebhookModule.SetupFishListener()
     end)
 end
 
--- Setup Disconnect Detection
 function WebhookModule.SetupDisconnectDetection()
     if _G.DisconnectDetectionSetup then return end
     _G.DisconnectDetectionSetup = true
@@ -342,7 +319,6 @@ function WebhookModule.SetupDisconnectDetection()
     end)
 end
 
--- Send Test Webhook
 function WebhookModule.SendTestWebhook()
     local webhookUrl = _G.WebhookFlags.FishCaught.URL
     if not webhookUrl or webhookUrl == "" then
@@ -372,7 +348,6 @@ function WebhookModule.SendTestWebhook()
     end
 end
 
--- Send Test Disconnect Webhook
 function WebhookModule.SendTestDisconnectWebhook()
     local webhookUrl = _G.WebhookFlags.Disconnect.URL
     if not webhookUrl or webhookUrl == "" then
@@ -401,7 +376,6 @@ function WebhookModule.SendTestDisconnectWebhook()
     return true, "Test webhook sent, rejoining..."
 end
 
--- Clean URL Function
 function WebhookModule.CleanWebhookURL(url)
     if url and url:match("discord.com/api/webhooks") then
         return url:gsub("discordapp%.com", "discord.com")
@@ -411,15 +385,12 @@ function WebhookModule.CleanWebhookURL(url)
     return url
 end
 
--- Initialize Module
 function WebhookModule.Initialize()
-    -- Build fish database
     local count = WebhookModule.BuildFishDatabase()
     print("[Webhook System] Initialized successfully!")
     print("[Webhook] Fish Database: " .. count .. " entries")
     print("[Webhook] HTTP Request: " .. (_G.httpRequest and "✅ Available" or "❌ NOT AVAILABLE"))
     
-    -- Setup listeners
     WebhookModule.SetupFishListener()
     print("[Webhook] Fish Listener: ✅ Connected")
     
@@ -429,17 +400,14 @@ function WebhookModule.Initialize()
     return WebhookModule
 end
 
--- Get Fish Database (for external access)
 function WebhookModule.GetFishDatabase()
     return FishDatabase
 end
 
--- Get Tier Colors (for external access)
 function WebhookModule.GetTierColors()
     return TierColors
 end
 
--- Get Tier Names (for external access)
 function WebhookModule.GetTierNames()
     return TierNames
 end
