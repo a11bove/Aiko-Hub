@@ -1949,6 +1949,165 @@ autotrade:AddButton({
     end
 })
 
+-- ============================================
+-- FISH WEBHOOK SYSTEM
+-- ============================================
+local REObtainedNewFishNotification = NetFolder:WaitForChild("RE/ObtainedNewFishNotification")
+
+-- Fish Database
+local FishDatabase = {}
+
+local function BuildFishDatabase()
+    local itemsFolder = Services.ReplicatedStorage:WaitForChild("Items")
+    
+    for _, item in ipairs(itemsFolder:GetChildren()) do
+        local success, data = pcall(require, item)
+        if success and type(data) == "table" and data.Data and data.Data.Type == "Fishes" then
+            local fishData = data.Data
+            FishDatabase[fishData.Id] = {
+                Name = fishData.Name,
+                Tier = fishData.Tier,
+                Icon = fishData.Icon,
+                SellPrice = data.SellPrice
+            }
+        end
+    end
+end
+
+-- Get Thumbnail URL
+local function GetThumbnailURL(assetId)
+    local id = assetId:match("rbxassetid://(%d+)")
+    if not id then return nil end
+    
+    local url = string.format("https://thumbnails.roblox.com/v1/assets?assetIds=%s&type=Asset&size=420x420&format=Png", id)
+    
+    local success, response = pcall(function()
+        return Services.HttpService:JSONDecode(game:HttpGet(url))
+    end)
+    
+    if success and response and response.data and response.data[1] then
+        return response.data[1].imageUrl
+    end
+    
+    return nil
+end
+
+-- Tier Names
+local TierNames = {
+    [0] = "Common",
+    [1] = "Uncommon",
+    [2] = "Rare",
+    [3] = "Epic",
+    [4] = "Legendary",
+    [5] = "Mythic",
+    [6] = "Secret"
+}
+
+-- Send Fish Webhook
+local function SendFishWebhook(fishId, metadata)
+    if not _G.WebhookFlags.FishCaught.Enabled then return end
+    
+    local webhookUrl = _G.WebhookFlags.FishCaught.URL
+    if not webhookUrl or webhookUrl == "" then return end
+    
+    local fishData = FishDatabase[fishId]
+    if not fishData then return end
+    
+    local tierName = TierNames[fishData.Tier] or "Unknown"
+    
+    -- Check rarity filter
+    if _G.WebhookRarities and #_G.WebhookRarities > 0 then
+        if not table.find(_G.WebhookRarities, tierName) then
+            return
+        end
+    end
+    
+    -- Check name filter
+    if _G.WebhookNames and #_G.WebhookNames > 0 then
+        if not table.find(_G.WebhookNames, fishData.Name) then
+            return
+        end
+    end
+    
+    local weight = metadata and metadata.Weight and string.format("%.2f Kg", metadata.Weight) or "N/A"
+    local variant = metadata and metadata.VariantId and tostring(metadata.VariantId) or "None"
+    local sellPrice = fishData.SellPrice and ("$" .. tostring(fishData.SellPrice)) or "N/A"
+    local playerName = _G.WebhookCustomName ~= "" and _G.WebhookCustomName or Player.Name
+    
+    local payload = {
+        embeds = {{
+            title = "🎣 Fish Caught!",
+            url = "https://discord.gg/PaPvGUE8UC",
+            description = string.format("**%s** caught a **%s** fish!", playerName, tierName),
+            color = 52221,
+            fields = {
+                {name = "⦿ Fish Name:", value = "```❯ " .. fishData.Name .. "```"},
+                {name = "⦿ Fish Tier:", value = "```❯ " .. tierName .. "```"},
+                {name = "⦿ Weight:", value = "```❯ " .. weight .. "```"},
+                {name = "⦿ Mutation:", value = "```❯ " .. variant .. "```"},
+                {name = "⦿ Sell Price:", value = "```❯ " .. sellPrice .. "```"}
+            },
+            image = {
+                url = GetThumbnailURL(fishData.Icon) or "https://i.imgur.com/WltO8IG.png"
+            },
+            footer = {
+                text = "AIKO",
+                icon_url = "https://i.imgur.com/WltO8IG.png"
+            },
+            timestamp = os.date("!%Y-%m-%dT%H:%M:%S.000Z")
+        }},
+        username = "AIKO",
+        avatar_url = " https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png?ex=694f2c2e&is=694ddaae&hm=49285870da8c33345d3a1d592fa0f7d0799b7b592214be2ec53a513751b93ef9& "
+    }
+    
+    SendWebhook(webhookUrl, payload)
+end
+
+BuildFishDatabase()
+
+if not _G.FishWebhookConnected then
+    _G.FishWebhookConnected = true
+    
+    REObtainedNewFishNotification.OnClientEvent:Connect(function(fishId, _, data)
+        local metadata = data and data.InventoryItem and data.InventoryItem.Metadata
+        SendFishWebhook(fishId, metadata)
+    end)
+    
+    print("[Webhook] Fish notification connected!")
+end
+
+function SendWebhook(url, data)
+    if _G.httpRequest and url and url ~= "" then
+        if not (_G._WebhookLock and _G._WebhookLock[url]) then
+            _G._WebhookLock = _G._WebhookLock or {}
+            _G._WebhookLock[url] = true
+            
+            task.delay(0.25, function()
+                _G._WebhookLock[url] = nil
+            end)
+            
+            pcall(function()
+                _G.httpRequest({
+                    Url = url,
+                    Method = "POST",
+                    Headers = {
+                        ["Content-Type"] = "application/json"
+                    },
+                    Body = Services.HttpService:JSONEncode(data)
+                })
+            end)
+        end
+    end
+end
+
+function aiko(message, duration)
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "@aikoware",
+        Text = message,
+        Duration = duration or 3
+    })
+end
+
 _G.WebhookFlags = {
     FishCaught = {
         Enabled = false,
