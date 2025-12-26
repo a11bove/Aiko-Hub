@@ -1125,86 +1125,11 @@ local function ToggleMerchant(state)
     end
 end
 
--- Create the paragraph element
 local ShopParagraph = merch:AddParagraph({
-    Title = "MERCHANT STOCK PANEL",
+    Title = "Merchant Stock:",
     Icon = "shop",
     Content = "Loading merchant data..."
 })
-
--- Function to update merchant panel with proper formatting
-function UpdateMerchantPanel()
-    pcall(function()
-        local items = {}
-        
-        -- Get all items from the merchant
-        for _, child in ipairs(MerchantUI.ItemsFrame:GetChildren()) do
-            if child:IsA("ImageLabel") and child.Name ~= "Frame" then
-                local frame = child:FindFirstChild("Frame")
-                if frame and frame:FindFirstChild("ItemName") then
-                    local itemName = frame.ItemName.Text
-                    -- Filter out Mystery items
-                    if not string.find(itemName, "Mystery") then
-                        table.insert(items, itemName)
-                    end
-                end
-            end
-        end
-        
-        -- Build the content string with proper formatting
-        local content = ""
-        
-        if #items > 0 then
-            -- Add each item on a new line
-            for i, itemName in ipairs(items) do
-                content = content .. "- " .. itemName
-                if i < #items then
-                    content = content .. "\n"
-                end
-            end
-            
-            -- Add refresh timer at the bottom
-            if MerchantUI.RefreshLabel and MerchantUI.RefreshLabel.Text then
-                content = content .. "\n\n" .. MerchantUI.RefreshLabel.Text
-            end
-        else
-            content = "No items available"
-            if MerchantUI.RefreshLabel and MerchantUI.RefreshLabel.Text then
-                content = content .. "\n" .. MerchantUI.RefreshLabel.Text
-            end
-        end
-        
-        -- Update the paragraph
-        ShopParagraph:SetContent(content)
-    end)
-end
-
--- Toggle to show/hide merchant UI
-local merchantToggle = merch:AddToggle({
-    Title = "Toggle Merchant UI",
-    Content = "Show or hide the merchant window",
-    Default = false,
-    Callback = function(state)
-        ToggleMerchant(state)
-        if state then
-            -- Update immediately when opened
-            task.wait(0.5)
-            UpdateMerchantPanel()
-        end
-    end
-})
-
--- Auto-update loop (runs every 2 seconds)
-task.spawn(function()
-    while task.wait(1) do
-        if PlayerGui:FindFirstChild("Merchant") and PlayerGui.Merchant.Enabled then
-            UpdateMerchantPanel()
-        end
-    end
-end)
-
---[[
--- Use this version if the paragraph still doesn't show line breaks properly:
 
 local merchantItems = {}
 local refreshLabelText = "Next Refresh: Loading..."
@@ -1229,7 +1154,6 @@ function UpdateMerchantPanelAlt()
             refreshLabelText = MerchantUI.RefreshLabel.Text
         end
         
-        -- Build content with clear separators
         local content = table.concat(merchantItems, " | ")
         if content == "" then
             content = "No items in stock"
@@ -1239,7 +1163,27 @@ function UpdateMerchantPanelAlt()
         ShopParagraph:SetContent(content)
     end)
 end
---]]
+
+local merchantToggle = merch:AddToggle({
+    Title = "Toggle Merchant UI",
+    Content = "Show or hide the merchant window",
+    Default = false,
+    Callback = function(state)
+        ToggleMerchant(state)
+        if state then
+            task.wait(0.5)
+            UpdateMerchantPanel()
+        end
+    end
+})
+
+task.spawn(function()
+    while task.wait(1) do
+        if PlayerGui:FindFirstChild("Merchant") and PlayerGui.Merchant.Enabled then
+            UpdateMerchantPanel()
+        end
+    end
+end)
 
 local sell = Shop:AddSection("Sell")
 
