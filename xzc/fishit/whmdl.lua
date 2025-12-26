@@ -5,7 +5,6 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Player = Players.LocalPlayer
 
--- Initialize global variables
 _G.httpRequest = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
 
 _G.WebhookFlags = _G.WebhookFlags or {
@@ -29,9 +28,7 @@ _G.DiscordPingID = _G.DiscordPingID or ""
 _G.DisconnectCustomName = _G.DisconnectCustomName or ""
 _G.WebhookRarities = _G.WebhookRarities or {}
 _G.WebhookFishNames = _G.WebhookFishNames or {}
-_G.WebhookDebugMode = false
 
--- Tier Names Mapping
 local TierNames = {
     ["Common"] = "Common",
     ["Uncommon"] = "Uncommon", 
@@ -51,7 +48,6 @@ local TierNames = {
     [0] = "Common"
 }
 
--- Tier Colors for Embeds
 local TierColors = {
     Common = 9807270,      
     Uncommon = 3066993,    
@@ -62,21 +58,14 @@ local TierColors = {
     Secret = 16777215      
 }
 
--- Fish Database
 local FishDatabase = {}
 
--- Variant Cache
-local VariantCache = {}
-
--- Send Webhook Function
 function WebhookModule.SendWebhook(url, data)
     if not _G.httpRequest then
-        warn("[Webhook] HTTP Request not available")
         return false
     end
     
     if not url or url == "" then
-        warn("[Webhook] No URL provided")
         return false
     end
     
@@ -102,18 +91,15 @@ function WebhookModule.SendWebhook(url, data)
     end)
     
     if not success then
-        warn("[Webhook] Failed to send:", err)
         return false
     end
     
     return true
 end
 
--- Build Fish Database
 function WebhookModule.BuildFishDatabase()
     local itemsFolder = ReplicatedStorage:FindFirstChild("Items")
     if not itemsFolder then
-        warn("[Webhook] Items folder not found")
         return 0
     end
     
@@ -141,34 +127,6 @@ function WebhookModule.BuildFishDatabase()
     return count
 end
 
--- Build Variant Cache
-function WebhookModule.BuildVariantCache()
-    local variantFolder = ReplicatedStorage:FindFirstChild("Variants")
-    if not variantFolder then
-        warn("[Webhook] Variants folder not found")
-        return 0
-    end
-    
-    local count = 0
-    for _, variantModule in ipairs(variantFolder:GetChildren()) do
-        if variantModule:IsA("ModuleScript") then
-            local success, vData = pcall(require, variantModule)
-            if success and vData and vData.Data then
-                local id = vData.Data.Id
-                local name = vData.Data.Name
-                if id and name then
-                    VariantCache[id] = name
-                    VariantCache[tostring(id)] = name  -- Also cache as string
-                    count = count + 1
-                end
-            end
-        end
-    end
-    
-    return count
-end
-
--- Get Thumbnail URL
 function WebhookModule.GetThumbnailURL(assetId)
     if not assetId or assetId == "" then return nil end
     
@@ -178,7 +136,6 @@ function WebhookModule.GetThumbnailURL(assetId)
     return string.format("https://assetdelivery.roblox.com/v1/asset/?id=%s", id)
 end
 
--- Get Tier Name
 function WebhookModule.GetTierName(tier)
     if type(tier) == "string" then
         return TierNames[tier] or tier
@@ -189,46 +146,20 @@ function WebhookModule.GetTierName(tier)
     end
 end
 
--- Debug print function
-local function debugPrint(...)
-    if _G.WebhookDebugMode then
-        print("[Webhook Debug]", ...)
-    end
-end
-
--- Get Variant Name (SIMPLIFIED - Based on actual game structure)
 function WebhookModule.GetVariantName(fishId, metadata, data)
     local variant = "None"
     
-    -- Debug output
-    if _G.WebhookDebugMode then
-        debugPrint("=== VARIANT DEBUG ===")
-        debugPrint("Fish ID:", fishId)
-        
-        if data and data.InventoryItem and data.InventoryItem.Metadata then
-            debugPrint("Data.InventoryItem: exists")
-            debugPrint("Data.InventoryItem.Metadata: exists")
-            debugPrint("Full Metadata:", HttpService:JSONEncode(data.InventoryItem.Metadata))
-        end
-    end
-    
-    -- The game stores the variant NAME directly in VariantId field
     if data and data.InventoryItem and data.InventoryItem.Metadata then
         local variantName = data.InventoryItem.Metadata.VariantId
         
         if variantName and type(variantName) == "string" and variantName ~= "" then
             variant = variantName
-            debugPrint("Found variant name:", variant)
         end
     end
-    
-    debugPrint("Final variant:", variant)
-    debugPrint("===================")
     
     return variant
 end
 
--- Send Fish Caught Webhook
 function WebhookModule.SendFishWebhook(fishId, metadata, data)
     if not _G.WebhookFlags.FishCaught.Enabled then return end
     
@@ -239,13 +170,11 @@ function WebhookModule.SendFishWebhook(fishId, metadata, data)
     
     local fishData = FishDatabase[fishId]
     if not fishData then 
-        debugPrint("Fish ID not found in database:", fishId)
         return 
     end
     
     local tierName = WebhookModule.GetTierName(fishData.Tier)
     
-    -- Check rarity filter
     if _G.WebhookRarities and #_G.WebhookRarities > 0 then
         local found = false
         for _, rarity in ipairs(_G.WebhookRarities) do
@@ -255,15 +184,12 @@ function WebhookModule.SendFishWebhook(fishId, metadata, data)
             end
         end
         if not found then
-            debugPrint("Fish filtered out by rarity:", tierName)
             return
         end
     end
     
-    -- Check name filter
     if _G.WebhookFishNames and #_G.WebhookFishNames > 0 then
         if not table.find(_G.WebhookFishNames, fishData.Name) then
-            debugPrint("Fish filtered out by name:", fishData.Name)
             return
         end
     end
@@ -289,7 +215,7 @@ function WebhookModule.SendFishWebhook(fishId, metadata, data)
             },
             footer = {
                 text = "@aikoware Webhook",
-                icon_url = "https://i.imgur.com/WltO8IG.png"
+                --icon_url = "https://i.imgur.com/WltO8IG.png"
             },
             timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
         }},
@@ -300,7 +226,6 @@ function WebhookModule.SendFishWebhook(fishId, metadata, data)
     WebhookModule.SendWebhook(webhookUrl, payload)
 end
 
--- Send Disconnect Webhook
 local disconnectHandled = false
 
 function WebhookModule.SendDisconnectWebhook(reason)
@@ -341,7 +266,6 @@ function WebhookModule.SendDisconnectWebhook(reason)
     game:GetService("TeleportService"):Teleport(game.PlaceId, Player)
 end
 
--- Setup Fish Webhook Listener
 function WebhookModule.SetupFishListener()
     if _G.FishWebhookConnected then return end
     _G.FishWebhookConnected = true
@@ -363,7 +287,6 @@ function WebhookModule.SetupFishListener()
     end)
 end
 
--- Setup Disconnect Detection
 function WebhookModule.SetupDisconnectDetection()
     if _G.DisconnectDetectionSetup then return end
     _G.DisconnectDetectionSetup = true
@@ -395,7 +318,6 @@ function WebhookModule.SetupDisconnectDetection()
     end)
 end
 
--- Send Test Webhook
 function WebhookModule.SendTestWebhook()
     local webhookUrl = _G.WebhookFlags.FishCaught.URL
     if not webhookUrl or webhookUrl == "" then
@@ -425,7 +347,6 @@ function WebhookModule.SendTestWebhook()
     end
 end
 
--- Send Test Disconnect Webhook
 function WebhookModule.SendTestDisconnectWebhook()
     local webhookUrl = _G.WebhookFlags.Disconnect.URL
     if not webhookUrl or webhookUrl == "" then
@@ -454,7 +375,6 @@ function WebhookModule.SendTestDisconnectWebhook()
     return true, "Test webhook sent, rejoining..."
 end
 
--- Clean URL Function
 function WebhookModule.CleanWebhookURL(url)
     if url and url:match("discord.com/api/webhooks") then
         return url:gsub("discordapp%.com", "discord.com")
@@ -464,45 +384,25 @@ function WebhookModule.CleanWebhookURL(url)
     return url
 end
 
--- Get available rarities list
 function WebhookModule.GetRarityList()
     return {"Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Secret"}
 end
 
--- Initialize Module
 function WebhookModule.Initialize()
-    -- Build fish database
     local fishCount = WebhookModule.BuildFishDatabase()
-    print("[Webhook System] Initialized successfully!")
-    print("[Webhook] Fish Database: " .. fishCount .. " entries")
-    
-    -- Build variant cache
-    local variantCount = WebhookModule.BuildVariantCache()
-    print("[Webhook] Variant Cache: " .. variantCount .. " entries")
-    
-    print("[Webhook] HTTP Request: " .. (_G.httpRequest and "✅ Available" or "❌ NOT AVAILABLE"))
-    
-    -- Setup listeners
     WebhookModule.SetupFishListener()
-    print("[Webhook] Fish Listener: ✅ Connected")
-    
     WebhookModule.SetupDisconnectDetection()
-    print("[Webhook] Disconnect Detection: ✅ Setup")
-    
     return WebhookModule
 end
 
--- Get Fish Database (for external access)
 function WebhookModule.GetFishDatabase()
     return FishDatabase
 end
 
--- Get Tier Colors (for external access)
 function WebhookModule.GetTierColors()
     return TierColors
 end
 
--- Get Tier Names (for external access)
 function WebhookModule.GetTierNames()
     return TierNames
 end
