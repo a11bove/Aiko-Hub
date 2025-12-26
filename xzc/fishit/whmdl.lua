@@ -150,10 +150,15 @@ function WebhookModule.GetVariantName(fishId, metadata, data)
     local variant = "None"
     
     if data and data.InventoryItem and data.InventoryItem.Metadata then
-        local variantName = data.InventoryItem.Metadata.VariantId
+        local variantId = data.InventoryItem.Metadata.VariantId
         
-        if variantName and type(variantName) == "string" and variantName ~= "" then
-            variant = variantName
+        if variantId and type(variantId) == "string" and variantId ~= "" then
+            variant = variantId
+        end
+    elseif metadata and metadata.VariantId then
+        local variantId = metadata.VariantId
+        if variantId and type(variantId) == "string" and variantId ~= "" then
+            variant = variantId
         end
     end
     
@@ -194,8 +199,15 @@ function WebhookModule.SendFishWebhook(fishId, metadata, data)
         end
     end
     
-    local weight = metadata and metadata.Weight and string.format("%.2f Kg", metadata.Weight) or "N/A"
+    local weight = "N/A"
+    if metadata and metadata.Weight then
+        weight = string.format("%.2f Kg", metadata.Weight)
+    elseif data and data.InventoryItem and data.InventoryItem.Metadata and data.InventoryItem.Metadata.Weight then
+        weight = string.format("%.2f Kg", data.InventoryItem.Metadata.Weight)
+    end
+    
     local variant = WebhookModule.GetVariantName(fishId, metadata, data)
+    
     local embedColor = TierColors[tierName] or 52221
     local playerName = _G.WebhookCustomName ~= "" and _G.WebhookCustomName or Player.Name
     
@@ -205,17 +217,16 @@ function WebhookModule.SendFishWebhook(fishId, metadata, data)
             description = string.format("**%s** caught a **%s** fish!", playerName, tierName),
             color = embedColor,
             fields = {
-                {name = "**Fish Name:**", value = "❯ " .. fishData.Name, inline = false},
-                {name = "**Rarity:**", value = "❯ " .. tierName, inline = false},
-                {name = "**Weight:**", value = "❯ " .. weight, inline = true},
-                {name = "**Mutation:**", value = "❯ " .. variant, inline = true}
+                {name = "**Fish Name:**", value = "├ " .. fishData.Name, inline = false},
+                {name = "**Rarity:**", value = "├ " .. tierName, inline = false},
+                {name = "**Weight:**", value = "├ " .. weight, inline = true},
+                {name = "**Mutation:**", value = "├ " .. variant, inline = true}
             },
             thumbnail = {
                 url = WebhookModule.GetThumbnailURL(fishData.Icon) or "https://i.imgur.com/WltO8IG.png"
             },
             footer = {
                 text = "@aikoware Webhook",
-                --icon_url = "https://i.imgur.com/WltO8IG.png"
             },
             timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
         }},
