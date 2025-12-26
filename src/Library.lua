@@ -1558,12 +1558,8 @@ end
     ParagraphContent.Position = UDim2.new(0, iconOffset, 0, 25)
     ParagraphContent.Name = "ParagraphContent"
     ParagraphContent.RichText = true
+    ParagraphContent.TextWrapped = true  -- Enable text wrapping by default
     ParagraphContent.Parent = Paragraph
-
-    -- Calculate proper size with text wrapping
-    ParagraphContent.Size = UDim2.new(1, -iconOffset - 6, 0, 12 + (12 * (ParagraphContent.TextBounds.X // ParagraphContent.AbsoluteSize.X)))
-    ParagraphContent.TextWrapped = true
-    Paragraph.Size = UDim2.new(1, 0, 0, ParagraphContent.AbsoluteSize.Y + 33)
 
     local ParagraphButton
     if ParagraphConfig.ButtonText then
@@ -1589,26 +1585,46 @@ end
     end
 
     local function UpdateSize()
-        ParagraphContent.TextWrapped = false
-        ParagraphContent.Size = UDim2.new(1, -iconOffset - 6, 0, 12 + (12 * (ParagraphContent.TextBounds.X // ParagraphContent.AbsoluteSize.X)))
-        ParagraphContent.TextWrapped = true
+        -- Wait for text to render
+        task.wait()
         
-        local totalHeight = ParagraphContent.AbsoluteSize.Y + 33
+        -- Calculate the actual text height based on TextBounds
+        local textHeight = ParagraphContent.TextBounds.Y
+        
+        -- Calculate total height
+        local totalHeight = 25 + textHeight + 8  -- 25 (top padding) + text height + 8 (bottom padding)
+        
         if ParagraphButton then
-            totalHeight = totalHeight + ParagraphButton.Size.Y.Offset + 5
+            ParagraphButton.Position = UDim2.new(0, 10, 0, totalHeight - 5)
+            totalHeight = totalHeight + ParagraphButton.Size.Y.Offset + 10
         end
+        
+        -- Update content label size first
+        ParagraphContent.Size = UDim2.new(1, -iconOffset - 6, 0, textHeight)
+        
+        -- Update paragraph frame size
         Paragraph.Size = UDim2.new(1, 0, 0, totalHeight)
+        
+        -- Update section size
         UpdateSizeSection()
     end
 
+    -- Initial size calculation
     UpdateSize()
 
-    ParagraphContent:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateSize)
+    -- Update when text bounds change (for dynamic content)
+    ParagraphContent:GetPropertyChangedSignal("Text"):Connect(function()
+        UpdateSize()
+    end)
+    
+    ParagraphContent:GetPropertyChangedSignal("TextBounds"):Connect(function()
+        UpdateSize()
+    end)
 
     function ParagraphFunc:SetContent(content)
         content = content or "Content"
         ParagraphContent.Text = content
-        UpdateSize()
+        -- UpdateSize will be called automatically by the Text property change
     end
 
     CountItem = CountItem + 1
