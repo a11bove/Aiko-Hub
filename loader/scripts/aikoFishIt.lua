@@ -1522,7 +1522,7 @@ loc:AddButton({
     end
 })
 
-local npcl = Teleport:AddSection("NPC Location")
+local npcl = Teleport:AddSection("NPC")
 
 local npcNames = {}
 for name, _ in pairs(TeleportData.NPCs) do
@@ -1930,7 +1930,7 @@ autotrade:AddButton({
 })
 
 local autoAccept = autotrade:AddToggle({
-    Title = "Auto Accept Trade",
+    Title = "Auto Accept Trade Requests",
     Content = "",
     Default = false,
     Callback = function(state)
@@ -1961,7 +1961,7 @@ _G.WebhookRarities = _G.WebhookRarities or {}
 local webhookSection = Webhook:AddSection("Webhook Settings")
 
 local whurl = webhookSection:AddInput({
-    Title = "Fish Webhook URL",
+    Title = "Webhook URL",
     Default = _G.WebhookFlags.FishCaught.URL,
     Placeholder = "Paste discord webhook...",
     Callback = function(url)
@@ -1979,7 +1979,7 @@ local whurl = webhookSection:AddInput({
 })
 
 local whfish = webhookSection:AddToggle({
-    Title = "Send Fish Webhook",
+    Title = "Webhook Send",
     Default = _G.WebhookFlags.FishCaught.Enabled,
     Callback = function(enabled)
         _G.WebhookFlags.FishCaught.Enabled = enabled
@@ -1993,7 +1993,7 @@ local whfish = webhookSection:AddToggle({
 })
 
 local whrarity = webhookSection:AddDropdown({
-    Title = "Select Rarity",
+    Title = "Rarity Filter",
     Content = "Empty = All",
     Options = {"Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Secret"},
     Multi = true,
@@ -2010,7 +2010,6 @@ local whrarity = webhookSection:AddDropdown({
 
 webhookSection:AddButton({
     Title = "Test Fish Webhook",
-    Content = "Send test message to webhook",
     Callback = function()
         local success, message = WebhookModule.SendTestWebhook()
         AIKO:MakeNotify({
@@ -2039,10 +2038,10 @@ local whname = webhookSection:AddInput({
     end
 })
 
-local disconnectSection = Webhook:AddSection("Disconnect Alert")
+local disconnectSection = Webhook:AddSection("Webhook Disconnect Alert")
 
 local dcurl = disconnectSection:AddInput({
-    Title = "Disconnect Webhook URL",
+    Title = "Webhook URL",
     Default = _G.WebhookFlags.Disconnect.URL,
     Placeholder = "Paste disconnect webhook...",
     Callback = function(url)
@@ -2079,7 +2078,7 @@ local dcid = disconnectSection:AddInput({
 })
 
 local dcname = disconnectSection:AddInput({
-    Title = "Hide Identity (Optional)",
+    Title = "Custom Name (Optional)",
     Default = _G.DisconnectCustomName or "",
     Placeholder = "Custom name (blank = use Roblox name)",
     Callback = function(name)
@@ -2110,7 +2109,6 @@ local dcrj = disconnectSection:AddToggle({
 
 disconnectSection:AddButton({
     Title = "Test Disconnect Webhook",
-    Content = "Kick yourself and rejoin",
     Callback = function()
         local success, message = WebhookModule.SendTestDisconnectWebhook()
         if not success then
