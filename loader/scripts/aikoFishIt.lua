@@ -1949,12 +1949,8 @@ autotrade:AddButton({
     end
 })
 
--- ============================================
--- FISH WEBHOOK SYSTEM
--- ============================================
 local REObtainedNewFishNotification = NetFolder:WaitForChild("RE/ObtainedNewFishNotification")
 
--- Fish Database
 local FishDatabase = {}
 
 local function BuildFishDatabase()
@@ -1974,7 +1970,6 @@ local function BuildFishDatabase()
     end
 end
 
--- Get Thumbnail URL
 local function GetThumbnailURL(assetId)
     local id = assetId:match("rbxassetid://(%d+)")
     if not id then return nil end
