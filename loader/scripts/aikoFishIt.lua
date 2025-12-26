@@ -1256,6 +1256,8 @@ sell:AddButton({
     end
 })
 
+_G.AutoFavoriteRarities = _G.AutoFavoriteRarities or {}
+
 local fav = Favo:AddSection("Auto Favorite")
 
 local GlobalFav = {
@@ -1379,6 +1381,29 @@ local selectRarities = fav:AddDropdown({
     Content = "",
     Options = {"Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Secret"},
     Multi = true,
+    Default = _G.AutoFavoriteRarities or {},  -- Changed from {} to use saved state
+    Callback = function(selectedRarities)
+        _G.AutoFavoriteRarities = {}
+        for _, rarity in ipairs(selectedRarities) do
+            _G.AutoFavoriteRarities[rarity] = true
+        end
+        
+        GlobalFav.SelectedRarities = _G.AutoFavoriteRarities
+        
+        AIKO:MakeNotify({
+            Title = "@aikoware",
+            Description = "| Auto Fav Rarity",
+            Content = #selectedRarities .. " rarities selected",
+            Delay = 2
+        })
+    end
+})
+
+local selectRarities = fav:AddDropdown({
+    Title = "Select Rarity",
+    Content = "",
+    Options = {"Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Secret"},
+    Multi = true,
     Default = {},
     Callback = function(selectedRarities)
         GlobalFav.SelectedRarities = {}
@@ -1420,7 +1445,7 @@ GlobalFav.REObtainedNewFishNotification.OnClientEvent:Connect(function(itemId, _
     local reason = ""
 
     local isFishSelected = GlobalFav.SelectedFishIds[itemId]
-    local isRaritySelected = GlobalFav.SelectedRarities[tierName]
+    local isRaritySelected = GlobalFav.SelectedRarities[tierName]  -- This now uses _G.AutoFavoriteRarities
     local isVariantSelected = variantId and GlobalFav.SelectedVariants[variantId]
 
     if isFishSelected then
@@ -1452,20 +1477,6 @@ GlobalFav.REObtainedNewFishNotification.OnClientEvent:Connect(function(itemId, _
         })
     end
 end)
-
-fav:AddButton({
-    Title = "Clear Fish Selection",
-    Content = "Clear all selected fish",
-    Callback = function()
-        GlobalFav.SelectedFishIds = {}
-        AIKO:MakeNotify({
-            Title = "@aikoware",
-            Description = "| Cleared",
-            Content = "Fish selection cleared",
-            Delay = 2
-        })
-    end
-})
 
 fav:AddButton({
     Title = "Clear Rarity Selection",
@@ -1983,9 +1994,11 @@ autotrade:AddButton({
 local WebhookModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/fishit/whmdl.lua"))()
 WebhookModule.Initialize()
 
+_G.WebhookRarities = _G.WebhookRarities or {}
+
 local webhookSection = Webhook:AddSection("Webhook Settings")
 
-webhookSection:AddInput({
+local whurl = webhookSection:AddInput({
     Title = "Fish Webhook URL",
     Default = _G.WebhookFlags.FishCaught.URL,
     Placeholder = "Paste discord webhook...",
@@ -2003,7 +2016,7 @@ webhookSection:AddInput({
     end
 })
 
-webhookSection:AddToggle({
+local whfish = webhookSection:AddToggle({
     Title = "Send Fish Webhook",
     Default = _G.WebhookFlags.FishCaught.Enabled,
     Callback = function(enabled)
@@ -2017,7 +2030,7 @@ webhookSection:AddToggle({
     end
 })
 
-webhookSection:AddDropdown({
+local whrarity = webhookSection:AddDropdown({
     Title = "Select Rarity",
     Content = "Only send these rarities (empty = all)",
     Options = WebhookModule.GetRarityList(),
@@ -2045,7 +2058,7 @@ webhookSection:AddButton({
 
 webhookSection:AddDivider()
 
-webhookSection:AddInput({
+local whname = webhookSection:AddInput({
     Title = "Custom Name (Optional)",
     Default = _G.WebhookCustomName or "",
     Placeholder = "Leave blank to use Roblox name",
@@ -2062,7 +2075,7 @@ webhookSection:AddInput({
 
 local disconnectSection = Webhook:AddSection("Disconnect Alert")
 
-disconnectSection:AddInput({
+local dcurl = disconnectSection:AddInput({
     Title = "Disconnect Webhook URL",
     Default = _G.WebhookFlags.Disconnect.URL,
     Placeholder = "Paste disconnect webhook...",
@@ -2080,7 +2093,7 @@ disconnectSection:AddInput({
     end
 })
 
-disconnectSection:AddInput({
+local dcid = disconnectSection:AddInput({
     Title = "Discord ID (Optional)",
     Default = "",
     Placeholder = "Enter your Discord ID for ping...",
@@ -2099,7 +2112,7 @@ disconnectSection:AddInput({
     end
 })
 
-disconnectSection:AddInput({
+local dcname = disconnectSection:AddInput({
     Title = "Hide Identity (Optional)",
     Default = _G.DisconnectCustomName or "",
     Placeholder = "Custom name (blank = use Roblox name)",
@@ -2114,7 +2127,7 @@ disconnectSection:AddInput({
     end
 })
 
-disconnectSection:AddToggle({
+local dcrj = disconnectSection:AddToggle({
     Title = "Auto Rejoin On Disconnect",
     Content = "Send webhook and rejoin automatically",
     Default = _G.WebhookFlags.Disconnect.Enabled,
