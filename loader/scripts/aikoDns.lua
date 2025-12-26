@@ -7,7 +7,7 @@ AIKO:MakeNotify({
     Delay = 5
 })
 
-local Window = AIKO:MakeGui({
+local Window = AIKO:Window({
     Title = "@aikoware |",
     Footer = " made by untog!",
     Version = 1
