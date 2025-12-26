@@ -196,81 +196,30 @@ local function debugPrint(...)
     end
 end
 
--- Get Variant Name (Multiple approaches)
+-- Get Variant Name (SIMPLIFIED - Based on actual game structure)
 function WebhookModule.GetVariantName(fishId, metadata, data)
     local variant = "None"
-    local variantId = nil
     
     -- Debug output
     if _G.WebhookDebugMode then
         debugPrint("=== VARIANT DEBUG ===")
         debugPrint("Fish ID:", fishId)
-        debugPrint("Metadata:", metadata and HttpService:JSONEncode(metadata) or "nil")
-        debugPrint("Data structure:", data and "exists" or "nil")
         
-        if data then
-            debugPrint("Data.InventoryItem:", data.InventoryItem and "exists" or "nil")
-            if data.InventoryItem then
-                debugPrint("Data.InventoryItem.Metadata:", data.InventoryItem.Metadata and "exists" or "nil")
-                if data.InventoryItem.Metadata then
-                    debugPrint("Full Metadata:", HttpService:JSONEncode(data.InventoryItem.Metadata))
-                end
-            end
+        if data and data.InventoryItem and data.InventoryItem.Metadata then
+            debugPrint("Data.InventoryItem: exists")
+            debugPrint("Data.InventoryItem.Metadata: exists")
+            debugPrint("Full Metadata:", HttpService:JSONEncode(data.InventoryItem.Metadata))
         end
     end
     
-    -- Try Method 1: From data.InventoryItem.Metadata.VariantId (Auto-favorite method)
+    -- The game stores the variant NAME directly in VariantId field
     if data and data.InventoryItem and data.InventoryItem.Metadata then
-        variantId = data.InventoryItem.Metadata.VariantId
-        debugPrint("Method 1 - VariantId from data.InventoryItem.Metadata:", variantId)
-    end
-    
-    -- Try Method 2: From metadata parameter directly
-    if not variantId and metadata then
-        variantId = metadata.VariantId or metadata.Variant or metadata.variantId or metadata.variant
-        debugPrint("Method 2 - VariantId from metadata:", variantId)
-    end
-    
-    -- Try Method 3: Direct from data
-    if not variantId and data then
-        variantId = data.VariantId or data.Variant
-        debugPrint("Method 3 - VariantId from data:", variantId)
-    end
-    
-    -- If we found a variant ID, look it up
-    if variantId then
-        debugPrint("Found variant ID:", variantId, "Type:", type(variantId))
+        local variantName = data.InventoryItem.Metadata.VariantId
         
-        -- Try cache first
-        variant = VariantCache[variantId] or VariantCache[tostring(variantId)]
-        
-        if variant and variant ~= "None" then
-            debugPrint("Found in cache:", variant)
-        else
-            debugPrint("Not in cache, searching manually...")
-            -- Manual search
-            local variantFolder = ReplicatedStorage:FindFirstChild("Variants")
-            if variantFolder then
-                for _, v in ipairs(variantFolder:GetChildren()) do
-                    if v:IsA("ModuleScript") then
-                        local ok, vData = pcall(require, v)
-                        if ok and vData and vData.Data then
-                            local vId = vData.Data.Id
-                            if vId == variantId or tostring(vId) == tostring(variantId) then
-                                variant = vData.Data.Name or "Unknown"
-                                debugPrint("Found variant:", variant)
-                                -- Update cache
-                                VariantCache[variantId] = variant
-                                VariantCache[tostring(variantId)] = variant
-                                break
-                            end
-                        end
-                    end
-                end
-            end
+        if variantName and type(variantName) == "string" and variantName ~= "" then
+            variant = variantName
+            debugPrint("Found variant name:", variant)
         end
-    else
-        debugPrint("No variant ID found")
     end
     
     debugPrint("Final variant:", variant)
