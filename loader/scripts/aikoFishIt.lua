@@ -1374,7 +1374,7 @@ local selectFishes = fav:AddDropdown({
 })
 
 local selectRarities = fav:AddDropdown({
-    Title = "Select Rarity (Auto Fav)",
+    Title = "Select Rarity",
     Content = "",
     Options = {"Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Secret"},
     Multi = true,
@@ -1392,23 +1392,6 @@ local selectRarities = fav:AddDropdown({
         for _ in pairs(_G.AutoFavoriteRarities) do
             count = count + 1
         end
-    end
-})
-
-local selectRarities = fav:AddDropdown({
-    Title = "Select Rarity",
-    Content = "",
-    Options = {"Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Secret"},
-    Multi = true,
-    Default = _G.AutoFavoriteRarities or {},  -- Changed from {} to use saved state
-    Callback = function(selectedRarities)
-        _G.AutoFavoriteRarities = {}
-        for _, rarity in ipairs(selectedRarities) do
-            _G.AutoFavoriteRarities[rarity] = true
-        end
-        
-        GlobalFav.SelectedRarities = _G.AutoFavoriteRarities
-        
     end
 })
 
@@ -1443,13 +1426,10 @@ GlobalFav.REObtainedNewFishNotification.OnClientEvent:Connect(function(itemId, _
     local shouldFavorite = false
     local reason = ""
 
-    -- Check fish selection
     local isFishSelected = GlobalFav.SelectedFishIds[itemId]
     
-    -- Check rarity selection (using the lookup table)
     local isRaritySelected = GlobalFav.SelectedRarities[tierName] == true
     
-    -- Check variant selection
     local isVariantSelected = variantId and GlobalFav.SelectedVariants[variantId]
 
     if isFishSelected then
@@ -2036,8 +2016,8 @@ local whfish = webhookSection:AddToggle({
 })
 
 local whrarity = webhookSection:AddDropdown({
-    Title = "Select Rarity (Webhook)",
-    Content = "Only send these rarities (empty = all)",
+    Title = "Select Rarity",
+    Content = "Empty = All",
     Options = {"Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Secret"},
     Multi = true,
     Default = {},
