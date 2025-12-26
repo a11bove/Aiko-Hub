@@ -48,16 +48,6 @@ local TierNames = {
     [0] = "Common"
 }
 
-local TierColors = {
-    Common = 9807270,      
-    Uncommon = 3066993,    
-    Rare = 3447003,        
-    Epic = 10181046,       
-    Legendary = 15844367,  
-    Mythic = 15158332,     
-    Secret = 16777215      
-}
-
 local FishDatabase = {}
 
 function WebhookModule.SendWebhook(url, data)
@@ -208,19 +198,18 @@ function WebhookModule.SendFishWebhook(fishId, metadata, data)
     
     local variant = WebhookModule.GetVariantName(fishId, metadata, data)
     
-    local embedColor = TierColors[tierName] or 52221
     local playerName = _G.WebhookCustomName ~= "" and _G.WebhookCustomName or Player.Name
     
     local payload = {
         embeds = {{
-            title = "🦈 Fish Caught!",
+            title = "🎣 FISH CAUGHT",
             description = string.format("**%s** caught a **%s** fish!", playerName, tierName),
-            color = embedColor,
+            color = 5793266,
             fields = {
-                {name = "**Fish Name:**", value = " ❯ " .. fishData.Name, inline = false},
-                {name = "**Rarity:**", value = " ❯ " .. tierName, inline = false},
-                {name = "**Weight:**", value = " ❯ " .. weight, inline = true},
-                {name = "**Variant:**", value = " ❯ " .. variant, inline = true}
+                {name = "**Fish:**", value = "`` ❯ " .. fishData.Name .. " ``", inline = false},
+                {name = "**Tier:**", value = "`` ❯ " .. tierName .. " ``", inline = false},
+                {name = "**Weight:**", value = "`` ❯ " .. weight .. " ``", inline = true},
+                {name = "**Variant:**", value = "`` ❯ " .. variant .. " ``", inline = true}
             },
             thumbnail = {
                 url = WebhookModule.GetThumbnailURL(fishData.Icon) or "https://cdn.discordapp.com/attachments/1387681189502124042/1449753201044750336/banners_pinterest_654429389618926022.jpg"
