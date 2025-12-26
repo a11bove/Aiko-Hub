@@ -131,8 +131,8 @@ local Misc = Window:AddTab({
 local dcsec = Home:AddSection("Support", true)
 
 dcsec:AddParagraph({
-    Title = "Discord",
-    Content = "Join our discord for more info!",
+    Title = "Join Our Discord",
+    Content = "Join Us!",
     Icon = "discord",
     ButtonText = "Copy Server Link",
     ButtonCallback = function()
