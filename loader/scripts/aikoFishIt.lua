@@ -1150,7 +1150,7 @@ function UPX()
     end
     
     if #items > 0 then
-        ShopParagraph:SetContent(table.concat(items, "\n") .. "\n\n" .. MerchantUI.RefreshLabel.Text)
+        ShopParagraph:SetContent(table.concat(items, "<br/>") .. "<br/><br/>" .. MerchantUI.RefreshLabel.Text)
     else
         ShopParagraph:SetContent("No items found\n" .. MerchantUI.RefreshLabel.Text)
     end
