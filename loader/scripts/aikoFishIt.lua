@@ -1951,26 +1951,45 @@ autotrade:AddButton({
 
 local REObtainedNewFishNotification = NetFolder:WaitForChild("RE/ObtainedNewFishNotification")
 
+-- Fish Database
 local FishDatabase = {}
 
 local function BuildFishDatabase()
-    local itemsFolder = Services.ReplicatedStorage:WaitForChild("Items")
+    -- Try to find Items folder in different locations
+    local itemsFolder = Services.ReplicatedStorage:FindFirstChild("Items")
+    
+    if not itemsFolder then
+        warn("[Webhook] Items folder not found, trying alternative path...")
+        return
+    end
     
     for _, item in ipairs(itemsFolder:GetChildren()) do
-        local success, data = pcall(require, item)
-        if success and type(data) == "table" and data.Data and data.Data.Type == "Fishes" then
-            local fishData = data.Data
-            FishDatabase[fishData.Id] = {
-                Name = fishData.Name,
-                Tier = fishData.Tier,
-                Icon = fishData.Icon,
-                SellPrice = data.SellPrice
-            }
+        if item:IsA("ModuleScript") then
+            local success, data = pcall(require, item)
+            if success and type(data) == "table" and data.Data then
+                -- Check if it's a fish (some games use "Fish" or "Fishes")
+                if data.Data.Type == "Fishes" or data.Data.Type == "Fish" then
+                    local fishData = data.Data
+                    if fishData.Id and fishData.Name then
+                        FishDatabase[fishData.Id] = {
+                            Name = fishData.Name,
+                            Tier = fishData.Tier or 0,
+                            Icon = fishData.Icon or "",
+                            SellPrice = data.SellPrice or 0
+                        }
+                    end
+                end
+            end
         end
     end
+    
+    print("[Webhook] Loaded " .. #FishDatabase .. " fish into database")
 end
 
+-- Get Thumbnail URL
 local function GetThumbnailURL(assetId)
+    if not assetId or assetId == "" then return nil end
+    
     local id = assetId:match("rbxassetid://(%d+)")
     if not id then return nil end
     
@@ -2006,7 +2025,10 @@ local function SendFishWebhook(fishId, metadata)
     if not webhookUrl or webhookUrl == "" then return end
     
     local fishData = FishDatabase[fishId]
-    if not fishData then return end
+    if not fishData then 
+        warn("[Webhook] Fish ID not found in database: " .. tostring(fishId))
+        return 
+    end
     
     local tierName = TierNames[fishData.Tier] or "Unknown"
     
@@ -2032,21 +2054,20 @@ local function SendFishWebhook(fishId, metadata)
     local payload = {
         embeds = {{
             title = "🎣 Fish Caught!",
-            url = "https://discord.gg/PaPvGUE8UC",
             description = string.format("**%s** caught a **%s** fish!", playerName, tierName),
             color = 52221,
             fields = {
-                {name = "⦿ Fish Name:", value = "```❯ " .. fishData.Name .. "```"},
-                {name = "⦿ Fish Tier:", value = "```❯ " .. tierName .. "```"},
-                {name = "⦿ Weight:", value = "```❯ " .. weight .. "```"},
-                {name = "⦿ Mutation:", value = "```❯ " .. variant .. "```"},
-                {name = "⦿ Sell Price:", value = "```❯ " .. sellPrice .. "```"}
+                {name = "⦿Fish Name:", value = "```❯ " .. fishData.Name .. "```"},
+                {name = "⦿Fish Tier:", value = "```❯ " .. tierName .. "```"},
+                {name = "⦿Weight:", value = "```❯ " .. weight .. "```"},
+                {name = "⦿Mutation:", value = "```❯ " .. variant .. "```"},
+                {name = "⦿Sell Price:", value = "```❯ " .. sellPrice .. "```"}
             },
             image = {
                 url = GetThumbnailURL(fishData.Icon) or "https://i.imgur.com/WltO8IG.png"
             },
             footer = {
-                text = "AIKO",
+                text = "@aikoware Webhook",
                 icon_url = "https://i.imgur.com/WltO8IG.png"
             },
             timestamp = os.date("!%Y-%m-%dT%H:%M:%S.000Z")
@@ -2058,14 +2079,27 @@ local function SendFishWebhook(fishId, metadata)
     SendWebhook(webhookUrl, payload)
 end
 
-BuildFishDatabase()
+task.spawn(function()
+    local success, err = pcall(BuildFishDatabase)
+    if not success then
+        warn("[Webhook] Failed to build fish database:", err)
+    end
+end)
 
 if not _G.FishWebhookConnected then
     _G.FishWebhookConnected = true
     
     REObtainedNewFishNotification.OnClientEvent:Connect(function(fishId, _, data)
-        local metadata = data and data.InventoryItem and data.InventoryItem.Metadata
-        SendFishWebhook(fishId, metadata)
+        task.spawn(function()
+            local success, err = pcall(function()
+                local metadata = data and data.InventoryItem and data.InventoryItem.Metadata
+                SendFishWebhook(fishId, metadata)
+            end)
+            
+            if not success then
+                warn("[Webhook] Error sending fish webhook:", err)
+            end
+        end)
     end)
     
     print("[Webhook] Fish notification connected!")
