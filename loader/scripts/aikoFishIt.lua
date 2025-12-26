@@ -120,7 +120,7 @@ local Trade = Window:AddTab({
 
 local Webhook = Window:AddTab({
     Name = "Webhook",
-    Icon = ""
+    Icon = "rbxassetid://137601480983962"
 })
 
 local Misc = Window:AddTab({
