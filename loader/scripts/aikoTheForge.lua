@@ -48,12 +48,18 @@ local Tabs = {
 local InfoSection = Tabs.Info:AddSection("Support", true)
 
 InfoSection:AddParagraph({
+	Title = "Note",
+	Content = "Script is still in beta, so expect some bugs.",
+	Icon = "idea",
+})
+
+InfoSection:AddParagraph({
     Title = "Discord",
     Content = "Join to our discord for more info!",
     Icon = "discord",
     ButtonText = "Copy Server Link",
     ButtonCallback = function()
-        local link = "https://discord.gg/jUctfTAa5D"
+        local link = "https//discord.gg/JccfFGpDNV"
         if setclipboard then
             setclipboard(link)
             aiko("Discord link copied!")
