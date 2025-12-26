@@ -1495,30 +1495,6 @@ fav:AddButton({
     end
 })
 
-fav:AddButton({
-    Title = "Show Current Selection",
-    Content = "Display current selected",
-    Callback = function()
-        local fishCount = 0
-        for _ in pairs(GlobalFav.SelectedFishIds) do fishCount = fishCount + 1 end
-
-        local rarityCount = 0
-        for _ in pairs(GlobalFav.SelectedRarities) do rarityCount = rarityCount + 1 end
-
-        local variantCount = 0
-        for _ in pairs(GlobalFav.SelectedVariants) do variantCount = variantCount + 1 end
-
-        AIKO:MakeNotify({
-            Title = "@aikoware",
-            Description = "| Current Selection",
-            Content = string.format(
-                "Fish: %d\nRarities: %d\nVariants: %d", fishCount, rarityCount, variantCount
-            ),
-            Delay = 3
-        })
-    end
-})
-
 local TeleportData = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/fishit/tpmdl.lua"))()
 
 local loc = Teleport:AddSection("Location")
@@ -2042,7 +2018,7 @@ webhookSection:AddToggle({
 })
 
 webhookSection:AddDropdown({
-    Title = "Select Rarities to Send",
+    Title = "Select Rarity",
     Content = "Only send these rarities (empty = all)",
     Options = WebhookModule.GetRarityList(),
     Multi = true,
@@ -2050,27 +2026,6 @@ webhookSection:AddDropdown({
     Callback = function(selected)
         _G.WebhookRarities = selected
         local count = #selected
-        AIKO:MakeNotify({
-            Title = "@aikoware",
-            Description = "| Rarity Filter",
-            Content = count == 0 and "Sending all rarities" or ("Sending " .. count .. " rarities"),
-            Delay = 3
-        })
-    end
-})
-
-webhookSection:AddToggle({
-    Title = "Enable Debug Mode",
-    Content = "Print variant detection info to console",
-    Default = false,
-    Callback = function(enabled)
-        _G.WebhookDebugMode = enabled
-        AIKO:MakeNotify({
-            Title = "@aikoware",
-            Description = "| Debug Mode",
-            Content = enabled and "Enabled! Check console (F9)" or "Disabled!",
-            Delay = 2
-        })
     end
 })
 
