@@ -238,6 +238,7 @@ local infosec = info:AddSection("Info", true)
 
 infosec:AddParagraph({
     Title = "Warning:",
+    Icon = "alert",
     Content = "I made this script for testing purposes only, I am not responsible for any bans or any other consequences."
 })
 
