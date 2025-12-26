@@ -249,10 +249,11 @@ function WebhookModule.SendDisconnectWebhook(reason)
         embeds = {{
             title = "⚠️ Disconnected Alert!",
             color = 6170265,
+            description = string.format("**%s** got disconnected from the server!", playerName),
             fields = {
-                {name = "**Username:**", value = " ❯ " .. playerName, inline = false},
-                {name = "**Time:**", value = " ❯ " .. dateTime, inline = false},
-                {name = "**Reason:**", value = " ❯ " .. (reason or "Unknown"), inline = false}
+                {name = "**Username:**", value = "`` ❯ " .. playerName .. " ``", inline = false},
+                {name = "**Time:**", value = "`` ❯ " .. dateTime .. " ``", inline = false},
+                {name = "**Reason:**", value = "`` ❯ " .. (reason or "Unknown") .. " ``", inline = false}
             },
             image = {
                 url = "https://cdn.discordapp.com/attachments/1387681189502124042/1454161899238457571/New_Project.jpg?ex=6950154d&is=694ec3cd&hm=d3d22f3aa93d26b2f80b0b8a136d61269ece8c665a033947c71ae9fc1a7ddfa6&"
@@ -330,8 +331,7 @@ function WebhookModule.SendTestWebhook()
     local payload = {
         embeds = {{
             color = 6170265,
-            author = {
-                name = "✅ Webhook Connection Test!"
+            title = "✅ Webhook Connection Test!"
             },
             description = "If you see this message, your webhook is working correctly!",
             image = {
@@ -357,13 +357,15 @@ function WebhookModule.SendTestDisconnectWebhook()
     end
     
     local payload = {
-        content = "Test Disconnect - Working!",
         embeds = {{
-            title = "✅ Test Successful!",
-            color = 11342935,
+            title = "✅ Webhook Disconnect Test!",
+            color = 6170265,
             fields = {
-                {name = "Status", value = "Webhook is working correctly!", inline = false},
+                {name = "Status", value = "Webhook working!", inline = false},
                 {name = "Action", value = "Rejoining server now...", inline = false}
+            },
+            image = {
+                url = "https://cdn.discordapp.com/attachments/1387681189502124042/1454161899238457571/New_Project.jpg?ex=6950154d&is=694ec3cd&hm=d3d22f3aa93d26b2f80b0b8a136d61269ece8c665a033947c71ae9fc1a7ddfa6&"
             },
             timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
         }},
