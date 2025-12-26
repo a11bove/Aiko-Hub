@@ -2064,6 +2064,18 @@ local TierNames = {
     [0] = "Common"
 }
 
+local tierColors = {
+    Common = 9807270,      
+    Uncommon = 3066993,    
+    Rare = 3447003,        
+    Epic = 10181046,       
+    Legendary = 15844367,  
+    Mythic = 15158332,     
+    Secret = 16777215      
+}
+
+local embedColor = tierColors[tierName] or 52221
+
 local function GetThumbnailURL(assetId)
     if not assetId or assetId == "" then return nil end
     
@@ -2130,7 +2142,7 @@ local function SendFishWebhook(fishId, metadata)
         embeds = {{
             title = "🦈 Fish Caught!",
             description = string.format("**%s** caught a **%s** fish!", playerName, tierName),
-            color = 11342935,
+            color = embedColor,
             fields = {
                 {name = "**Fish Name:**", value = "❯ " .. fishData.Name .. "", inline = false},
                 {name = "**Rarity:**", value = "❯ " .. tierName .. "", inline = false},
