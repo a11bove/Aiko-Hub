@@ -1949,27 +1949,94 @@ autotrade:AddButton({
     end
 })
 
-local REObtainedNewFishNotification = NetFolder:WaitForChild("RE/ObtainedNewFishNotification")
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Player = Players.LocalPlayer
 
--- Fish Database
+-- Initialize HTTP Request
+_G.httpRequest = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
+
+-- Webhook Storage
+_G.WebhookFlags = _G.WebhookFlags or {
+    FishCaught = {
+        Enabled = false,
+        URL = ""
+    },
+    Stats = {
+        Enabled = false,
+        URL = "",
+        Delay = 5
+    },
+    Disconnect = {
+        Enabled = false,
+        URL = ""
+    }
+}
+
+_G.WebhookCustomName = _G.WebhookCustomName or ""
+_G.DiscordPingID = _G.DiscordPingID or ""
+_G.DisconnectCustomName = _G.DisconnectCustomName or ""
+_G.WebhookRarities = _G.WebhookRarities or {}
+_G.WebhookNames = _G.WebhookNames or {}
+
+local function SendWebhook(url, data)
+    if not _G.httpRequest then
+        warn("[Webhook] HTTP request function not available - Your executor may not support webhooks")
+        return false
+    end
+    
+    if not url or url == "" then
+        warn("[Webhook] Invalid webhook URL")
+        return false
+    end
+    
+    -- Rate limiting
+    _G._WebhookLock = _G._WebhookLock or {}
+    if _G._WebhookLock[url] then
+        return false
+    end
+    
+    _G._WebhookLock[url] = true
+    task.delay(1, function()
+        _G._WebhookLock[url] = nil
+    end)
+    
+    local success, err = pcall(function()
+        _G.httpRequest({
+            Url = url,
+            Method = "POST",
+            Headers = {
+                ["Content-Type"] = "application/json"
+            },
+            Body = HttpService:JSONEncode(data)
+        })
+    end)
+    
+    if not success then
+        warn("[Webhook] Failed to send:", err)
+        return false
+    end
+    
+    return true
+end
+
 local FishDatabase = {}
 
 local function BuildFishDatabase()
-    -- Try to find Items folder in different locations
-    local itemsFolder = Services.ReplicatedStorage:FindFirstChild("Items")
-    
+    local itemsFolder = ReplicatedStorage:FindFirstChild("Items")
     if not itemsFolder then
-        warn("[Webhook] Items folder not found, trying alternative path...")
+        warn("[Webhook] Items folder not found")
         return
     end
     
+    local count = 0
     for _, item in ipairs(itemsFolder:GetChildren()) do
         if item:IsA("ModuleScript") then
             local success, data = pcall(require, item)
             if success and type(data) == "table" and data.Data then
-                -- Check if it's a fish (some games use "Fish" or "Fishes")
-                if data.Data.Type == "Fishes" or data.Data.Type == "Fish" then
-                    local fishData = data.Data
+                local fishData = data.Data
+                if fishData.Type == "Fish" or fishData.Type == "Fishes" then
                     if fishData.Id and fishData.Name then
                         FishDatabase[fishData.Id] = {
                             Name = fishData.Name,
@@ -1977,34 +2044,18 @@ local function BuildFishDatabase()
                             Icon = fishData.Icon or "",
                             SellPrice = data.SellPrice or 0
                         }
+                        count = count + 1
                     end
                 end
             end
         end
     end
     
-    print("[Webhook] Loaded " .. #FishDatabase .. " fish into database")
+    print("[Webhook] Loaded " .. count .. " fish into database")
 end
 
--- Get Thumbnail URL
-local function GetThumbnailURL(assetId)
-    if not assetId or assetId == "" then return nil end
-    
-    local id = assetId:match("rbxassetid://(%d+)")
-    if not id then return nil end
-    
-    local url = string.format("https://thumbnails.roblox.com/v1/assets?assetIds=%s&type=Asset&size=420x420&format=Png", id)
-    
-    local success, response = pcall(function()
-        return Services.HttpService:JSONDecode(game:HttpGet(url))
-    end)
-    
-    if success and response and response.data and response.data[1] then
-        return response.data[1].imageUrl
-    end
-    
-    return nil
-end
+-- Build fish database immediately
+task.spawn(BuildFishDatabase)
 
 -- Tier Names
 local TierNames = {
@@ -2017,16 +2068,27 @@ local TierNames = {
     [6] = "Secret"
 }
 
--- Send Fish Webhook
+local function GetThumbnailURL(assetId)
+    if not assetId or assetId == "" then return nil end
+    
+    local id = assetId:match("rbxassetid://(%d+)")
+    if not id then return nil end
+    
+    return string.format("https://assetdelivery.roblox.com/v1/asset/?id=%s", id)
+end
+
 local function SendFishWebhook(fishId, metadata)
     if not _G.WebhookFlags.FishCaught.Enabled then return end
     
     local webhookUrl = _G.WebhookFlags.FishCaught.URL
-    if not webhookUrl or webhookUrl == "" then return end
+    if not webhookUrl or webhookUrl == "" then
+        warn("[Webhook] Fish webhook URL not set")
+        return
+    end
     
     local fishData = FishDatabase[fishId]
     if not fishData then 
-        warn("[Webhook] Fish ID not found in database: " .. tostring(fishId))
+        warn("[Webhook] Fish ID not found:", fishId)
         return 
     end
     
@@ -2047,7 +2109,21 @@ local function SendFishWebhook(fishId, metadata)
     end
     
     local weight = metadata and metadata.Weight and string.format("%.2f Kg", metadata.Weight) or "N/A"
-    local variant = metadata and metadata.VariantId and tostring(metadata.VariantId) or "None"
+    local variant = "None"
+    
+    if metadata and metadata.VariantId then
+        local variantFolder = ReplicatedStorage:FindFirstChild("Variants")
+        if variantFolder then
+            for _, v in ipairs(variantFolder:GetChildren()) do
+                local ok, vData = pcall(require, v)
+                if ok and vData.Data and vData.Data.Id == metadata.VariantId then
+                    variant = vData.Data.Name or "Unknown"
+                    break
+                end
+            end
+        end
+    end
+    
     local sellPrice = fishData.SellPrice and ("$" .. tostring(fishData.SellPrice)) or "N/A"
     local playerName = _G.WebhookCustomName ~= "" and _G.WebhookCustomName or Player.Name
     
@@ -2057,191 +2133,152 @@ local function SendFishWebhook(fishId, metadata)
             description = string.format("**%s** caught a **%s** fish!", playerName, tierName),
             color = 52221,
             fields = {
-                {name = "⦿Fish Name:", value = "```❯ " .. fishData.Name .. "```"},
-                {name = "⦿Fish Tier:", value = "```❯ " .. tierName .. "```"},
-                {name = "⦿Weight:", value = "```❯ " .. weight .. "```"},
-                {name = "⦿Mutation:", value = "```❯ " .. variant .. "```"},
-                {name = "⦿Sell Price:", value = "```❯ " .. sellPrice .. "```"}
+                {name = "⦿Fish Name:", value = "```❯ " .. fishData.Name .. "```", inline = false},
+                {name = "⦿Fish Tier:", value = "```❯ " .. tierName .. "```", inline = false},
+                {name = "⦿Weight:", value = "```❯ " .. weight .. "```", inline = true},
+                {name = "⦿Mutation:", value = "```❯ " .. variant .. "```", inline = true},
+                {name = "⦿Sell Price:", value = "```❯ " .. sellPrice .. "```", inline = true}
             },
-            image = {
+            thumbnail = {
                 url = GetThumbnailURL(fishData.Icon) or "https://i.imgur.com/WltO8IG.png"
             },
             footer = {
                 text = "@aikoware Webhook",
                 icon_url = "https://i.imgur.com/WltO8IG.png"
             },
-            timestamp = os.date("!%Y-%m-%dT%H:%M:%S.000Z")
+            timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
         }},
         username = "AIKO",
-        avatar_url = " https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png?ex=694f2c2e&is=694ddaae&hm=49285870da8c33345d3a1d592fa0f7d0799b7b592214be2ec53a513751b93ef9& "
+        avatar_url = "https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png"
     }
     
-    SendWebhook(webhookUrl, payload)
-end
-
-task.spawn(function()
-    local success, err = pcall(BuildFishDatabase)
-    if not success then
-        warn("[Webhook] Failed to build fish database:", err)
+    if SendWebhook(webhookUrl, payload) then
+        print("[Webhook] Fish webhook sent:", fishData.Name)
     end
-end)
+end
 
 if not _G.FishWebhookConnected then
     _G.FishWebhookConnected = true
+    
+    local NetFolder = ReplicatedStorage:WaitForChild("Packages")
+        :WaitForChild("_Index")
+        :WaitForChild("sleitnick_net@0.2.0")
+        :WaitForChild("net")
+    
+    local REObtainedNewFishNotification = NetFolder:WaitForChild("RE/ObtainedNewFishNotification")
     
     REObtainedNewFishNotification.OnClientEvent:Connect(function(fishId, _, data)
         task.spawn(function()
             local success, err = pcall(function()
                 local metadata = data and data.InventoryItem and data.InventoryItem.Metadata
+                print("[Webhook] Fish caught - ID:", fishId)
                 SendFishWebhook(fishId, metadata)
             end)
             
             if not success then
-                warn("[Webhook] Error sending fish webhook:", err)
+                warn("[Webhook] Error in fish webhook:", err)
             end
         end)
     end)
     
-    print("[Webhook] Fish notification connected!")
+    print("[Webhook] Fish notification listener connected!")
 end
 
-function SendWebhook(url, data)
-    if _G.httpRequest and url and url ~= "" then
-        if not (_G._WebhookLock and _G._WebhookLock[url]) then
-            _G._WebhookLock = _G._WebhookLock or {}
-            _G._WebhookLock[url] = true
-            
-            task.delay(0.25, function()
-                _G._WebhookLock[url] = nil
-            end)
-            
-            pcall(function()
-                _G.httpRequest({
-                    Url = url,
-                    Method = "POST",
-                    Headers = {
-                        ["Content-Type"] = "application/json"
-                    },
-                    Body = Services.HttpService:JSONEncode(data)
-                })
-            end)
-        end
-    end
-end
+local disconnectHandled = false
 
-function aiko(message, duration)
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "@aikoware",
-        Text = message,
-        Duration = duration or 3
-    })
-end
-
-_G.WebhookFlags = {
-    FishCaught = {
-        Enabled = false,
-        URL = ""
-    },
-    Stats = {
-        Enabled = false,
-        URL = "",
-        Delay = 5
-    },
-    Disconnect = {
-        Enabled = false,
-        URL = ""
-    }
-}
-
-function SendWebhook(webhookUrl, data)
-    if _G.httpRequest and webhookUrl and webhookUrl ~= "" then
-        if not (_G._WebhookLock and _G._WebhookLock[webhookUrl]) then
-            _G._WebhookLock = _G._WebhookLock or {}
-            _G._WebhookLock[webhookUrl] = true
-            
-            task.delay(0.25, function()
-                _G._WebhookLock[webhookUrl] = nil
-            end)
-            
-            pcall(function()
-                _G.httpRequest({
-                    Url = webhookUrl,
-                    Method = "POST",
-                    Headers = {
-                        ["Content-Type"] = "application/json"
-                    },
-                    Body = Services.HttpService:JSONEncode(data)
-                })
-            end)
-        end
-    end
-end
-
-function TestWebhook(webhookUrl)
-    local payload = {
-        embeds = {{
-            color = 44543,
-            author = {
-                name = "Webhook Connected!"
-            },
-            image = {
-                url = "https://cdn.discordapp.com/attachments/1387681189502124042/1449753201044750336/banners_pinterest_654429389618926022.jpg?ex=694e8be2&is=694d3a62&hm=0132945a6bdb1c503a580b4c4a6fbbc55c292301655d3720c1011a50939cdded&"
-            }
-        }},
-        username = "AIKO",
-        avatar_url = "https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png?ex=694f2c2e&is=694ddaae&hm=49285870da8c33345d3a1d592fa0f7d0799b7b592214be2ec53a513751b93ef9&"
-    }
+local function SendDisconnectWebhook(reason)
+    if disconnectHandled then return end
+    disconnectHandled = true
     
-    SendWebhook(webhookUrl, payload)
-end
-
-function SendDisconnectWebhook(reason)
     local webhookUrl = _G.WebhookFlags.Disconnect.URL
-    if webhookUrl == "" then return end
+    if not webhookUrl or webhookUrl == "" then 
+        print("[Webhook] Disconnect detected but no webhook URL set")
+        return 
+    end
     
-    local playerName = Player.Name
+    local playerName = _G.DisconnectCustomName ~= "" and _G.DisconnectCustomName or Player.Name
     local dateTime = os.date("%m/%d/%Y %I:%M %p")
+    local pingText = _G.DiscordPingID or ""
     
     local payload = {
-        content = "Account Disconnected!",
+        content = pingText .. " Your account disconnected!",
         embeds = {{
-            title = "DISCONNECT ALERT",
-            color = 36863,
+            title = "⚠️ DISCONNECT ALERT",
+            color = 16711680,
             fields = {
-                {name = "Username", value = "> " .. playerName},
-                {name = "Time", value = "> " .. dateTime},
-                {name = "Reason", value = "> " .. (reason or "Unknown")}
-            }
+                {name = "⦿Username:", value = "> " .. playerName, inline = false},
+                {name = "⦿Time:", value = "> " .. dateTime, inline = false},
+                {name = "⦿Reason:", value = "> " .. (reason or "Unknown"), inline = false}
+            },
+            thumbnail = {
+                url = "https://cdn.discordapp.com/attachments/1387681189502124042/1449753201044750336/banners_pinterest_654429389618926022.jpg"
+            },
+            timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
         }},
         username = "AIKO",
-        avatar_url = "https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png?ex=694f2c2e&is=694ddaae&hm=49285870da8c33345d3a1d592fa0f7d0799b7b592214be2ec53a513751b93ef9&"
+        avatar_url = "https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png"
     }
     
-    SendWebhook(webhookUrl, payload)
-    task.wait(2)
-    RejoinServer()
+    if SendWebhook(webhookUrl, payload) then
+        print("[Webhook] Disconnect webhook sent")
+    end
+    
+    task.wait(3)
+    game:GetService("TeleportService"):Teleport(game.PlaceId, Player)
 end
 
-function EnableAutoRejoin(enabled)
-    if enabled then
-        game:GetService("GuiService").ErrorMessageChanged:Connect(function(errorMsg)
-            if errorMsg and errorMsg ~= "" then
-                SendDisconnectWebhook(errorMsg)
+local function SetupDisconnectDetection()
+    if _G.DisconnectDetectionSetup then return end
+    _G.DisconnectDetectionSetup = true
+    
+    -- Method 1: GUI Error Detection
+    local success1 = pcall(function()
+        game:GetService("GuiService").ErrorMessageChanged:Connect(function(msg)
+            if msg and msg ~= "" and _G.WebhookFlags.Disconnect.Enabled then
+                print("[Webhook] Disconnect detected (GUI):", msg)
+                SendDisconnectWebhook(msg)
             end
         end)
-        
-        game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(prompt)
-            if prompt.Name == "ErrorPrompt" then
-                task.wait(1)
-                local textLabel = prompt:FindFirstChildWhichIsA("TextLabel", true)
-                SendDisconnectWebhook(textLabel and textLabel.Text or "Disconnected")
+    end)
+    
+    -- Method 2: CoreGui Prompt Detection
+    local success2 = pcall(function()
+        local coreGui = game:GetService("CoreGui")
+        local promptGui = coreGui:FindFirstChild("RobloxPromptGui")
+        if promptGui then
+            local promptOverlay = promptGui:FindFirstChild("promptOverlay")
+            if promptOverlay then
+                promptOverlay.ChildAdded:Connect(function(prompt)
+                    if prompt.Name == "ErrorPrompt" and _G.WebhookFlags.Disconnect.Enabled then
+                        task.wait(0.5)
+                        local label = prompt:FindFirstChildWhichIsA("TextLabel", true)
+                        local reason = label and label.Text or "Disconnected"
+                        print("[Webhook] Disconnect detected (Prompt):", reason)
+                        SendDisconnectWebhook(reason)
+                    end
+                end)
             end
-        end)
+        end
+    end)
+    
+    if success1 and success2 then
+        print("[Webhook] Disconnect detection setup complete")
+    else
+        warn("[Webhook] Some disconnect detection methods failed to setup")
     end
 end
+
+-- Auto-setup disconnect detection
+SetupDisconnectDetection()
+
+local Webhook = Window:AddTab({
+    Name = "Webhook",
+    Icon = ""
+})
 
 local webhookSection = Webhook:AddSection("Webhook Settings")
 
+-- Fish Webhook URL Input
 webhookSection:AddInput({
     Title = "Fish Webhook URL",
     Default = _G.WebhookFlags.FishCaught.URL,
@@ -2252,20 +2289,32 @@ webhookSection:AddInput({
                                :gsub("canary%.discord%.com", "discord.com")
                                :gsub("ptb%.discord%.com", "discord.com")
             _G.WebhookFlags.FishCaught.URL = cleanUrl
-            aiko("Fish webhook URL updated!")
+            AIKO:MakeNotify({
+                Title = "@aikoware",
+                Description = "| Webhook",
+                Content = "Fish webhook URL updated!",
+                Delay = 3
+            })
         end
     end
 })
 
+-- Toggle Fish Webhook
 webhookSection:AddToggle({
     Title = "Send Fish Webhook",
     Default = _G.WebhookFlags.FishCaught.Enabled,
     Callback = function(enabled)
         _G.WebhookFlags.FishCaught.Enabled = enabled
-        aiko(enabled and "Fish webhook enabled!" or "Fish webhook disabled!")
+        AIKO:MakeNotify({
+            Title = "@aikoware",
+            Description = "| Fish Webhook",
+            Content = enabled and "Enabled!" or "Disabled!",
+            Delay = 2
+        })
     end
 })
 
+-- Test Fish Webhook Button
 webhookSection:AddButton({
     Title = "Test Fish Webhook",
     Content = "Send test message to webhook",
@@ -2276,63 +2325,65 @@ webhookSection:AddButton({
                 embeds = {{
                     color = 44543,
                     author = {
-                        name = "Webhook Connection Test!"
+                        name = "✅ Webhook Connection Test!"
                     },
+                    description = "If you see this message, your webhook is working correctly!",
                     image = {
-                        url = "https://cdn.discordapp.com/attachments/1387681189502124042/1449753201044750336/banners_pinterest_654429389618926022.jpg?ex=694e8be2&is=694d3a62&hm=0132945a6bdb1c503a580b4c4a6fbbc55c292301655d3720c1011a50939cdded&"
-                    }
+                        url = "https://cdn.discordapp.com/attachments/1387681189502124042/1449753201044750336/banners_pinterest_654429389618926022.jpg"
+                    },
+                    timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
                 }},
                 username = "AIKO",
-                avatar_url = " https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png?ex=694f2c2e&is=694ddaae&hm=49285870da8c33345d3a1d592fa0f7d0799b7b592214be2ec53a513751b93ef9& "
+                avatar_url = "https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png"
             }
             
-            SendWebhook(webhookUrl, payload)
-            aiko("Test Webhook sent!")
+            if SendWebhook(webhookUrl, payload) then
+                AIKO:MakeNotify({
+                    Title = "@aikoware",
+                    Description = "| Test Webhook",
+                    Content = "Test sent successfully!",
+                    Delay = 3
+                })
+            else
+                AIKO:MakeNotify({
+                    Title = "@aikoware",
+                    Description = "| Test Webhook",
+                    Content = "Failed to send test!",
+                    Delay = 3
+                })
+            end
         else
-            aiko("Please set webhook URL first!")
+            AIKO:MakeNotify({
+                Title = "@aikoware",
+                Description = "| Error",
+                Content = "Please set webhook URL first!",
+                Delay = 3
+            })
         end
     end
 })
 
+webhookSection:AddDivider()
+
+-- Custom Name Input
 webhookSection:AddInput({
-    Title = "Stats Webhook URL",
-    Default = _G.WebhookFlags.Stats.URL,
-    Placeholder = "Paste stats webhook...",
-    Callback = function(url)
-        if url and url:match("discord.com/api/webhooks") then
-            local cleanUrl = url:gsub("discordapp%.com", "discord.com")
-            _G.WebhookFlags.Stats.URL = cleanUrl
-            aiko("Stats webhook URL updated!")
-        end
-    end
-})
-
-webhookSection:AddInput({
-    Title = "Stats Delay (Minutes)",
-    Default = tostring(_G.WebhookFlags.Stats.Delay),
-    Placeholder = "Enter delay in minutes...",
-    Callback = function(value)
-        local delay = tonumber(value)
-        if delay and delay >= 1 then
-            _G.WebhookFlags.Stats.Delay = delay
-            aiko("Stats delay set to " .. delay .. " minutes")
-        end
-    end
-})
-
-webhookSection:AddToggle({
-    Title = "Send Stats Webhook",
-    Content = "Auto-send player statistics",
-    Default = _G.WebhookFlags.Stats.Enabled,
-    Callback = function(enabled)
-        _G.WebhookFlags.Stats.Enabled = enabled
-        -- Add your stats webhook loop here
-        aiko(enabled and "Stats webhook enabled!" or "Stats webhook disabled!")
+    Title = "Custom Name (Optional)",
+    Default = _G.WebhookCustomName or "",
+    Placeholder = "Leave blank to use Roblox name",
+    Callback = function(name)
+        _G.WebhookCustomName = name
+        AIKO:MakeNotify({
+            Title = "@aikoware",
+            Description = "| Webhook",
+            Content = "Custom name updated!",
+            Delay = 2
+        })
     end
 })
 
 local disconnectSection = Webhook:AddSection("Disconnect Alert")
 
+-- Disconnect Webhook URL Input
 disconnectSection:AddInput({
     Title = "Disconnect Webhook URL",
     Default = _G.WebhookFlags.Disconnect.URL,
@@ -2341,35 +2392,53 @@ disconnectSection:AddInput({
         if url and url:match("discord.com/api/webhooks") then
             local cleanUrl = url:gsub("discordapp%.com", "discord.com")
             _G.WebhookFlags.Disconnect.URL = cleanUrl
-            aiko("Disconnect webhook URL updated!")
+            AIKO:MakeNotify({
+                Title = "@aikoware",
+                Description = "| Webhook",
+                Content = "Disconnect webhook URL updated!",
+                Delay = 3
+            })
         end
     end
 })
 
+-- Discord ID Input
 disconnectSection:AddInput({
-    Title = "Discord ID",
+    Title = "Discord ID (Optional)",
     Default = "",
     Placeholder = "Enter your Discord ID for ping...",
     Callback = function(id)
         if id and id ~= "" then
             _G.DiscordPingID = "<@" .. id:gsub("%D", "") .. ">"
-            aiko("Discord ID set!")
+            AIKO:MakeNotify({
+                Title = "@aikoware",
+                Description = "| Webhook",
+                Content = "Discord ID set!",
+                Delay = 2
+            })
         else
             _G.DiscordPingID = ""
         end
     end
 })
 
+-- Hide Identity Input
 disconnectSection:AddInput({
-    Title = "Hide Identity",
+    Title = "Hide Identity (Optional)",
     Default = _G.DisconnectCustomName or "",
     Placeholder = "Custom name (blank = use Roblox name)",
     Callback = function(name)
         _G.DisconnectCustomName = name
-        aiko("Custom name updated!")
+        AIKO:MakeNotify({
+            Title = "@aikoware",
+            Description = "| Webhook",
+            Content = "Custom name updated!",
+            Delay = 2
+        })
     end
 })
 
+-- Auto Rejoin Toggle
 disconnectSection:AddToggle({
     Title = "Auto Rejoin On Disconnect",
     Content = "Send webhook and rejoin automatically",
@@ -2377,96 +2446,65 @@ disconnectSection:AddToggle({
     Callback = function(enabled)
         _G.WebhookFlags.Disconnect.Enabled = enabled
         
-        if enabled then
-            local disconnectDetected = false
-            
-            local function handleDisconnect(reason)
-                if not disconnectDetected then
-                    disconnectDetected = true
-                    
-                    local webhookUrl = _G.WebhookFlags.Disconnect.URL
-                    if webhookUrl ~= "" then
-                        local playerName = _G.DisconnectCustomName or Player.Name
-                        local dateTime = os.date("%m/%d/%Y %I:%M %p")
-                        local pingText = _G.DiscordPingID or ""
-                        
-                        local payload = {
-                            content = pingText .. " Your account disconnected!",
-                            embeds = {{
-                                title = "DISCONNECT ALERT",
-                                color = 36863,
-                                fields = {
-                                    {name = "⦿Username:", value = "> " .. playerName},
-                                    {name = "⦿Time:", value = "> " .. dateTime},
-                                    {name = "⦿Reason:", value = "> " .. (reason or "Unknown")}
-                                },
-                                thumbnail = {
-                                    url = "https://cdn.discordapp.com/attachments/1387681189502124042/1449753201044750336/banners_pinterest_654429389618926022.jpg?ex=694e8be2&is=694d3a62&hm=0132945a6bdb1c503a580b4c4a6fbbc55c292301655d3720c1011a50939cdded&"
-                                }
-                            }},
-                            username = "AIKO",
-                            avatar_url = " https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png?ex=694f2c2e&is=694ddaae&hm=49285870da8c33345d3a1d592fa0f7d0799b7b592214be2ec53a513751b93ef9& "
-                        }
-                        
-                        SendWebhook(webhookUrl, payload)
-                    end
-                    
-                    task.wait(2)
-                    game:GetService("TeleportService"):Teleport(game.PlaceId, Player)
-                end
-            end
-            
-            game:GetService("GuiService").ErrorMessageChanged:Connect(function(msg)
-                if msg and msg ~= "" then
-                    handleDisconnect(msg)
-                end
-            end)
-        
-            game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(prompt)
-                if prompt.Name == "ErrorPrompt" then
-                    task.wait(1)
-                    local label = prompt:FindFirstChildWhichIsA("TextLabel", true)
-                    handleDisconnect(label and label.Text or "Disconnected")
-                end
-            end)
-            
-            aiko("Auto-rejoin enabled!")
-        else
-            aiko("Auto-rejoin disabled!")
-        end
+        AIKO:MakeNotify({
+            Title = "@aikoware",
+            Description = "| Auto Rejoin",
+            Content = enabled and "Enabled!" or "Disabled!",
+            Delay = 2
+        })
     end
 })
 
+-- Test Disconnect Webhook Button
 disconnectSection:AddButton({
     Title = "Test Disconnect Webhook",
     Content = "Kick yourself and rejoin",
     Callback = function()
-        aiko("Testing disconnect webhook...")
-        task.wait(1)
-        
         local webhookUrl = _G.WebhookFlags.Disconnect.URL
-        if webhookUrl ~= "" then
+        if webhookUrl and webhookUrl ~= "" then
+            AIKO:MakeNotify({
+                Title = "@aikoware",
+                Description = "| Test",
+                Content = "Testing disconnect webhook...",
+                Delay = 2
+            })
+            
+            task.wait(1)
+            
             local payload = {
-                content = "Test Disconnect - Working!",
+                content = "🧪 Test Disconnect - Working!",
                 embeds = {{
-                    title = "Test Successful!",
+                    title = "✅ Test Successful!",
                     color = 65280,
                     fields = {
-                        {name = "Status", value = "Webhook is working correctly!"},
-                        {name = "Action", value = "Rejoining server now..."}
-                    }
+                        {name = "Status", value = "Webhook is working correctly!", inline = false},
+                        {name = "Action", value = "Rejoining server now...", inline = false}
+                    },
+                    timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
                 }},
                 username = "AIKO",
-                avatar_url = " https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png?ex=694f2c2e&is=694ddaae&hm=49285870da8c33345d3a1d592fa0f7d0799b7b592214be2ec53a513751b93ef9& "
+                avatar_url = "https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png"
             }
             
             SendWebhook(webhookUrl, payload)
+            task.wait(2)
+            game:GetService("TeleportService"):Teleport(game.PlaceId, Player)
+        else
+            AIKO:MakeNotify({
+                Title = "@aikoware",
+                Description = "| Error",
+                Content = "Please set webhook URL first!",
+                Delay = 3
+            })
         end
-        
-        task.wait(2)
-        game:GetService("TeleportService"):Teleport(game.PlaceId, Player)
     end
 })
+
+print("[Webhook System] Initialized successfully!")
+print("[Webhook] Fish Database: " .. #FishDatabase .. " entries")
+print("[Webhook] HTTP Request: " .. (_G.httpRequest and "✅ Available" or "❌ NOT AVAILABLE"))
+print("[Webhook] Fish Listener: ✅ Connected")
+print("[Webhook] Disconnect Detection: ✅ Setup")
 
 local MiscModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/fishit/miscmdl.lua"))()
 MiscModule:Initialize()
