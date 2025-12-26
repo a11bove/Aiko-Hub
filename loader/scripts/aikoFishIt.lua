@@ -1979,6 +1979,39 @@ webhookSection:AddToggle({
     end
 })
 
+webhookSection:AddDropdown({
+    Title = "Select Rarities to Send",
+    Content = "Only send these rarities (empty = all)",
+    Options = WebhookModule.GetRarityList(),
+    Multi = true,
+    Default = _G.WebhookRarities or {},
+    Callback = function(selected)
+        _G.WebhookRarities = selected
+        local count = #selected
+        AIKO:MakeNotify({
+            Title = "@aikoware",
+            Description = "| Rarity Filter",
+            Content = count == 0 and "Sending all rarities" or ("Sending " .. count .. " rarities"),
+            Delay = 3
+        })
+    end
+})
+
+webhookSection:AddToggle({
+    Title = "Enable Debug Mode",
+    Content = "Print variant detection info to console",
+    Default = false,
+    Callback = function(enabled)
+        _G.WebhookDebugMode = enabled
+        AIKO:MakeNotify({
+            Title = "@aikoware",
+            Description = "| Debug Mode",
+            Content = enabled and "Enabled! Check console (F9)" or "Disabled!",
+            Delay = 2
+        })
+    end
+})
+
 webhookSection:AddButton({
     Title = "Test Fish Webhook",
     Content = "Send test message to webhook",
