@@ -1110,10 +1110,6 @@ local autobuyweather = ws:AddToggle({
     end
 })
 
--- ============================================
--- MERCHANT SECTION FIX
--- ============================================
-
 local merch = Shop:AddSection("Merchant")
 
 local MerchantUI = {
@@ -1129,10 +1125,23 @@ local function ToggleMerchant(state)
     end
 end
 
-local ShopParagraph = merch:AddParagraph({
+local merchantOpen = false
+
+local MerchantStockPanel = merch:AddPanel({
     Title = "Merchant Stock:",
-    Icon = "shop",
-    Content = "- Unknown\n- Unknown\n- Unknown"
+    Content = "Loading merchant stock...",
+    ButtonText = "Toggle Merchant",
+    ButtonCallback = function()
+        merchantOpen = not merchantOpen
+        ToggleMerchant(merchantOpen)
+        
+        MerchantStockPanel:SetButtonText(merchantOpen and "Close Merchant" or "Open Merchant")
+        
+        if merchantOpen then
+            task.wait(0.5)
+            UpdateMerchantPanel()
+        end
+    end
 })
 
 function UpdateMerchantPanel()
@@ -1144,9 +1153,8 @@ function UpdateMerchantPanel()
                 local frame = child:FindFirstChild("Frame")
                 if frame and frame:FindFirstChild("ItemName") then
                     local itemName = frame.ItemName.Text
-                    -- Filter out Mystery items
                     if not string.find(itemName, "Mystery") then
-                        table.insert(items, itemName)
+                        table.insert(items, "- " .. itemName)
                     end
                 end
             end
@@ -1155,46 +1163,32 @@ function UpdateMerchantPanel()
         local content = ""
         
         if #items > 0 then
-            for i, itemName in ipairs(items) do
-                content = content .. "- " .. itemName
-                if i < #items then
-                    content = content .. "\n"
-                end
-            end
+            content = table.concat(items, "\n")
             
             if MerchantUI.RefreshLabel and MerchantUI.RefreshLabel.Text then
                 content = content .. "\n\n" .. MerchantUI.RefreshLabel.Text
             end
         else
-            content = "No items available"
+            content = "No items available in stock"
             if MerchantUI.RefreshLabel and MerchantUI.RefreshLabel.Text then
                 content = content .. "\n" .. MerchantUI.RefreshLabel.Text
             end
         end
         
-        ShopParagraph:SetContent(content)
+        MerchantStockPanel:SetContent(content)
     end)
 end
 
-local merchantToggle = merch:AddToggle({
-    Title = "Toggle Merchant UI",
-    Content = "Show or hide the merchant window",
-    Default = false,
-    Callback = function(state)
-        ToggleMerchant(state)
-        if state then
-            task.wait(0.5)
-            UpdateMerchantPanel()
-        end
-    end
-})
-
 task.spawn(function()
-    while task.wait(1) do
+    while task.wait(2) do
         if PlayerGui:FindFirstChild("Merchant") and PlayerGui.Merchant.Enabled then
             UpdateMerchantPanel()
         end
     end
+end)
+
+task.delay(1, function()
+    UpdateMerchantPanel()
 end)
 
 local sell = Shop:AddSection("Sell")
