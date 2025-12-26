@@ -1390,26 +1390,6 @@ local selectRarities = fav:AddDropdown({
         
         GlobalFav.SelectedRarities = _G.AutoFavoriteRarities
         
-        AIKO:MakeNotify({
-            Title = "@aikoware",
-            Description = "| Auto Fav Rarity",
-            Content = #selectedRarities .. " rarities selected",
-            Delay = 2
-        })
-    end
-})
-
-local selectRarities = fav:AddDropdown({
-    Title = "Select Rarity",
-    Content = "",
-    Options = {"Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Secret"},
-    Multi = true,
-    Default = {},
-    Callback = function(selectedRarities)
-        GlobalFav.SelectedRarities = {}
-        for _, rarity in ipairs(selectedRarities) do
-            GlobalFav.SelectedRarities[rarity] = true
-        end
     end
 })
 
