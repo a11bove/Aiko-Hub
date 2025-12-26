@@ -1110,6 +1110,10 @@ local autobuyweather = ws:AddToggle({
     end
 })
 
+-- ============================================
+-- MERCHANT SECTION FIX
+-- ============================================
+
 local merch = Shop:AddSection("Merchant")
 
 local MerchantUI = {
@@ -1128,37 +1132,45 @@ end
 local ShopParagraph = merch:AddParagraph({
     Title = "Merchant Stock:",
     Icon = "shop",
-    Content = "Loading merchant data..."
+    Content = "- Unknown\n- Unknown\n- Unknown"
 })
 
-local merchantItems = {}
-local refreshLabelText = "Next Refresh: Loading..."
-
-function UpdateMerchantPanelAlt()
+function UpdateMerchantPanel()
     pcall(function()
-        merchantItems = {}
+        local items = {}
         
         for _, child in ipairs(MerchantUI.ItemsFrame:GetChildren()) do
             if child:IsA("ImageLabel") and child.Name ~= "Frame" then
                 local frame = child:FindFirstChild("Frame")
                 if frame and frame:FindFirstChild("ItemName") then
                     local itemName = frame.ItemName.Text
+                    -- Filter out Mystery items
                     if not string.find(itemName, "Mystery") then
-                        table.insert(merchantItems, "• " .. itemName)
+                        table.insert(items, itemName)
                     end
                 end
             end
         end
         
-        if MerchantUI.RefreshLabel and MerchantUI.RefreshLabel.Text then
-            refreshLabelText = MerchantUI.RefreshLabel.Text
-        end
+        local content = ""
         
-        local content = table.concat(merchantItems, " | ")
-        if content == "" then
-            content = "No items in stock"
+        if #items > 0 then
+            for i, itemName in ipairs(items) do
+                content = content .. "- " .. itemName
+                if i < #items then
+                    content = content .. "\n"
+                end
+            end
+            
+            if MerchantUI.RefreshLabel and MerchantUI.RefreshLabel.Text then
+                content = content .. "\n\n" .. MerchantUI.RefreshLabel.Text
+            end
+        else
+            content = "No items available"
+            if MerchantUI.RefreshLabel and MerchantUI.RefreshLabel.Text then
+                content = content .. "\n" .. MerchantUI.RefreshLabel.Text
+            end
         end
-        content = content .. " — " .. refreshLabelText
         
         ShopParagraph:SetContent(content)
     end)
@@ -1374,7 +1386,7 @@ local selectFishes = fav:AddDropdown({
 })
 
 local selectRarities = fav:AddDropdown({
-    Title = "Select Rarity",
+    Title = "Rarity",
     Content = "",
     Options = {"Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Secret"},
     Multi = true,
