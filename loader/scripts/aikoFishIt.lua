@@ -1966,7 +1966,7 @@ _G.WebhookFlags = {
 }
 
 function SendWebhook(webhookUrl, data)
-    if _G.httpRequest and webhookUrl and webhookUrl ~= "" the
+    if _G.httpRequest and webhookUrl and webhookUrl ~= "" then
         if not (_G._WebhookLock and _G._WebhookLock[webhookUrl]) then
             _G._WebhookLock = _G._WebhookLock or {}
             _G._WebhookLock[webhookUrl] = true
