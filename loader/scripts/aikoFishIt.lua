@@ -1949,11 +1949,6 @@ autotrade:AddButton({
     end
 })
 
--- ============================================================================
--- COMPLETE WEBHOOK TAB - FIXED VERSION
--- Replace your entire webhook section with this code
--- ============================================================================
-
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -1985,18 +1980,12 @@ _G.DisconnectCustomName = _G.DisconnectCustomName or ""
 _G.WebhookRarities = _G.WebhookRarities or {}
 _G.WebhookNames = _G.WebhookNames or {}
 
--- ============================================================================
--- WEBHOOK SEND FUNCTION
--- ============================================================================
-
 local function SendWebhook(url, data)
     if not _G.httpRequest then
-        warn("[Webhook] HTTP request function not available - Your executor may not support webhooks")
         return false
     end
     
     if not url or url == "" then
-        warn("[Webhook] Invalid webhook URL")
         return false
     end
     
@@ -2023,23 +2012,17 @@ local function SendWebhook(url, data)
     end)
     
     if not success then
-        warn("[Webhook] Failed to send:", err)
         return false
     end
     
     return true
 end
 
--- ============================================================================
--- FISH DATABASE
--- ============================================================================
-
 local FishDatabase = {}
 
 local function BuildFishDatabase()
     local itemsFolder = ReplicatedStorage:FindFirstChild("Items")
     if not itemsFolder then
-        warn("[Webhook] Items folder not found")
         return
     end
     
@@ -2063,14 +2046,10 @@ local function BuildFishDatabase()
             end
         end
     end
-    
-    print("[Webhook] Loaded " .. count .. " fish into database")
 end
 
--- Build fish database immediately
 task.spawn(BuildFishDatabase)
 
--- Tier Names (Updated mapping)
 local TierNames = {
     ["Common"] = "Common",
     ["Uncommon"] = "Uncommon", 
@@ -2080,20 +2059,18 @@ local TierNames = {
     ["Mythic"] = "Mythic",
     ["Secret"] = "Secret",
     ["Exotic"] = "Exotic",
-    ["Limited"] = "Limited",
-    -- Numeric fallbacks
-    [0] = "Common",
-    [1] = "Uncommon",
-    [2] = "Rare",
-    [3] = "Epic",
-    [4] = "Legendary",
-    [5] = "Mythic",
-    [6] = "Secret"
+    ["Limited"] = "Limited"
+    
+    [1] = "Common",
+    [2] = "Uncommon",
+    [3] = "Rare",
+    [4] = "Epic",
+    [5] = "Legendary",
+    [6] = "Mythic",
+    [7] = "Secret",
+    [8] = "Exotic",
+    [0] = "Common"
 }
-
--- ============================================================================
--- THUMBNAIL FUNCTION
--- ============================================================================
 
 local function GetThumbnailURL(assetId)
     if not assetId or assetId == "" then return nil end
@@ -2104,28 +2081,18 @@ local function GetThumbnailURL(assetId)
     return string.format("https://assetdelivery.roblox.com/v1/asset/?id=%s", id)
 end
 
--- ============================================================================
--- FISH WEBHOOK FUNCTION
--- ============================================================================
-
 local function SendFishWebhook(fishId, metadata)
     if not _G.WebhookFlags.FishCaught.Enabled then return end
     
     local webhookUrl = _G.WebhookFlags.FishCaught.URL
     if not webhookUrl or webhookUrl == "" then
-        warn("[Webhook] Fish webhook URL not set")
         return
     end
     
     local fishData = FishDatabase[fishId]
     if not fishData then 
-        warn("[Webhook] Fish ID not found:", fishId)
         return 
     end
-    
-    -- DEBUG: Print the actual tier value
-    print("[Webhook DEBUG] Fish:", fishData.Name)
-    print("[Webhook DEBUG] Tier Value:", fishData.Tier, "Type:", type(fishData.Tier))
     
     -- Handle both string and numeric tier values
     local tierName
@@ -2136,8 +2103,6 @@ local function SendFishWebhook(fishId, metadata)
     else
         tierName = "Unknown"
     end
-    
-    print("[Webhook DEBUG] Tier Name:", tierName)
     
     -- Check rarity filter
     if _G.WebhookRarities and #_G.WebhookRarities > 0 then
@@ -2178,11 +2143,11 @@ local function SendFishWebhook(fishId, metadata)
             description = string.format("**%s** caught a **%s** fish!", playerName, tierName),
             color = 52221,
             fields = {
-                {name = "⦿Fish Name:", value = "```❯ " .. fishData.Name .. "```", inline = false},
-                {name = "⦿Fish Tier:", value = "```❯ " .. tierName .. "```", inline = false},
-                {name = "⦿Weight:", value = "```❯ " .. weight .. "```", inline = true},
-                {name = "⦿Mutation:", value = "```❯ " .. variant .. "```", inline = true},
-                {name = "⦿Sell Price:", value = "```❯ " .. sellPrice .. "```", inline = true}
+                {name = "Fish Name:", value = "```❯ " .. fishData.Name .. "```", inline = false},
+                {name = "Fish Tier:", value = "```❯ " .. tierName .. "```", inline = false},
+                {name = "Weight:", value = "```❯ " .. weight .. "```", inline = true},
+                {name = "Mutation:", value = "```❯ " .. variant .. "```", inline = true},
+                {name = "Sell Price:", value = "```❯ " .. sellPrice .. "```", inline = true}
             },
             thumbnail = {
                 url = GetThumbnailURL(fishData.Icon) or "https://i.imgur.com/WltO8IG.png"
@@ -2197,14 +2162,8 @@ local function SendFishWebhook(fishId, metadata)
         avatar_url = "https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png"
     }
     
-    if SendWebhook(webhookUrl, payload) then
-        print("[Webhook] Fish webhook sent:", fishData.Name, "- Tier:", tierName)
-    end
+    SendWebhook(webhookUrl, payload)
 end
-
--- ============================================================================
--- CONNECT FISH NOTIFICATION
--- ============================================================================
 
 if not _G.FishWebhookConnected then
     _G.FishWebhookConnected = true
@@ -2218,24 +2177,13 @@ if not _G.FishWebhookConnected then
     
     REObtainedNewFishNotification.OnClientEvent:Connect(function(fishId, _, data)
         task.spawn(function()
-            local success, err = pcall(function()
+            pcall(function()
                 local metadata = data and data.InventoryItem and data.InventoryItem.Metadata
-                print("[Webhook] Fish caught - ID:", fishId)
                 SendFishWebhook(fishId, metadata)
             end)
-            
-            if not success then
-                warn("[Webhook] Error in fish webhook:", err)
-            end
         end)
     end)
-    
-    print("[Webhook] Fish notification listener connected!")
 end
-
--- ============================================================================
--- DISCONNECT WEBHOOK HANDLER
--- ============================================================================
 
 local disconnectHandled = false
 
@@ -2245,7 +2193,6 @@ local function SendDisconnectWebhook(reason)
     
     local webhookUrl = _G.WebhookFlags.Disconnect.URL
     if not webhookUrl or webhookUrl == "" then 
-        print("[Webhook] Disconnect detected but no webhook URL set")
         return 
     end
     
@@ -2256,12 +2203,12 @@ local function SendDisconnectWebhook(reason)
     local payload = {
         content = pingText .. " Your account disconnected!",
         embeds = {{
-            title = "⚠️ DISCONNECT ALERT",
+            title = "⚠️ Disconnected Alert!",
             color = 16711680,
             fields = {
-                {name = "⦿Username:", value = "> " .. playerName, inline = false},
-                {name = "⦿Time:", value = "> " .. dateTime, inline = false},
-                {name = "⦿Reason:", value = "> " .. (reason or "Unknown"), inline = false}
+                {name = "**Username:**", value = "> " .. playerName, inline = false},
+                {name = "**Time:**", value = "> " .. dateTime, inline = false},
+                {name = "**Reason:**", value = "> " .. (reason or "Unknown"), inline = false}
             },
             thumbnail = {
                 url = "https://cdn.discordapp.com/attachments/1387681189502124042/1449753201044750336/banners_pinterest_654429389618926022.jpg"
@@ -2272,34 +2219,27 @@ local function SendDisconnectWebhook(reason)
         avatar_url = "https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png"
     }
     
-    if SendWebhook(webhookUrl, payload) then
-        print("[Webhook] Disconnect webhook sent")
-    end
+    SendWebhook(webhookUrl, payload)
     
     task.wait(3)
     game:GetService("TeleportService"):Teleport(game.PlaceId, Player)
 end
-
--- ============================================================================
--- SETUP DISCONNECT DETECTION
--- ============================================================================
 
 local function SetupDisconnectDetection()
     if _G.DisconnectDetectionSetup then return end
     _G.DisconnectDetectionSetup = true
     
     -- Method 1: GUI Error Detection
-    local success1 = pcall(function()
+    pcall(function()
         game:GetService("GuiService").ErrorMessageChanged:Connect(function(msg)
             if msg and msg ~= "" and _G.WebhookFlags.Disconnect.Enabled then
-                print("[Webhook] Disconnect detected (GUI):", msg)
                 SendDisconnectWebhook(msg)
             end
         end)
     end)
     
     -- Method 2: CoreGui Prompt Detection
-    local success2 = pcall(function()
+    pcall(function()
         local coreGui = game:GetService("CoreGui")
         local promptGui = coreGui:FindFirstChild("RobloxPromptGui")
         if promptGui then
@@ -2310,32 +2250,15 @@ local function SetupDisconnectDetection()
                         task.wait(0.5)
                         local label = prompt:FindFirstChildWhichIsA("TextLabel", true)
                         local reason = label and label.Text or "Disconnected"
-                        print("[Webhook] Disconnect detected (Prompt):", reason)
                         SendDisconnectWebhook(reason)
                     end
                 end)
             end
         end
     end)
-    
-    if success1 and success2 then
-        print("[Webhook] Disconnect detection setup complete")
-    else
-        warn("[Webhook] Some disconnect detection methods failed to setup")
-    end
 end
 
--- Auto-setup disconnect detection
 SetupDisconnectDetection()
-
--- ============================================================================
--- WEBHOOK TAB UI
--- ============================================================================
-
-local Webhook = Window:AddTab({
-    Name = "Webhook",
-    Icon = ""
-})
 
 local webhookSection = Webhook:AddSection("Webhook Settings")
 
@@ -2441,10 +2364,6 @@ webhookSection:AddInput({
         })
     end
 })
-
--- ============================================================================
--- DISCONNECT SECTION
--- ============================================================================
 
 local disconnectSection = Webhook:AddSection("Disconnect Alert")
 
@@ -2565,17 +2484,12 @@ disconnectSection:AddButton({
     end
 })
 
--- ============================================================================
--- INITIALIZATION LOG
--- ============================================================================
-
 print("============================================")
 print("[Webhook System] Initialized successfully!")
 print("[Webhook] Fish Database: " .. #FishDatabase .. " entries")
 print("[Webhook] HTTP Request: " .. (_G.httpRequest and "✅ Available" or "❌ NOT AVAILABLE"))
 print("[Webhook] Fish Listener: ✅ Connected")
 print("[Webhook] Disconnect Detection: ✅ Setup")
-print("============================================")
 
 local MiscModule = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/kdoaz/refs/heads/main/xzc/fishit/miscmdl.lua"))()
 MiscModule:Initialize()
