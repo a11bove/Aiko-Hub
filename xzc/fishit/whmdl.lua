@@ -204,7 +204,7 @@ function WebhookModule.SendFishWebhook(fishId, metadata, data)
         embeds = {{
             title = "🎣 FISH CAUGHT",
             description = string.format("**%s** caught a **%s** fish!", playerName, tierName),
-            color = 5793266,
+            color = 6170265,
             fields = {
                 {name = "**Fish:**", value = "`` ❯ " .. fishData.Name .. " ``", inline = false},
                 {name = "**Tier:**", value = "`` ❯ " .. tierName .. " ``", inline = false},
@@ -215,7 +215,7 @@ function WebhookModule.SendFishWebhook(fishId, metadata, data)
                 url = WebhookModule.GetThumbnailURL(fishData.Icon) or "https://cdn.discordapp.com/attachments/1387681189502124042/1449753201044750336/banners_pinterest_654429389618926022.jpg"
             },
             image = {
-                url = " https://cdn.discordapp.com/attachments/1387681189502124042/1454161899238457571/New_Project.jpg?ex=6950154d&is=694ec3cd&hm=d3d22f3aa93d26b2f80b0b8a136d61269ece8c665a033947c71ae9fc1a7ddfa6&"
+                url = "https://cdn.discordapp.com/attachments/1387681189502124042/1454161899238457571/New_Project.jpg?ex=6950154d&is=694ec3cd&hm=d3d22f3aa93d26b2f80b0b8a136d61269ece8c665a033947c71ae9fc1a7ddfa6&"
             },
             footer = {
                 text = "@aikoware Webhook",
@@ -248,14 +248,14 @@ function WebhookModule.SendDisconnectWebhook(reason)
         content = pingText ~= "" and (pingText .. " Your account disconnected!") or "Your account disconnected!",
         embeds = {{
             title = "⚠️ Disconnected Alert!",
-            color = 11342935,
+            color = 6170265,
             fields = {
                 {name = "**Username:**", value = " ❯ " .. playerName, inline = false},
                 {name = "**Time:**", value = " ❯ " .. dateTime, inline = false},
                 {name = "**Reason:**", value = " ❯ " .. (reason or "Unknown"), inline = false}
             },
-            thumbnail = {
-                url = "https://cdn.discordapp.com/attachments/1387681189502124042/1449753201044750336/banners_pinterest_654429389618926022.jpg"
+            image = {
+                url = "https://cdn.discordapp.com/attachments/1387681189502124042/1454161899238457571/New_Project.jpg?ex=6950154d&is=694ec3cd&hm=d3d22f3aa93d26b2f80b0b8a136d61269ece8c665a033947c71ae9fc1a7ddfa6&"
             },
             timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
         }},
@@ -329,13 +329,13 @@ function WebhookModule.SendTestWebhook()
     
     local payload = {
         embeds = {{
-            color = 11342935,
+            color = 6170265,
             author = {
                 name = "✅ Webhook Connection Test!"
             },
             description = "If you see this message, your webhook is working correctly!",
             image = {
-                url = "https://cdn.discordapp.com/attachments/1387681189502124042/1449753201044750336/banners_pinterest_654429389618926022.jpg"
+                url = "https://cdn.discordapp.com/attachments/1387681189502124042/1454161899238457571/New_Project.jpg?ex=6950154d&is=694ec3cd&hm=d3d22f3aa93d26b2f80b0b8a136d61269ece8c665a033947c71ae9fc1a7ddfa6&"
             },
             timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
         }},
