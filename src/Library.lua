@@ -1417,23 +1417,23 @@ end
             end
 
             local function UpdateSizeSection()
-                if OpenSection then
-                    local SectionSizeYWitdh = 38
-                    for _, v in SectionAdd:GetChildren() do
-                        if v.Name ~= "UIListLayout" and v.Name ~= "UICorner" then
-                            SectionSizeYWitdh = SectionSizeYWitdh + v.Size.Y.Offset + 3
-                        end
-                    end
-                    TweenService:Create(FeatureFrame, TweenInfo.new(0.5), { Rotation = 90 }):Play()
-                    TweenService:Create(Section, TweenInfo.new(0.5), { Size = UDim2.new(1, 1, 0, SectionSizeYWitdh) })
-                        :Play()
-                    TweenService:Create(SectionAdd, TweenInfo.new(0.5),
-                        { Size = UDim2.new(1, 0, 0, SectionSizeYWitdh - 38) }):Play()
-                    TweenService:Create(SectionDecideFrame, TweenInfo.new(0.5), { Size = UDim2.new(1, 0, 0, 2) }):Play()
-                    task.wait(0.5)
-                    UpdateSizeScroll()
-                end
+    if OpenSection then
+        local SectionSizeYWitdh = 38
+        for _, v in SectionAdd:GetChildren() do
+            if v.Name ~= "UIListLayout" and v.Name ~= "UICorner" then
+                SectionSizeYWitdh = SectionSizeYWitdh + v.Size.Y.Offset + 3
             end
+        end
+        TweenService:Create(FeatureFrame, TweenInfo.new(0.5), { Rotation = 90 }):Play()
+        TweenService:Create(Section, TweenInfo.new(0.5), { Size = UDim2.new(1, 1, 0, SectionSizeYWitdh) })
+            :Play()
+        TweenService:Create(SectionAdd, TweenInfo.new(0.5),
+            { Size = UDim2.new(1, 0, 0, SectionSizeYWitdh - 38) }):Play()
+        TweenService:Create(SectionDecideFrame, TweenInfo.new(0.5), { Size = UDim2.new(1, 0, 0, 2) }):Play()
+        task.wait(0.5)
+        UpdateSizeScroll()
+    end
+end
 
             if AlwaysOpen == true then
                 SectionButton:Destroy()
@@ -1558,7 +1558,7 @@ end
     ParagraphContent.Position = UDim2.new(0, iconOffset, 0, 25)
     ParagraphContent.Name = "ParagraphContent"
     ParagraphContent.RichText = true
-    ParagraphContent.TextWrapped = true  -- Enable text wrapping by default
+    ParagraphContent.TextWrapped = true
     ParagraphContent.Parent = Paragraph
 
     local ParagraphButton
@@ -1584,47 +1584,62 @@ end
         end
     end
 
+    local updateDebounce = false
     local function UpdateSize()
-        -- Wait for text to render
-        task.wait()
+        if updateDebounce then return end
+        updateDebounce = true
         
-        -- Calculate the actual text height based on TextBounds
-        local textHeight = ParagraphContent.TextBounds.Y
+        -- Wait for rendering to complete
+        task.wait(0.05)
+        
+        -- Get the available width for text
+        local availableWidth = Paragraph.AbsoluteSize.X - iconOffset - 6
+        
+        -- Set the content size to allow proper text bounds calculation
+        ParagraphContent.Size = UDim2.new(0, availableWidth, 0, 1000)
+        
+        -- Wait for text bounds to update
+        task.wait(0.05)
+        
+        -- Get actual text height
+        local textHeight = math.max(ParagraphContent.TextBounds.Y, 12)
         
         -- Calculate total height
-        local totalHeight = 25 + textHeight + 8  -- 25 (top padding) + text height + 8 (bottom padding)
+        local totalHeight = 25 + textHeight + 8
         
         if ParagraphButton then
             ParagraphButton.Position = UDim2.new(0, 10, 0, totalHeight - 5)
             totalHeight = totalHeight + ParagraphButton.Size.Y.Offset + 10
         end
         
-        -- Update content label size first
+        -- Set final content size
         ParagraphContent.Size = UDim2.new(1, -iconOffset - 6, 0, textHeight)
         
-        -- Update paragraph frame size
+        -- Update paragraph size
         Paragraph.Size = UDim2.new(1, 0, 0, totalHeight)
         
-        -- Update section size
+        -- Update section
         UpdateSizeSection()
+        
+        updateDebounce = false
     end
 
-    -- Initial size calculation
-    UpdateSize()
-
-    -- Update when text bounds change (for dynamic content)
-    ParagraphContent:GetPropertyChangedSignal("Text"):Connect(function()
+    -- Track size changes
+    Paragraph:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
         UpdateSize()
     end)
-    
-    ParagraphContent:GetPropertyChangedSignal("TextBounds"):Connect(function()
-        UpdateSize()
+
+    -- Initial size
+    task.spawn(UpdateSize)
+
+    -- Update on text change
+    ParagraphContent:GetPropertyChangedSignal("Text"):Connect(function()
+        task.spawn(UpdateSize)
     end)
 
     function ParagraphFunc:SetContent(content)
         content = content or "Content"
         ParagraphContent.Text = content
-        -- UpdateSize will be called automatically by the Text property change
     end
 
     CountItem = CountItem + 1
