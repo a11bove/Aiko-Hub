@@ -313,7 +313,7 @@ local legitDELAY = fsh:AddInput({
     end
 })
 
-local legitFISHING = fsh:AddToggle({
+fsh:AddToggle({
     Title = "Legit Fishing",
     Content = "",
     Default = false,
@@ -365,7 +365,7 @@ local stuckDELAY = fsh:AddInput({
     end
 })
 
-local antiSTUCK = fsh:AddToggle({
+fsh:AddToggle({
     Title = "Anti Stuck",
     Content = "Auto restart if fishing gets stuck.",
     Default = false,
@@ -378,20 +378,15 @@ fsh:AddButton({
     Title = "Manual Fix Stuck",
     Content = "",
     Callback = function()
-        -- Stop New Method
         RuntimeState.IsFishingNewMethod = false
 
-        -- Stop Auto Fish 5X
         StopAutoFish5X()
 
-        -- Stop Instant Fish
         StopInstantFish()
 
-        -- Stop all spam processes
         _G.stopSpam()
         _G.StopRecastSpam()
 
-        -- Cancel fishing
         _G.StopFishing()
 
         AIKO:MakeNotify({
@@ -455,7 +450,7 @@ local function StopInstantFish()
     InstantFishEnabled = false
 end
 
-local insFish = fin:AddToggle({
+fin:AddToggle({
     Title = "Instant Fishing",
     Content = "",
     Default = false,
@@ -535,7 +530,7 @@ local function StopSuperInstantV2()
     SuperInstantV2Enabled = false
 end
 
-local blatTog = bts:AddToggle({
+bts:AddToggle({
     Title = "Blatant Fishing",
     Content = "",
     Default = false,
