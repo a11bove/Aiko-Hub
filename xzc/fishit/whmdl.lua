@@ -215,7 +215,81 @@ function WebhookModule.SendFishWebhook(fishId, metadata, data)
                 url = WebhookModule.GetThumbnailURL(fishData.Icon) or "https://cdn.discordapp.com/attachments/1387681189502124042/1449753201044750336/banners_pinterest_654429389618926022.jpg"
             },
             image = {
-                url = WebhookModule.GetImageURL(fishData.Icon) or "https://cdn.discordapp.com/attachments/1387681189502124042/1454161899238457571/New_Project.jpg?ex=6950154d&is=694ec3cd&hm=d3d22f3aa93d26b2f80b0b8a136d61269ece8c665a033947c71ae9fc1a7ddfa6&"
+                url = "https://cdn.discordapp.com/attachments/1387681189502124042/1454161899238457571/New_Project.jpg?ex=6950154d&is=694ec3cd&hm=d3d22f3aa93d26b2f80b0b8a136d61269ece8c665a033947c71ae9fc1a7ddfa6&"
+            },
+            footer = {
+                text = "@aikoware Webhook"
+            },
+            timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
+        }},
+        username = "AIKO",
+        avatar_url = "https://cdn.discordapp.com/attachments/1387681189502124042/1453911584874168340/IMG_1130.png"
+    }
+    
+    WebhookModule.SendWebhook(webhookUrl, payload)
+end
+
+--[[function WebhookModule.SendFishWebhook(fishId, metadata, data)
+    if not _G.WebhookFlags.FishCaught.Enabled then return end
+    
+    local webhookUrl = _G.WebhookFlags.FishCaught.URL
+    if not webhookUrl or webhookUrl == "" then
+        return
+    end
+    
+    local fishData = FishDatabase[fishId]
+    if not fishData then 
+        return 
+    end
+    
+    local tierName = WebhookModule.GetTierName(fishData.Tier)
+    
+    if _G.WebhookRarities and #_G.WebhookRarities > 0 then
+        local found = false
+        for _, rarity in ipairs(_G.WebhookRarities) do
+            if rarity == tierName then
+                found = true
+                break
+            end
+        end
+        if not found then
+            return
+        end
+    end
+    
+    if _G.WebhookFishNames and #_G.WebhookFishNames > 0 then
+        if not table.find(_G.WebhookFishNames, fishData.Name) then
+            return
+        end
+    end
+    
+    local weight = "N/A"
+    if metadata and metadata.Weight then
+        weight = string.format("%.2f Kg", metadata.Weight)
+    elseif data and data.InventoryItem and data.InventoryItem.Metadata and data.InventoryItem.Metadata.Weight then
+        weight = string.format("%.2f Kg", data.InventoryItem.Metadata.Weight)
+    end
+    
+    local variant = WebhookModule.GetVariantName(fishId, metadata, data)
+    
+    local playerName = _G.WebhookCustomName ~= "" and _G.WebhookCustomName or Player.Name
+    
+    local payload = {
+        embeds = {{
+            title = "🎣 FISH CAUGHT",
+            description = string.format("**%s** caught a **%s** fish!", playerName, tierName),
+            color = 5708687,
+            fields = {
+                {name = "**Fish:**", value = "`` ❯ " .. fishData.Name .. " ``", inline = false},
+                {name = "**Tier:**", value = "`` ❯ " .. tierName .. " ``", inline = false},
+                {name = "**Weight:**", value = "`` ❯ " .. weight .. " ``", inline = true},
+                {name = "**Variant:**", value = "`` ❯ " .. variant .. " ``", inline = true}
+            },
+            thumbnail = {
+                url = WebhookModule.GetThumbnailURL(fishData.Icon) or "https://cdn.discordapp.com/attachments/1387681189502124042/1449753201044750336/banners_pinterest_654429389618926022.jpg"
+            },
+            image = {
+                url = "https://cdn.discordapp.com/attachments/1387681189502124042/1454161899238457571/New_Project.jpg?ex=6950154d&is=694ec3cd&hm=d3d22f3aa93d26b2f80b0b8a136d61269ece8c665a033947c71ae9fc1a7ddfa6&"
             },
             footer = {
                 text = "@aikoware Webhook",
@@ -227,7 +301,7 @@ function WebhookModule.SendFishWebhook(fishId, metadata, data)
     }
     
     WebhookModule.SendWebhook(webhookUrl, payload)
-end
+end]]
 
 local disconnectHandled = false
 
