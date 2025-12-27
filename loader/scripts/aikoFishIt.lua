@@ -2,7 +2,7 @@ local AIKO = loadstring(game:HttpGet("https://raw.githubusercontent.com/a11bove/
 
 local Window = AIKO:Window({
     Title   = "@aikoware |",
-    Footer  = " made by untog",              
+    Footer  = "made by untog",              
     Version = 1,
 })
 
@@ -95,7 +95,7 @@ local Home = Window:AddTab({
 
 local Fishing = Window:AddTab({
     Name = "Fishing",
-    Icon = "fish"
+    Icon = "rbxassetid://100067447000453"
 })
 
 local Shop = Window:AddTab({
@@ -131,8 +131,8 @@ local Misc = Window:AddTab({
 local dcsec = Home:AddSection("Support", true)
 
 dcsec:AddParagraph({
-    Title = "Join Our Discord",
-    Content = "Join Us!",
+    Title = "Discord",
+    Content = "Join our discord for more info!",
     Icon = "discord",
     ButtonText = "Copy Server Link",
     ButtonCallback = function()
