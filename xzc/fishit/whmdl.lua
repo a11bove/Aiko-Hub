@@ -124,7 +124,7 @@ function WebhookModule.GetThumbnailURL(assetId)
     
     if not id then return nil end
     
-    return string.format("https://tr.rbxcdn.com/%s/420/420/Image/Png", id)
+    return string.format("https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=%s", id)
 end
 
 function WebhookModule.GetTierName(tier)
