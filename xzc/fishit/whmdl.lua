@@ -120,7 +120,8 @@ end
 function WebhookModule.GetThumbnailURL(assetId)
     if not assetId or assetId == "" then return nil end
     
-    local id = assetId:match("rbxassetid://(%d+)")
+    local id = assetId:match("rbxassetid://(%d+)") or assetId:match("(%d+)")
+    
     if not id then return nil end
     
     return string.format("https://assetdelivery.roblox.com/v1/asset/?id=%s", id)
@@ -162,11 +163,15 @@ function WebhookModule.SendFishWebhook(fishId, metadata, data)
     if not webhookUrl or webhookUrl == "" then
         return
     end
-    
+
     local fishData = FishDatabase[fishId]
     if not fishData then 
         return 
     end
+    
+    -- DEBUG: Print the icon value
+    print("Fish Icon:", fishData.Icon)
+    print("Thumbnail URL:", WebhookModule.GetThumbnailURL(fishData.Icon))
     
     local tierName = WebhookModule.GetTierName(fishData.Tier)
     
